@@ -1,1 +1,7 @@
-# wxapp-tennisking
+# BackEnd文件夹说明
+
+## 内容
+
+主要存放后端代码
+
+## 规则
