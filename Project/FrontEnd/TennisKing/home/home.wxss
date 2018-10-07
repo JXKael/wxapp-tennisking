@@ -1,0 +1,68 @@
+/* pages/home/home.wxss */
+.head{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  border-bottom: 2rpx solid rgb(228, 228, 228);
+}
+
+.tab{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.tab-item{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 64rpx;
+  align-items: center;
+}
+
+.tab-item-icon{
+  width: 28rpx;
+  height: 28rpx;
+  margin-left: 27%;
+}
+
+.tab-item-txt{
+  width: auto;
+  height: 64rpx;
+  line-height: 64rpx;
+  text-align: center;
+  display: block;
+  font-size: 28rpx;
+  margin-left: 20rpx;
+  color: #545454;
+}
+
+.tab-item-txt-choosed{
+  color: #009b42;
+}
+
+.scroll-menu{
+  margin: 0rpx 10rpx;
+  width: 100%;
+  height: 66rpx;
+  white-space: nowrap;
+}
+
+.scroll-menu-item{
+  display: inline-block;
+  width: auto;
+  height: 60rpx;
+  margin: 0rpx 12rpx;
+  padding: 0rpx 12rpx;
+  font-size: 26rpx;
+  text-align: center;
+  line-height: 60rpx;
+  color: #949494;
+  border-bottom: 0rpx solid #949494;
+}
+
+.scroll-menu-item-choosed{
+  color: rgb(0, 155, 66);
+  border-bottom: 6rpx solid rgb(0, 155, 66);
+}
