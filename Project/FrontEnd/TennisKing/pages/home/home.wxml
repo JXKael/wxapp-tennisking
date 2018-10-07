@@ -1,27 +1,28 @@
 <!--pages/home/home.wxml-->
-
-<!-- 顶部页签及类目 -->
-<view class='head'>
-  <!-- 页签 -->
-  <view class='tab'>
-    <view class='tab-item' bindtap='onTapNews'>
-      <image class="tab-item-icon" src="{{currTabID==0?image_path+'icon_news_choosed.png':image_path+'icon_news.png'}}"/>
-      <text class="tab-item-txt {{currTabID==0?'tab-item-txt-choosed':''}}">{{txt_tab_news}}</text>
+<view class='container'>
+  <!-- 顶部，页签及类目 -->
+  <view class='head'>
+    <!-- 页签 -->
+    <view class='tab'>
+      <view class='tab-item' bindtap='onTapNews'>
+        <image class="tab-item-icon" src="{{currTabID==0?image_path+'icon_news_choosed.png':image_path+'icon_news.png'}}"/>
+        <text class="tab-item-txt {{currTabID==0?'tab-item-txt-choosed':''}}">{{txt_tab_news}}</text>
+      </view>
+      <view class='tab-item' bindtap='onTapPlayers'>
+        <image class="tab-item-icon" src="{{currTabID==1?image_path+'icon_players_choosed.png':image_path+'icon_players.png'}}"/>
+        <text class="tab-item-txt {{currTabID==1?'tab-item-txt-choosed':''}}">{{txt_tab_players}}</text>
+      </view>
     </view>
-    <view class='tab-item' bindtap='onTapPlayers'>
-      <image class="tab-item-icon" src="{{currTabID==1?image_path+'icon_players_choosed.png':image_path+'icon_players.png'}}"/>
-      <text class="tab-item-txt {{currTabID==1?'tab-item-txt-choosed':''}}">{{txt_tab_players}}</text>
+    <!-- 类目 -->
+    <view class='scroll-menu'>
+      <scroll-view scroll-x='true'>
+        <text class="scroll-menu-item {{item.choosed?'scroll-menu-item-choosed':''}}" wx:for='{{scroll_menu}}' wx:key='{{item.id}}' bindtap='onTapMenuItem' data-index='{{item.id}}'>{{item.name}}
+        </text>
+      </scroll-view>
     </view>
   </view>
-  <!-- 类目 -->
-  <view class='scroll-menu'>
-    <scroll-view scroll-x='true'>
-      <text class="scroll-menu-item {{item.choosed?'scroll-menu-item-choosed':''}}" wx:for='{{scroll_menu}}' wx:key='{{item.id}}' bindtap='onTapMenuItem' data-index='{{item.id}}'>{{item.name}}
-      </text>
-    </scroll-view>
+  <!-- 内容 -->
+  <view class='body'>
+    <text>aaa</text>
   </view>
-</view>
-<!-- 内容 -->
-<view class='body'>
-  <text>aaa</text>
 </view>

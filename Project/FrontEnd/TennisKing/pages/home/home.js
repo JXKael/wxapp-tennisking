@@ -70,7 +70,8 @@ Page({
     console.log("点击赛事新闻")
     this.setData({
       currTabID: 0,
-      scroll_menu: menu_data.news
+      scroll_menu: menu_data.news,
+      currMenuID: 0
     })
   },
 
@@ -81,7 +82,8 @@ Page({
     console.log("点击选手资讯")
     this.setData({
       currTabID: 1,
-      scroll_menu: menu_data.players
+      scroll_menu: menu_data.players,
+      currMenuID: 0
     })
   },
 
