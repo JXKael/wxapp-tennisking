@@ -1,6 +1,7 @@
 // pages/home/home.js
 
 var menu_data = require("../../utils/menus.js")
+var resources = require("../../utils/resources.js")
 
 Page({
 
@@ -12,7 +13,9 @@ Page({
     txt_tab_players: "选手资讯",
     currTabID: 0,
     scroll_menu: [],
-    currMenuID: 0
+    currMenuID: 0,
+
+    image_path: resources.images_path
   },
 
   /**

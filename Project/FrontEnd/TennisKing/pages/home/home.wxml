@@ -5,11 +5,11 @@
     <!-- 页签 -->
     <view class='tab'>
       <view class='tab-item' bindtap='onTapNews'>
-        <image class="tab-item-icon" src="{{currTabID==0?'../../resources/images/icon_news_choosed.png':'../../resources/images/icon_news.png'}}"/>
+        <image class="tab-item-icon" src="{{currTabID==0?image_path+'icon_news_choosed.png':image_path+'icon_news.png'}}"/>
         <text class="tab-item-txt {{currTabID==0?'tab-item-txt-choosed':''}}">{{txt_tab_news}}</text>
       </view>
       <view class='tab-item' bindtap='onTapPlayers'>
-        <image class="tab-item-icon" src="{{currTabID==1?'../../resources/images/icon_players_choosed.png':'../../resources/images/icon_players.png'}}"/>
+        <image class="tab-item-icon" src="{{currTabID==1?image_path+'icon_players_choosed.png':image_path+'icon_players.png'}}"/>
         <text class="tab-item-txt {{currTabID==1?'tab-item-txt-choosed':''}}">{{txt_tab_players}}</text>
       </view>
     </view>
