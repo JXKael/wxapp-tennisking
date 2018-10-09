@@ -153,11 +153,11 @@ page{
 
 .mi-player-name{
   width: 100%;
-  height: auto;
+  height: 50rpx;
   color: #009b42;
   font-size: 35rpx;
   font-weight: bold;
-  margin-bottom: 8rpx;
+  margin-bottom: 5rpx;
 }
 
 .mi-player-tags{
@@ -165,7 +165,7 @@ page{
   flex-direction: row;
   width: 100%;
   height: auto;
-  margin-top: 8rpx;
+  margin-top: 5rpx;
 }
 
 .mi-player-tag{
