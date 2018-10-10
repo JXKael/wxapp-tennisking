@@ -4,6 +4,7 @@ var menu_data = require("../../utils/menus.js")
 var resources = require("../../utils/resources.js")
 
 var SCREEN_CONVERT_RATIO = 1
+var touchStart = 0
 
 Page({
 
@@ -20,7 +21,10 @@ Page({
     image_path: resources.images_path,
 
     isFixed: false,
-    menu_scroll_left: 0
+    menu_scroll_left: 0,
+    body_scroll_left: 0,
+    curr_bodyScroll_ID: 0,
+    body_scroll_into: "body-scroll0"
   },
 
   /**
@@ -112,6 +116,16 @@ Page({
   },
 
   /**
+   * 类目滑动事件
+   */
+  menuScroll: function (e) {
+    // console.log(e)
+    this.setData({
+      menu_scroll_left: e.detail.scrollLeft
+    })
+  },
+
+  /**
    * 页面滑动框【触顶】事件
    */
   pageScrollToupper: function (e) {
@@ -129,8 +143,8 @@ Page({
    * 页面【滑动】事件
    */
   pageScroll: function (e) {
-    // console.log(e)
-    if (e.detail.scrollTop > 47){
+    console.log(e)
+    if (e.detail.scrollTop > 50){
       this.setData({
         isFixed: true,
       })
@@ -142,12 +156,54 @@ Page({
   },
 
   /**
-   * 类目滑动事件
+   * 主页内容左右滑动事件，自动贴近
    */
-  menuScroll: function (e) {
+  bodyScroll: function (e) {
     // console.log(e)
+    var re = e.detail.scrollLeft % 375
+    var id = Math.ceil(e.detail.scrollLeft / 375)
+    // if (re < 375 / 2){
+    //   id -= 1
+    //   if (id < 0 ){ id = 0 }
+    //   this.setData({
+    //     curr_bodyScroll_ID: id,
+    //     body_scroll_into: "body-scroll" + id
+    //   })
+    // }else{
+    //   this.setData({
+    //     curr_bodyScroll_ID: id,
+    //     body_scroll_into: "body-scroll" + id
+    //   })
+    // }
+  },
+
+  /**
+   * 
+   */
+  bodyScrollTouchStart: function (e){
+    console.log(e)
+    touchStart = e.changedTouches[0].pageX
+  },
+
+  /**
+   * 主页内容横向滑动手指抬起事件
+   */
+  bodyScrollTouchEnd: function (e){
+    console.log(e)
+    var touchEnd = e.changedTouches[0].pageX
+    var id = this.data.curr_bodyScroll_ID
+    id = touchStart > touchEnd ? id + 1 : id - 1
+    var idMax = this.data.scroll_menu.length - 1
+    if (id > idMax) id = idMax
+    if (id < 0 ) id = 0
     this.setData({
-      menu_scroll_left: e.detail.scrollLeft
+      curr_bodyScroll_ID: id,
+      body_scroll_into: "body-scroll" + id
     })
+
+    // this.setData({
+    //   // curr_bodyScroll_ID: id,
+    //   body_scroll_into: "body-scroll" + this.data.curr_bodyScroll_ID
+    // })
   }
 })

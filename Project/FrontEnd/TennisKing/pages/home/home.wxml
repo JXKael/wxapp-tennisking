@@ -33,60 +33,66 @@
       </scroll-view>
     </view>
   </view>
-  <!-- 内容 -->
-  <view class="body">
-    <!-- 筛选标签列表 -->
-    <view class='scroll-tag'>
-      <scroll-view scroll-x='true'>
-        <view class="scroll-tag-item {{item.choosed?'scroll-tag-item-choosed':''}}" wx:for='{{scroll_menu}}' wx:key='{{item.id}}' bindtap='onTapTagItem' data-index='{{item.id}}'> 
-          <text>{{item.name}}</text>
-        </view>
-      </scroll-view>
-    </view>
-    <view class='main'>
-      <block wx:for='{{scroll_menu}}'>
-      <!-- <block> -->
-        <view class='main-item'>
-          <view class='mi-top'>
-            <!-- 日期或置顶 -->
-            <view class='mi-date'>
-              <text>02/30\n05:45</text>
-            </view>
-            <!-- 选手&标签 -->
-            <view class='mi-player'>
-              <text class='mi-player-name'>穆雷</text>
-              <view class='mi-player-tags'>
-                <!-- <block wx:for='{{}}'> -->
-                <block>
-                  <text class='mi-player-tag'>市场异动</text>
-                </block>
-                <block>
-                  <text class='mi-player-tag'>伤病/退赛</text>
-                </block>
-                <block>
-                  <text class='mi-player-tag'>打法对比</text>
-                </block>
+  <!-- 【赛事新闻】内容 -->
+  <view class="body" wx:if='{{currTabID == 0}}'>
+    <scroll-view class='body-scroll' scroll-x scroll-into-view='{{body_scroll_into}}' scroll-with-animation='true' bindtouchstart='bodyScrollTouchStart' bindtouchend='bodyScrollTouchEnd'>
+      <block wx:for='{{scroll_menu}}' wx:key='{{item.id}}'>
+        <view class='body-scrll-item' id='body-scroll{{item.id}}'>
+          <!-- 筛选标签列表 -->
+          <view class='scroll-tag'>
+            <scroll-view scroll-x='true'>
+              <view class="scroll-tag-item {{item.choosed?'scroll-tag-item-choosed':''}}" wx:for='{{scroll_menu}}' wx:key='{{item.id}}' bindtap='onTapTagItem' data-index='{{item.id}}'> 
+                <text>{{item.name}}</text>
               </view>
-            </view>
+            </scroll-view>
           </view>
-          <view class='mi-content'>
-            <rich-text><b>aaaaa</b>aaaa</rich-text>
-          </view>
-          <view class='mi-bottom'>
-            <text class='mi-author'>网球帝小编</text>
-            <view class='mi-number'>
-              <view class='mi-like'>
-                <!-- <image></image> -->
-                <text>2222</text>
+          <view class='main'>
+            <block wx:for='{{scroll_menu}}'>
+            <!-- <block> -->
+              <view class='main-item'>
+                <view class='mi-top'>
+                  <!-- 日期或置顶 -->
+                  <view class='mi-date'>
+                    <text>02/30\n05:45</text>
+                  </view>
+                  <!-- 选手&标签 -->
+                  <view class='mi-player'>
+                    <text class='mi-player-name'>穆雷{{item.id}}</text>
+                    <view class='mi-player-tags'>
+                      <!-- <block wx:for='{{}}'> -->
+                      <block>
+                        <text class='mi-player-tag'>市场异动</text>
+                      </block>
+                      <block>
+                        <text class='mi-player-tag'>伤病/退赛</text>
+                      </block>
+                      <block>
+                        <text class='mi-player-tag'>打法对比</text>
+                      </block>
+                    </view>
+                  </view>
+                </view>
+                <view class='mi-content'>
+                  <rich-text><b>aaaaa</b>aaaa</rich-text>
+                </view>
+                <view class='mi-bottom'>
+                  <text class='mi-author'>网球帝小编</text>
+                  <view class='mi-number'>
+                    <view class='mi-like'>
+                      <!-- <image></image> -->
+                      <text>2222</text>
+                    </view>
+                    <view class='mi-hot'>
+                      <!-- <image></image> -->
+                      <text>1111</text>
+                    </view>
+                  </view>
+                </view>
               </view>
-              <view class='mi-hot'>
-                <!-- <image></image> -->
-                <text>1111</text>
-              </view>
-            </view>
+            </block>
           </view>
         </view>
       </block>
-    </view>
+    </scroll-view>
   </view>
 </scroll-view>

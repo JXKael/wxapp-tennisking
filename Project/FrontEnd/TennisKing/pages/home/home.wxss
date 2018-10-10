@@ -29,6 +29,7 @@ page{
   background-color: white;
   border-bottom: 2rpx solid #e4e4e4;
   z-index: 2;
+  opacity: .2;
 }
 
 .tab{
@@ -97,6 +98,20 @@ page{
   background-color: #f3f3f3;
   overflow: hidden;
   z-index: 1;
+}
+
+.body-scroll{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: auto;
+  white-space: nowrap;
+}
+
+.body-scrll-item{
+  display: inline-block;
+  height: 100%;
+  width: 750rpx;
 }
 
 .scroll-tag{
