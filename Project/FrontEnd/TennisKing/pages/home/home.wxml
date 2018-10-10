@@ -1,5 +1,16 @@
 <!--pages/home/home.wxml-->
-<view class='container'>
+<scroll-view class="page-scroll-container" scroll-y enable-back-to-top bindscrolltoupper='pageScrollToupper' bindscrolltolower='pageScrollTolower' bindscroll='pageScroll' style='height:{{windowHeight}}'>
+  <!-- 固定的顶部，上滑显现 -->
+  <view class='head-fixed' wx:if='{{isFixed}}'>
+    <!-- 类目 -->
+    <view class='scroll-menu'>
+      <scroll-view scroll-x='true' bindscroll='menuScroll' scroll-left='{{menu_scroll_left}}'>
+        <text class="scroll-menu-item {{item.choosed?'scroll-menu-item-choosed':''}}" wx:for='{{scroll_menu}}' wx:key='{{item.id}}' bindtap='onTapMenuItem' data-index='{{item.id}}'>
+          <text>{{item.name}}</text>
+        </text>
+      </scroll-view>
+    </view>
+  </view>
   <!-- 顶部，页签及类目 -->
   <view class='head'>
     <!-- 页签 -->
@@ -15,7 +26,7 @@
     </view>
     <!-- 类目 -->
     <view class='scroll-menu'>
-      <scroll-view scroll-x='true'>
+      <scroll-view scroll-x='true' bindscroll='menuScroll' scroll-left='{{menu_scroll_left}}'>
         <text class="scroll-menu-item {{item.choosed?'scroll-menu-item-choosed':''}}" wx:for='{{scroll_menu}}' wx:key='{{item.id}}' bindtap='onTapMenuItem' data-index='{{item.id}}'>
           <text>{{item.name}}</text>
         </text>
@@ -23,7 +34,7 @@
     </view>
   </view>
   <!-- 内容 -->
-  <view class='body'>
+  <view class="body">
     <!-- 筛选标签列表 -->
     <view class='scroll-tag'>
       <scroll-view scroll-x='true'>
@@ -33,8 +44,8 @@
       </scroll-view>
     </view>
     <view class='main'>
-      <!-- <block wx-for='{{}}'> -->
-      <block>
+      <block wx:for='{{scroll_menu}}'>
+      <!-- <block> -->
         <view class='main-item'>
           <view class='mi-top'>
             <!-- 日期或置顶 -->
@@ -45,7 +56,7 @@
             <view class='mi-player'>
               <text class='mi-player-name'>穆雷</text>
               <view class='mi-player-tags'>
-                <!-- <block wx-for='{{}}'> -->
+                <!-- <block wx:for='{{}}'> -->
                 <block>
                   <text class='mi-player-tag'>市场异动</text>
                 </block>
@@ -78,4 +89,4 @@
       </block>
     </view>
   </view>
-</view>
+</scroll-view>

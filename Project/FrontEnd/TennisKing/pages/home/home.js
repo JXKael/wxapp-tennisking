@@ -3,6 +3,8 @@
 var menu_data = require("../../utils/menus.js")
 var resources = require("../../utils/resources.js")
 
+var SCREEN_CONVERT_RATIO = 1
+
 Page({
 
   /**
@@ -15,13 +17,29 @@ Page({
     scroll_menu: [],
     currMenuID: 0,
 
-    image_path: resources.images_path
+    image_path: resources.images_path,
+
+    isFixed: false,
+    menu_scroll_left: 0
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    // 设置page-scroll的高
+    var that = this
+    wx.getSystemInfo({
+      success: function (res) {
+        SCREEN_CONVERT_RATIO = 750 / res.windowWidth
+        var windowHeight = (res.windowHeight * SCREEN_CONVERT_RATIO); //将高度乘以换算后的该设备的rpx与px的比例
+        that.setData({
+          windowHeight: windowHeight + "rpx"
+        })
+        console.log("window height: " + windowHeight) //最后获得转化后得rpx单位的窗口高度
+      }
+    })
+
     this.setData({
       currTabID: 0,
       scroll_menu: menu_data.news
@@ -47,16 +65,6 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {},
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {},
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {},
 
   /**
    * 用户点击右上角分享
@@ -100,6 +108,46 @@ Page({
     this.setData({
       scroll_menu: menu,
       currMenuID: tapID
+    })
+  },
+
+  /**
+   * 页面滑动框【触顶】事件
+   */
+  pageScrollToupper: function (e) {
+    // console.log(e);
+  },
+
+  /**
+   * 页面滑动框【触底】事件
+   */
+  pageScrollTolower: function (e) {
+    // console.log(e)
+  },
+
+  /**
+   * 页面【滑动】事件
+   */
+  pageScroll: function (e) {
+    // console.log(e)
+    if (e.detail.scrollTop > 47){
+      this.setData({
+        isFixed: true,
+      })
+    }else{
+      this.setData({
+        isFixed: false,
+      })
+    }
+  },
+
+  /**
+   * 类目滑动事件
+   */
+  menuScroll: function (e) {
+    // console.log(e)
+    this.setData({
+      menu_scroll_left: e.detail.scrollLeft
     })
   }
 })
