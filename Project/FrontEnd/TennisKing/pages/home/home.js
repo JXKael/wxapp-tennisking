@@ -4,7 +4,9 @@ var menu_data = require("../../utils/menus.js")
 var resources = require("../../utils/resources.js")
 
 var SCREEN_CONVERT_RATIO = 1
-var touchStart = 0
+var top_offset = 60
+var head_alpha = 32
+var body_scroll_sudden = 40
 
 Page({
 
@@ -17,6 +19,7 @@ Page({
     currTabID: 0,
     scroll_menu: [],
     currMenuID: 0,
+    newsData: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], // 临时数据
 
     image_path: resources.images_path,
 
@@ -24,8 +27,15 @@ Page({
     menu_scroll_left: 0,
     body_scroll_left: 0,
     curr_bodyScroll_ID: 0,
-    body_scroll_into: "body-scroll0"
+    body_scroll_into: "body-scroll0",
+
+    head_top_num: 0,
+    head_top: "0rpx",
+    body_top: "0rpx",
+    tab_opacity: 1
   },
+
+  
 
   /**
    * 生命周期函数--监听页面加载
@@ -140,19 +150,69 @@ Page({
   },
 
   /**
-   * 页面【滑动】事件
+   * 竖向【滑动】事件
    */
-  pageScroll: function (e) {
+  onBodyScrollYScroll: function (e) {
     console.log(e)
-    if (e.detail.scrollTop > 50){
+    if (e.detail.scrollTop < 0){ return }
+
+    var newTop = 0
+    if (e.detail.deltaY > 0) {
+      if (e.detail.deltaY > body_scroll_sudden) {
+        this.setData({
+          head_top_num: 0,
+          body_top: "0rpx",
+          head_top: "0rpx",
+          tab_opacity: 1
+        })
+      } else if (e.detail.scrollTop < top_offset && this.data.head_top_num < 0) {
+        newTop = -e.detail.scrollTop + e.detail.deltaY
+        if (newTop < -top_offset) { newTop = -top_offset }
+        if (newTop > 0) { newTop = 0 }
+
+        var newOpacoty = 1 + newTop / head_alpha
+        if (newOpacoty < 0) { newOpacoty = 0 }
+        if (newOpacoty > 1) { newOpacoty = 1 }
+
+        var newTopStr = String(newTop * SCREEN_CONVERT_RATIO) + "rpx"
+        this.setData({
+          head_top_num: newTop,
+          body_top: newTopStr,
+          head_top: newTopStr,
+          tab_opacity: newOpacoty
+        })
+      }
+    } else {
+      var newTop = this.data.head_top_num + e.detail.deltaY
+      if (newTop < -top_offset) { newTop = -top_offset }
+      if (newTop > 0) { newTop = 0 }
+
+      var newOpacoty = 1 + newTop / head_alpha
+      if (newOpacoty < 0) { newOpacoty = 0 }
+      if (newOpacoty > 1) { newOpacoty = 1 }
+
+      var newTopStr = String(newTop * SCREEN_CONVERT_RATIO) + "rpx"
       this.setData({
-        isFixed: true,
-      })
-    }else{
-      this.setData({
-        isFixed: false,
+        head_top_num: newTop,
+        body_top: newTopStr,
+        head_top: newTopStr,
+        tab_opacity: newOpacoty
       })
     }
+
+    // if (e.detail.scrollTop > 50){
+    //   this.setData({
+    //     isFixed: false,
+    //     // head_top_num: new_head_top,
+    //     // head_top: String(-e.detail.scrollTop) + "rpx"
+    //   })
+    // }else{
+    //   this.setData({
+    //     isFixed: false,
+    //     body_top: String(-e.detail.scrollTop) + "rpx",
+    //     head_top: String(-e.detail.scrollTop) + "rpx"
+    //   })
+    // }
   },
 
   /**
@@ -190,16 +250,16 @@ Page({
    */
   bodyScrollTouchEnd: function (e){
     console.log(e)
-    var touchEnd = e.changedTouches[0].pageX
-    var id = this.data.curr_bodyScroll_ID
-    id = touchStart > touchEnd ? id + 1 : id - 1
-    var idMax = this.data.scroll_menu.length - 1
-    if (id > idMax) id = idMax
-    if (id < 0 ) id = 0
-    this.setData({
-      curr_bodyScroll_ID: id,
-      body_scroll_into: "body-scroll" + id
-    })
+    // var touchEnd = e.changedTouches[0].pageX
+    // var id = this.data.curr_bodyScroll_ID
+    // id = touchStart > touchEnd ? id + 1 : id - 1
+    // var idMax = this.data.scroll_menu.length - 1
+    // if (id > idMax) id = idMax
+    // if (id < 0 ) id = 0
+    // this.setData({
+    //   curr_bodyScroll_ID: id,
+    //   body_scroll_into: "body-scroll" + id
+    // })
 
     // this.setData({
     //   // curr_bodyScroll_ID: id,
