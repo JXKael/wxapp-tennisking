@@ -90,18 +90,17 @@ page{
   z-index: 1;
 }
 
-.body-scroll-X{
+.body-swiper-X{
   display: flex;
   flex-direction: row;
-  width: 100%;
-  height: auto;
-  white-space: nowrap;
+  width: auto;
+  height: 1200rpx;
 }
 
-.body-scroll-X-item{
-  display: inline-block;
+.body-swiper-X-item{
+  display: block;
   height: 100%;
-  width: 750rpx;
+  width: 100%;
 }
 
 .body-scroll-Y{

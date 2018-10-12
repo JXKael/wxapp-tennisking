@@ -23,19 +23,14 @@ Page({
 
     image_path: resources.images_path,
 
-    isFixed: false,
-    menu_scroll_left: 0,
-    body_scroll_left: 0,
-    curr_bodyScroll_ID: 0,
-    body_scroll_into: "body-scroll0",
-
+    curr_swiper_id: 0,
+    // body_scroll_into: "body-scroll0",
+    // 顶部tab相关参数
     head_top_num: 0,
     head_top: "0rpx",
     body_top: "0rpx",
     tab_opacity: 1
   },
-
-  
 
   /**
    * 生命周期函数--监听页面加载
@@ -121,17 +116,8 @@ Page({
     menu[tapID].choosed = true
     this.setData({
       scroll_menu: menu,
-      currMenuID: tapID
-    })
-  },
-
-  /**
-   * 类目滑动事件
-   */
-  menuScroll: function (e) {
-    // console.log(e)
-    this.setData({
-      menu_scroll_left: e.detail.scrollLeft
+      currMenuID: tapID,
+      curr_swiper_id: tapID
     })
   },
 
@@ -152,8 +138,8 @@ Page({
   /**
    * 竖向【滑动】事件
    */
-  onBodyScrollYScroll: function (e) {
-    console.log(e)
+  onBodyScrollY: function (e) {
+    // console.log(e)
     if (e.detail.scrollTop < 0){ return }
 
     var newTop = 0
@@ -199,71 +185,21 @@ Page({
         tab_opacity: newOpacoty
       })
     }
-
-    // if (e.detail.scrollTop > 50){
-    //   this.setData({
-    //     isFixed: false,
-    //     // head_top_num: new_head_top,
-    //     // head_top: String(-e.detail.scrollTop) + "rpx"
-    //   })
-    // }else{
-    //   this.setData({
-    //     isFixed: false,
-    //     body_top: String(-e.detail.scrollTop) + "rpx",
-    //     head_top: String(-e.detail.scrollTop) + "rpx"
-    //   })
-    // }
   },
 
   /**
-   * 主页内容左右滑动事件，自动贴近
+   * swiper current值改变事件函数
    */
-  bodyScroll: function (e) {
-    // console.log(e)
-    var re = e.detail.scrollLeft % 375
-    var id = Math.ceil(e.detail.scrollLeft / 375)
-    // if (re < 375 / 2){
-    //   id -= 1
-    //   if (id < 0 ){ id = 0 }
-    //   this.setData({
-    //     curr_bodyScroll_ID: id,
-    //     body_scroll_into: "body-scroll" + id
-    //   })
-    // }else{
-    //   this.setData({
-    //     curr_bodyScroll_ID: id,
-    //     body_scroll_into: "body-scroll" + id
-    //   })
-    // }
-  },
-
-  /**
-   * 
-   */
-  bodyScrollTouchStart: function (e){
+  onSwiperChange: function(e) {
     console.log(e)
-    touchStart = e.changedTouches[0].pageX
-  },
-
-  /**
-   * 主页内容横向滑动手指抬起事件
-   */
-  bodyScrollTouchEnd: function (e){
-    console.log(e)
-    // var touchEnd = e.changedTouches[0].pageX
-    // var id = this.data.curr_bodyScroll_ID
-    // id = touchStart > touchEnd ? id + 1 : id - 1
-    // var idMax = this.data.scroll_menu.length - 1
-    // if (id > idMax) id = idMax
-    // if (id < 0 ) id = 0
-    // this.setData({
-    //   curr_bodyScroll_ID: id,
-    //   body_scroll_into: "body-scroll" + id
-    // })
-
-    // this.setData({
-    //   // curr_bodyScroll_ID: id,
-    //   body_scroll_into: "body-scroll" + this.data.curr_bodyScroll_ID
-    // })
+    var tapID = e.detail.current
+    var menu = this.data.scroll_menu
+    menu[this.data.currMenuID].choosed = false
+    menu[tapID].choosed = true
+    this.setData({
+      scroll_menu: menu,
+      currMenuID: tapID,
+      curr_swiper_id: tapID
+    })
   }
 })

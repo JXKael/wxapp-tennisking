@@ -15,8 +15,8 @@
     </view>
     <!-- 类目 -->
     <view class='scroll-menu'>
-      <scroll-view scroll-x='true' bindscroll='menuScroll' scroll-left='{{menu_scroll_left}}'>
-        <text class="scroll-menu-item {{item.choosed?'scroll-menu-item-choosed':''}}" wx:for='{{scroll_menu}}' wx:key='{{item.id}}' bindtap='onTapMenuItem' data-index='{{item.id}}'>
+      <scroll-view scroll-x='true' scroll-into-view='menu-{{currMenuID}}' scroll-with-animation>
+        <text class="scroll-menu-item {{item.choosed?'scroll-menu-item-choosed':''}}" id='menu-{{item.id}}' wx:for='{{scroll_menu}}' wx:key='{{item.id}}' bindtap='onTapMenuItem' data-index='{{item.id}}'>
           <text>{{item.name}}</text>
         </text>
       </scroll-view>
@@ -24,10 +24,10 @@
   </view>
   <!-- 【赛事新闻】内容 -->
   <view class="body" wx:if='{{currTabID == 0}}' style='top:{{body_top}}'>
-    <scroll-view class='body-scroll-X' scroll-x scroll-with-animation='true'>
+    <swiper class='body-swiper-X' duration='300' current='{{curr_swiper_id}}' bindchange='onSwiperChange'>
       <block wx:for='{{scroll_menu}}' wx:key='{{item.id}}'>
-        <view class='body-scroll-X-item' id='body-scroll{{item.id}}'>
-          <scroll-view class='body-scroll-Y' scroll-y bindscroll='onBodyScrollYScroll'>
+        <swiper-item class='body-swiper-X-item' id='body-scroll{{item.id}}'>
+          <scroll-view class='body-scroll-Y' scroll-y bindscroll='onBodyScrollY' enable-back-to-top>
             <!-- 筛选标签列表 -->
             <view class='scroll-tag'>
               <scroll-view scroll-x='true'>
@@ -83,8 +83,8 @@
             </view>
             <text class='main-loading'>加载中...</text>
           </scroll-view>
-        </view>
+        </swiper-item>
       </block>
-    </scroll-view>
+    </swiper>
   </view>
 </view>
