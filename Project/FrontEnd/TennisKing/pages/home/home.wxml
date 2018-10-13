@@ -24,20 +24,22 @@
   </view>
   <!-- 【赛事新闻】内容 -->
   <view class="body" wx:if='{{currTabID == 0}}' style='top:{{body_top}}'>
-    <swiper class='body-swiper-X' duration='300' current='{{curr_swiper_id}}' bindchange='onSwiperChange'>
-      <block wx:for='{{scroll_menu}}' wx:key='{{item.id}}'>
-        <swiper-item class='body-swiper-X-item' id='body-scroll{{item.id}}'>
+    <swiper class='body-swiper-X' duration='300' current='{{curr_news_swiper_id}}' bindchange='onNewsSwiperChange'>
+      <block wx:for='{{scroll_menu}}' wx:for-item='swiperItem' wx:key='{{swiperItem.id}}'>
+        <swiper-item class='body-swiper-X-item' id='body-scroll-{{swiperItem.id}}'>
           <scroll-view class='body-scroll-Y' scroll-y bindscroll='onBodyScrollY' enable-back-to-top>
             <!-- 筛选标签列表 -->
             <view class='scroll-tag'>
               <scroll-view scroll-x='true'>
-                <view class="scroll-tag-item {{item.choosed?'scroll-tag-item-choosed':''}}" wx:for='{{scroll_menu}}' wx:key='{{item.id}}' bindtap='onTapTagItem' data-index='{{item.id}}'> 
-                  <text>{{item.name}}</text>
-                </view>
+                <block wx:for='{{scroll_menu}}' wx:key='{{tagItem.id}}' wx:for-item='tagItem'>
+                  <view class="scroll-tag-item {{tagItem.choosed?'scroll-tag-item-choosed':''}}"  bindtap='onTapTagItem' data-index='{{tagItem.id}}'> 
+                    <text>{{tagItem.name}}</text>
+                  </view>
+                </block>
               </scroll-view>
             </view>
             <view class='main'>
-              <block wx:for='{{newsData}}' wx:for-item='postItem'>
+              <block wx:for='{{newsData}}' wx:for-item='newsItem'>
               <!-- <block> -->
                 <view class='main-item'>
                   <view class='mi-top'>
@@ -47,7 +49,7 @@
                     </view>
                     <!-- 选手&标签 -->
                     <view class='mi-player'>
-                      <text class='mi-player-name'>穆雷{{postItem}}</text>
+                      <text class='mi-player-name'>穆雷{{newsItem}}</text>
                       <view class='mi-player-tags'>
                         <!-- <block wx:for='{{}}'> -->
                         <block>
@@ -82,6 +84,26 @@
               </block>
             </view>
             <text class='main-loading'>加载中...</text>
+          </scroll-view>
+        </swiper-item>
+      </block>
+    </swiper>
+  </view>
+  <!-- 【选手资讯】内容 -->
+  <view class="body" wx:if='{{currTabID == 1}}' style='top:{{body_top}}'>
+    <swiper class='body-swiper-X' duration='300' current='{{curr_player_swiper_id}}' bindchange='onPlayerSwiperChange'>
+      <block wx:for='{{scroll_menu}}' wx:for-item='swiperItem' wx:key='{{swiperItem.id}}'>
+        <swiper-item class='body-swiper-X-item' id='body-scroll{{swiperItem.id}}'>
+          <scroll-view class='body-scroll-Y' scroll-y bindscroll='onBodyScrollY' enable-back-to-top>
+            <view class='main'>
+              <block wx:for='{{newsData}}' wx:for-item='playerItem'>
+                <view class='player-item'>
+                  <text class='player-name'>诺瓦克·德约科维奇</text>
+                  <text class='player-news-num'>8888</text>
+                  <image class='left-arrow' src='../../resources/images/left_arrow.png'></image>
+                </view>
+              </block>
+            </view>
           </scroll-view>
         </swiper-item>
       </block>

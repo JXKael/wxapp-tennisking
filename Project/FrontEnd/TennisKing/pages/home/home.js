@@ -23,7 +23,8 @@ Page({
 
     image_path: resources.images_path,
 
-    curr_swiper_id: 0,
+    curr_news_swiper_id: 0,
+    curr_player_swiper_id: 0,
     // body_scroll_into: "body-scroll0",
     // 顶部tab相关参数
     head_top_num: 0,
@@ -49,9 +50,14 @@ Page({
       }
     })
 
+    // this.setData({
+    //   currTabID: 0,
+    //   scroll_menu: menu_data.news
+    // })
+
     this.setData({
-      currTabID: 0,
-      scroll_menu: menu_data.news
+      currTabID: 1,
+      scroll_menu: menu_data.players
     })
   },
 
@@ -117,7 +123,8 @@ Page({
     this.setData({
       scroll_menu: menu,
       currMenuID: tapID,
-      curr_swiper_id: tapID
+      curr_news_swiper_id: tapID,
+      curr_player_swiper_id: tapID
     })
   },
 
@@ -188,9 +195,10 @@ Page({
   },
 
   /**
-   * swiper current值改变事件函数
+   * 赛事新闻swiper current值改变事件函数
    */
-  onSwiperChange: function(e) {
+  onNewsSwiperChange: function(e) {
+    console.log("用户横向滑动")
     console.log(e)
     var tapID = e.detail.current
     var menu = this.data.scroll_menu
@@ -199,7 +207,24 @@ Page({
     this.setData({
       scroll_menu: menu,
       currMenuID: tapID,
-      curr_swiper_id: tapID
+      curr_news_swiper_id: tapID
+    })
+  },
+
+  /**
+   * 选手资讯swiper current值改变事件函数
+   */
+  onPlayerSwiperChange: function (e) {
+    console.log("用户横向滑动")
+    console.log(e)
+    var tapID = e.detail.current
+    var menu = this.data.scroll_menu
+    menu[this.data.currMenuID].choosed = false
+    menu[tapID].choosed = true
+    this.setData({
+      scroll_menu: menu,
+      currMenuID: tapID,
+      curr_player_swiper_id: tapID
     })
   }
 })
