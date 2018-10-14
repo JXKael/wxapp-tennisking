@@ -86,7 +86,7 @@
   height: auto;
   margin-top: 15rpx;
   margin-bottom: 10rpx;
-  padding: 5rpx 0rpx;
+  padding: 5rpx 0;
 }
 
 .news-author{
@@ -102,12 +102,21 @@
   width: 100%;
 }
 
-.news-hot{
-  margin: 0rpx 10rpx;
+.news-number-item{
+  display: flex;
+  flex-direction: row;
+  margin: 0 5rpx;
   width: auto;
 }
 
-.news-like{
-  margin: 0rpx 10rpx;
-  width: auto;
+.news-number-item image{
+  width: 30rpx;
+  height: 30rpx;
+  margin: 0 8rpx;
+}
+
+.news-number-item text{
+  margin: auto 0;
+  width: 105rpx;
+  color: #949494;
 }

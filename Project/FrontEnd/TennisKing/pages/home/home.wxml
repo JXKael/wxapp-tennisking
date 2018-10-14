@@ -40,7 +40,7 @@
               <!-- 筛选标签列表 -->
               <template is='scroll-tag' data='{{...swiperItem}}' wx:if='{{swiperItem.tags.length > 0}}'/>
               <view class='news-content'>
-                <block wx:for='{{newsData}}' wx:for-item='newsItem'>
+                <block wx:for='{{newsData}}' wx:for-item='newsItem' wx:key='{{newsItem.id}}'>
                   <template is='news-item' data='{{...newsItem}}'/>
                 </block>
               </view>

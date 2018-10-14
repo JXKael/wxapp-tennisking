@@ -28,13 +28,13 @@
     <view class='news-bottom'>
       <text class='news-author'>网球帝小编</text>
       <view class='news-number'>
-        <view class='news-like'>
-          <!-- <image></image> -->
-          <text>2222</text>
+        <view class='news-number-item'>
+          <image src="../../../resources/images/icon_like{{liked?'_click':''}}.png" mode='aspectFit'/>
+          <text>8888888</text>
         </view>
-        <view class='news-hot'>
-          <!-- <image></image> -->
-          <text>1111</text>
+        <view class='news-number-item'>
+          <image src='../../../resources/images/icon_hot.png' mode='aspectFit'/>
+          <text>99</text>
         </view>
       </view>
     </view>

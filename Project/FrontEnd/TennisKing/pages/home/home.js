@@ -20,7 +20,7 @@ Page({
     scroll_menu: [],
     currMenuID: 0,
     newsData: [
-      { id: 1, title: "穆1" },
+      { id: 1, title: "穆1", liked: true },
       { id: 2, title: "穆2" },
       { id: 3, title: "穆3" },
       { id: 4, title: "穆4" },
