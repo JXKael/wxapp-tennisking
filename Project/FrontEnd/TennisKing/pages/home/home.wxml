@@ -34,7 +34,7 @@
     <swiper class='body-swiper-X' duration='300' current='{{curr_news_swiper_id}}' bindchange='onSwiperChange'>
       <block wx:for='{{scroll_menu}}' wx:for-item='swiperItem' wx:key='{{swiperItem.id}}'>
         <swiper-item class='body-swiper-X-item' id='body-scroll-{{swiperItem.id}}'>
-          <scroll-view class='body-scroll-Y' scroll-y bindscroll='onBodyScrollY' enable-back-to-top>
+          <scroll-view class='body-scroll-Y' scroll-y scroll-with-animation enable-back-to-top bindscroll='onBodyScrollY' lower-threshold='5' bindscrolltolower='onBodyScrollYTolower'>
             <!-- 【赛事新闻】 -->
             <block wx:if='{{currTabID == 0}}'>
               <!-- 筛选标签列表 -->
@@ -53,7 +53,7 @@
                 </block>
               </view>
             </block>
-            <template is='bottom-loading'/>
+            <template is='bottom-loading' wx:if='{{isBottom}}'/>
           </scroll-view>
         </swiper-item>
       </block>

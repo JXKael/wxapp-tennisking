@@ -6,7 +6,7 @@ var resources = require("../../utils/resources.js")
 var SCREEN_CONVERT_RATIO = 1
 var top_offset = 60
 var head_alpha = 32
-var body_scroll_sudden = 40
+var body_scroll_sudden = 50
 
 Page({
 
@@ -28,6 +28,11 @@ Page({
       { id: 6, title: "穆6" },
       { id: 7, title: "穆7" },
       { id: 8, title: "穆8" },
+      { id: 9, title: "穆9" },
+      { id: 10, title: "穆10" },
+      { id: 11, title: "穆11" },
+      { id: 12, title: "穆12" },
+      { id: 13, title: "穆13" },
     ], // 临时数据
 
     image_path: resources.images_path,
@@ -39,7 +44,9 @@ Page({
     head_top_num: 0,
     head_top: "0rpx",
     body_top: "0rpx",
-    tab_opacity: 1
+    tab_opacity: 1,
+
+    isBottom: false
   },
 
   /**
@@ -155,8 +162,18 @@ Page({
   /**
    * 页面滑动框【触底】事件
    */
-  pageScrollTolower: function (e) {
-    // console.log(e)
+  onBodyScrollYTolower: function (e) {
+    console.log("竖向滑动触底")
+    console.log(e)
+    this.setData({
+      isBottom: true
+    })
+    var that = this
+    setTimeout(function(){
+      that.setData({
+        isBottom: false
+      })
+    }, 2000)
   },
 
   /**
@@ -169,6 +186,7 @@ Page({
     var newTop = 0
     if (e.detail.deltaY > 0) {
       if (e.detail.deltaY > body_scroll_sudden) {
+        // 突然上滑
         this.setData({
           head_top_num: 0,
           body_top: "0rpx",
@@ -176,6 +194,7 @@ Page({
           tab_opacity: 1
         })
       } else if (e.detail.scrollTop < top_offset && this.data.head_top_num < 0) {
+        // 到顶端缓慢上滑
         newTop = -e.detail.scrollTop + e.detail.deltaY
         if (newTop < -top_offset) { newTop = -top_offset }
         if (newTop > 0) { newTop = 0 }
@@ -193,6 +212,7 @@ Page({
         })
       }
     } else {
+      // 下滑
       var newTop = this.data.head_top_num + e.detail.deltaY
       if (newTop < -top_offset) { newTop = -top_offset }
       if (newTop > 0) { newTop = 0 }

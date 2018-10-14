@@ -109,14 +109,18 @@
   width: auto;
 }
 
-.news-number-item image{
+.news-number-icon{
   width: 30rpx;
   height: 30rpx;
   margin: 0 8rpx;
 }
 
-.news-number-item text{
+.news-number-text{
   margin: auto 0;
   width: 105rpx;
   color: #949494;
+}
+
+.news-number-text-liked{
+  color: #e99900;
 }
