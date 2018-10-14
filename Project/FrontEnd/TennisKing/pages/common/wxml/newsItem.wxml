@@ -1,0 +1,42 @@
+<template name='news-item'>
+  <view class='news-item' bindtap='onNewsItemTap'>
+    <view class='news-top'>
+      <!-- 日期或置顶 -->
+      <view class='news-date'>
+        <text>02/30\n05:45</text>
+      </view>
+      <!-- 选手&标签 -->
+      <view class='news-player'>
+        <text class='news-player-name'>{{title}}</text>
+        <view class='news-player-tags'>
+          <!-- <block wx:for='{{}}'> -->
+          <block>
+            <text class='news-player-tag'>市场异动</text>
+          </block>
+          <block>
+            <text class='news-player-tag'>伤病/退赛</text>
+          </block>
+          <block>
+            <text class='news-player-tag'>打法对比</text>
+          </block>
+        </view>
+      </view>
+    </view>
+    <view class='news-middle'>
+      <rich-text><b>aaaaa</b>aaaa</rich-text>
+    </view>
+    <view class='news-bottom'>
+      <text class='news-author'>网球帝小编</text>
+      <view class='news-number'>
+        <view class='news-like'>
+          <!-- <image></image> -->
+          <text>2222</text>
+        </view>
+        <view class='news-hot'>
+          <!-- <image></image> -->
+          <text>1111</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>

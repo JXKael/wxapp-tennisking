@@ -1,0 +1,11 @@
+<template name='scroll-tag'>
+  <view class='scroll-tag'>
+    <scroll-view scroll-x='true'>
+      <block wx:for='{{tags}}' wx:key='{{tagItem.id}}' wx:for-item='tagItem'>
+        <view class="scroll-tag-item {{tagItem.choosed?'scroll-tag-item-choosed':''}}"  bindtap='onTagItemTap' data-index='{{tagItem.id}}'> 
+          <text>{{tagItem.name}}</text>
+        </view>
+      </block>
+    </scroll-view>
+  </view>
+</template>

@@ -1,12 +1,60 @@
 const news_menu = [
-  { id: 0, name: "全部比赛", choosed: true },
-  { id: 1, name: "ATP", choosed: false },
-  { id: 2, name: "WTA", choosed: false },
-  { id: 3, name: "ITF", choosed: false },
-  { id: 4, name: "澳网", choosed: false },
-  { id: 5, name: "法网", choosed: false },
-  { id: 6, name: "温网", choosed: false },
-  { id: 7, name: "美网", choosed: false },
+  {
+    id: 0, name: "全部比赛", choosed: true,
+    tags: [
+      { id: 1, name: "市场异动" },
+      { id: 1, name: "伤病/退赛" },
+      { id: 1, name: "打法对比" },
+    ]
+  },
+  {
+    id: 1, name: "ATP", choosed: false,
+    tags: [
+      { id: 1, name: "市场异动" },
+      { id: 1, name: "伤病/退赛" },
+    ]
+  },
+  {
+    id: 2, name: "WTA", choosed: false,
+    tags: [
+      { id: 1, name: "市场异动" },
+      { id: 1, name: "打法对比" },
+    ]
+  },
+  {
+    id: 3, name: "ITF", choosed: false,
+    tags: [
+      { id: 1, name: "市场异动" },
+      { id: 1, name: "伤病/退赛" },
+      { id: 1, name: "打法对比" },
+    ]
+  },
+  {
+    id: 4, name: "澳网", choosed: false,
+    tags: [
+    ]
+  },
+  {
+    id: 5, name: "法网", choosed: false,
+    tags: [
+      { id: 1, name: "市场异动" },
+      { id: 1, name: "伤病/退赛" },
+      { id: 1, name: "打法对比" },
+    ]
+  },
+  {
+    id: 6, name: "温网", choosed: false,
+    tags: [
+      { id: 1, name: "市场异动" },
+      { id: 1, name: "伤病/退赛" },
+    ]
+  },
+  {
+    id: 7, name: "美网", choosed: false,
+    tags: [
+      { id: 1, name: "市场异动" },
+    ]
+  },
 ]
 
 const players_menu = [

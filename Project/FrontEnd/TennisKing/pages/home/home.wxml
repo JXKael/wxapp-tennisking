@@ -1,110 +1,59 @@
 <!--pages/home/home.wxml-->
+<import src='../common/wxml/scrollTag.wxml'/>
+<import src='../common/wxml/newsItem.wxml'/>
+<import src='../common/wxml/playerItem.wxml'/>
+<import src='../common/wxml/loading.wxml'/>
+
 <view class='container'>
   <!-- 顶部，页签及类目 -->
   <view class='head' style='top:{{head_top}};'>
     <!-- 页签 -->
     <view class='tab' style='opacity:{{tab_opacity}}'>
-      <view class='tab-item' bindtap='onTapNews'>
-        <image class="tab-item-icon" src="{{currTabID==0?image_path+'icon_news_choosed.png':image_path+'icon_news.png'}}"/>
+      <view class='tab-item' bindtap='onNewsTabTap'>
+        <image class='tab-item-icon' src="{{currTabID==0?image_path+'icon_news_choosed.png':image_path+'icon_news.png'}}"/>
         <text class="tab-item-txt {{currTabID==0?'tab-item-txt-choosed':''}}">{{txt_tab_news}}</text>
       </view>
-      <view class='tab-item' bindtap='onTapPlayers'>
-        <image class="tab-item-icon" src="{{currTabID==1?image_path+'icon_players_choosed.png':image_path+'icon_players.png'}}"/>
+      <view class='tab-item' bindtap='onPlayersTabTap'>
+        <image class='tab-item-icon' src="{{currTabID==1?image_path+'icon_players_choosed.png':image_path+'icon_players.png'}}"/>
         <text class="tab-item-txt {{currTabID==1?'tab-item-txt-choosed':''}}">{{txt_tab_players}}</text>
       </view>
     </view>
     <!-- 类目 -->
     <view class='scroll-menu'>
       <scroll-view scroll-x='true' scroll-into-view='menu-{{currMenuID}}' scroll-with-animation>
-        <text class="scroll-menu-item {{item.choosed?'scroll-menu-item-choosed':''}}" id='menu-{{item.id}}' wx:for='{{scroll_menu}}' wx:key='{{item.id}}' bindtap='onTapMenuItem' data-index='{{item.id}}'>
-          <text>{{item.name}}</text>
-        </text>
+        <block wx:for='{{scroll_menu}}' wx:for-item='menuItem' wx:key='{{menuItem.id}}'>
+          <text class="scroll-menu-item {{menuItem.choosed?'scroll-menu-item-choosed':''}}" id='menu-{{menuItem.id}}' bindtap='onMenuItemTap' data-index='{{menuItem.id}}'>
+            <text>{{menuItem.name}}</text>
+          </text>
+        </block>
       </scroll-view>
     </view>
   </view>
-  <!-- 【赛事新闻】内容 -->
-  <view class="body" wx:if='{{currTabID == 0}}' style='position:relative;top:{{body_top}}'>
-    <swiper class='body-swiper-X' duration='300' current='{{curr_news_swiper_id}}' bindchange='onNewsSwiperChange'>
+  <!-- 下方内容 -->
+  <view class='body' style='position:relative;top:{{body_top}}'>
+    <swiper class='body-swiper-X' duration='300' current='{{curr_news_swiper_id}}' bindchange='onSwiperChange'>
       <block wx:for='{{scroll_menu}}' wx:for-item='swiperItem' wx:key='{{swiperItem.id}}'>
         <swiper-item class='body-swiper-X-item' id='body-scroll-{{swiperItem.id}}'>
           <scroll-view class='body-scroll-Y' scroll-y bindscroll='onBodyScrollY' enable-back-to-top>
-            <!-- 筛选标签列表 -->
-            <view class='scroll-tag'>
-              <scroll-view scroll-x='true'>
-                <block wx:for='{{scroll_menu}}' wx:key='{{tagItem.id}}' wx:for-item='tagItem'>
-                  <view class="scroll-tag-item {{tagItem.choosed?'scroll-tag-item-choosed':''}}"  bindtap='onTapTagItem' data-index='{{tagItem.id}}'> 
-                    <text>{{tagItem.name}}</text>
-                  </view>
+            <!-- 【赛事新闻】 -->
+            <block wx:if='{{currTabID == 0}}'>
+              <!-- 筛选标签列表 -->
+              <template is='scroll-tag' data='{{...swiperItem}}' wx:if='{{swiperItem.tags.length > 0}}'/>
+              <view class='news-content'>
+                <block wx:for='{{newsData}}' wx:for-item='newsItem'>
+                  <template is='news-item' data='{{...newsItem}}'/>
                 </block>
-              </scroll-view>
-            </view>
-            <view class='main'>
-              <block wx:for='{{newsData}}' wx:for-item='newsItem'>
-              <!-- <block> -->
-                <view class='main-item'>
-                  <view class='mi-top'>
-                    <!-- 日期或置顶 -->
-                    <view class='mi-date'>
-                      <text>02/30\n05:45</text>
-                    </view>
-                    <!-- 选手&标签 -->
-                    <view class='mi-player'>
-                      <text class='mi-player-name'>穆雷{{newsItem}}</text>
-                      <view class='mi-player-tags'>
-                        <!-- <block wx:for='{{}}'> -->
-                        <block>
-                          <text class='mi-player-tag'>市场异动</text>
-                        </block>
-                        <block>
-                          <text class='mi-player-tag'>伤病/退赛</text>
-                        </block>
-                        <block>
-                          <text class='mi-player-tag'>打法对比</text>
-                        </block>
-                      </view>
-                    </view>
-                  </view>
-                  <view class='mi-content'>
-                    <rich-text><b>aaaaa</b>aaaa</rich-text>
-                  </view>
-                  <view class='mi-bottom'>
-                    <text class='mi-author'>网球帝小编</text>
-                    <view class='mi-number'>
-                      <view class='mi-like'>
-                        <!-- <image></image> -->
-                        <text>2222</text>
-                      </view>
-                      <view class='mi-hot'>
-                        <!-- <image></image> -->
-                        <text>1111</text>
-                      </view>
-                    </view>
-                  </view>
-                </view>
-              </block>
-            </view>
-            <text class='main-loading'>加载中...</text>
-          </scroll-view>
-        </swiper-item>
-      </block>
-    </swiper>
-  </view>
-  <!-- 【选手资讯】内容 -->
-  <view class="body" wx:if='{{currTabID == 1}}' style='position:relative;top:{{body_top}}'>
-    <swiper class='body-swiper-X' duration='300' current='{{curr_player_swiper_id}}' bindchange='onPlayerSwiperChange'>
-      <block wx:for='{{scroll_menu}}' wx:for-item='swiperItem' wx:key='{{swiperItem.id}}'>
-        <swiper-item class='body-swiper-X-item' id='body-scroll{{swiperItem.id}}'>
-          <scroll-view class='body-scroll-Y' scroll-y bindscroll='onBodyScrollY' enable-back-to-top>
-            <view class='main'>
-              <block wx:for='{{newsData}}' wx:for-item='playerItem'>
-                <view class='player-item' bindtap='onTapPlayerItem'>
-                  <text class='player-name'>诺瓦克·德约科维奇</text>
-                  <text class='player-news-num'>8888</text>
-                  <image class='left-arrow' src='../../resources/images/left_arrow.png'></image>
-                </view>
-              </block>
-            </view>
-            <text class='main-loading'>加载中...</text>
+              </view>
+            </block>
+            <!-- 【选手资讯】 -->
+            <block wx:elif='{{currTabID == 1}}'>
+              <view class='player-content'>
+                <block wx:for='{{newsData}}' wx:for-item='playerItem'>
+                  <template is='player-item' data='{{...playerItem}}' />
+                </block>
+              </view>
+            </block>
+            <template is='bottom-loading'/>
           </scroll-view>
         </swiper-item>
       </block>

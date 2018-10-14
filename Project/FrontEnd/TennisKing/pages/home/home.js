@@ -19,7 +19,16 @@ Page({
     currTabID: 0,
     scroll_menu: [],
     currMenuID: 0,
-    newsData: [1, 2, 3, 4, 5, 6, 7, 8], // 临时数据
+    newsData: [
+      { id: 1, title: "穆1" },
+      { id: 2, title: "穆2" },
+      { id: 3, title: "穆3" },
+      { id: 4, title: "穆4" },
+      { id: 5, title: "穆5" },
+      { id: 6, title: "穆6" },
+      { id: 7, title: "穆7" },
+      { id: 8, title: "穆8" },
+    ], // 临时数据
 
     image_path: resources.images_path,
 
@@ -89,7 +98,7 @@ Page({
   /**
    * 点击赛事新闻
    */
-  onTapNews: function (e) {
+  onNewsTabTap: function (e) {
     console.log("点击赛事新闻")
     this.setData({
       currTabID: 0,
@@ -101,7 +110,7 @@ Page({
   /**
    * 点击选手资讯
    */
-  onTapPlayers: function (e) {
+  onPlayersTabTap: function (e) {
     console.log("点击选手资讯")
     this.setData({
       currTabID: 1,
@@ -113,7 +122,7 @@ Page({
   /**
    * 用户点击菜单事件
    */
-  onTapMenuItem: function (e) {
+  onMenuItemTap: function (e) {
     console.log("用户点击类目")
     console.log(e)
     var tapID = e.currentTarget.dataset.index
@@ -128,7 +137,10 @@ Page({
     })
   },
 
-  onTapTagItem: function (e) {
+  /**
+   * 点击标签
+   */
+  onTagItemTap: function (e) {
     console.log("用户点击标签")
     console.log(e)
   },
@@ -200,9 +212,9 @@ Page({
   },
 
   /**
-   * 赛事新闻swiper current值改变事件函数
+   * swiper current值改变事件函数
    */
-  onNewsSwiperChange: function(e) {
+  onSwiperChange: function(e) {
     console.log("用户横向滑动")
     console.log(e)
     var tapID = e.detail.current
@@ -217,23 +229,17 @@ Page({
   },
 
   /**
-   * 选手资讯swiper current值改变事件函数
+   * 点击新闻item
    */
-  onPlayerSwiperChange: function (e) {
-    console.log("用户横向滑动")
+  onNewsItemTap: function (e) {
+    console.log("点击赛事新闻中的item")
     console.log(e)
-    var tapID = e.detail.current
-    var menu = this.data.scroll_menu
-    menu[this.data.currMenuID].choosed = false
-    menu[tapID].choosed = true
-    this.setData({
-      scroll_menu: menu,
-      currMenuID: tapID,
-      curr_player_swiper_id: tapID
-    })
   },
 
-  onTapPlayerItem: function (e) {
+  /**
+   * 点击选手资讯item
+   */
+  onPlayerItemTap: function (e) {
     console.log("点击选手资讯中的选手")
     console.log(e)
     wx.navigateTo({

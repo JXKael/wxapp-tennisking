@@ -1,0 +1,27 @@
+.scroll-tag{
+  height: 70rpx;
+  white-space: nowrap;
+  margin: 20rpx 20rpx 0 20rpx;
+}
+
+.scroll-tag-item{
+  display: inline-block;
+  width: auto;
+  min-width: 70rpx;
+  height: 50rpx;
+  line-height: 50rpx;
+  margin: auto 10rpx;
+  padding: 0 24rpx;
+  font-size: 26rpx;
+  text-align: center;
+  color: #949494;
+  border: 1rpx solid #e4e4e4;
+  background-color: white;
+  border-radius: 50rpx;
+}
+
+.scroll-tag-item-choosed{
+  background-color: #009b42;
+  color: white;
+  border-width: 0rpx;
+}

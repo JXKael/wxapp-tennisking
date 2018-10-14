@@ -1,0 +1,3 @@
+<template name='bottom-loading'>
+  <text class='bottom-loading'>加载中...</text>
+</template>
