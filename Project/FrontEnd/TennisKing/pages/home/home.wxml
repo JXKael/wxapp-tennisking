@@ -23,7 +23,7 @@
     </view>
   </view>
   <!-- 【赛事新闻】内容 -->
-  <view class="body" wx:if='{{currTabID == 0}}' style='top:{{body_top}}'>
+  <view class="body" wx:if='{{currTabID == 0}}' style='position:relative;top:{{body_top}}'>
     <swiper class='body-swiper-X' duration='300' current='{{curr_news_swiper_id}}' bindchange='onNewsSwiperChange'>
       <block wx:for='{{scroll_menu}}' wx:for-item='swiperItem' wx:key='{{swiperItem.id}}'>
         <swiper-item class='body-swiper-X-item' id='body-scroll-{{swiperItem.id}}'>
@@ -90,20 +90,21 @@
     </swiper>
   </view>
   <!-- 【选手资讯】内容 -->
-  <view class="body" wx:if='{{currTabID == 1}}' style='top:{{body_top}}'>
+  <view class="body" wx:if='{{currTabID == 1}}' style='position:relative;top:{{body_top}}'>
     <swiper class='body-swiper-X' duration='300' current='{{curr_player_swiper_id}}' bindchange='onPlayerSwiperChange'>
       <block wx:for='{{scroll_menu}}' wx:for-item='swiperItem' wx:key='{{swiperItem.id}}'>
         <swiper-item class='body-swiper-X-item' id='body-scroll{{swiperItem.id}}'>
           <scroll-view class='body-scroll-Y' scroll-y bindscroll='onBodyScrollY' enable-back-to-top>
             <view class='main'>
               <block wx:for='{{newsData}}' wx:for-item='playerItem'>
-                <view class='player-item'>
+                <view class='player-item' bindtap='onTapPlayerItem'>
                   <text class='player-name'>诺瓦克·德约科维奇</text>
                   <text class='player-news-num'>8888</text>
                   <image class='left-arrow' src='../../resources/images/left_arrow.png'></image>
                 </view>
               </block>
             </view>
+            <text class='main-loading'>加载中...</text>
           </scroll-view>
         </swiper-item>
       </block>

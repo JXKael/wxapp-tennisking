@@ -19,7 +19,7 @@ Page({
     currTabID: 0,
     scroll_menu: [],
     currMenuID: 0,
-    newsData: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], // 临时数据
+    newsData: [1, 2, 3, 4, 5, 6, 7, 8], // 临时数据
 
     image_path: resources.images_path,
 
@@ -50,15 +50,15 @@ Page({
       }
     })
 
-    // this.setData({
-    //   currTabID: 0,
-    //   scroll_menu: menu_data.news
-    // })
-
     this.setData({
-      currTabID: 1,
-      scroll_menu: menu_data.players
+      currTabID: 0,
+      scroll_menu: menu_data.news
     })
+
+    // this.setData({
+    //   currTabID: 1,
+    //   scroll_menu: menu_data.players
+    // })
   },
 
   /**
@@ -126,6 +126,11 @@ Page({
       curr_news_swiper_id: tapID,
       curr_player_swiper_id: tapID
     })
+  },
+
+  onTapTagItem: function (e) {
+    console.log("用户点击标签")
+    console.log(e)
   },
 
   /**
@@ -225,6 +230,14 @@ Page({
       scroll_menu: menu,
       currMenuID: tapID,
       curr_player_swiper_id: tapID
+    })
+  },
+
+  onTapPlayerItem: function (e) {
+    console.log("点击选手资讯中的选手")
+    console.log(e)
+    wx.navigateTo({
+      url: "../playerNews/playerNews",
     })
   }
 })

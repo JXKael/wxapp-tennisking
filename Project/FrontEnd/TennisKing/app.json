@@ -1,8 +1,7 @@
 {
   "pages": [
     "pages/home/home",
-    "pages/news/news",
-    "pages/index/index"
+    "pages/playerNews/playerNews"
   ],
   "window": {
     "backgroundTextStyle": "light",

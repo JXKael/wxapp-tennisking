@@ -1,18 +1,24 @@
-// pages/news/news.js
+// pages/playerNews/playerNews.js
+
+var menu_data = require("../../utils/menus.js")
+
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-
+    scroll_menu: [],
+    newsData: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], // 临时数据
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-
+    this.setData({
+      scroll_menu: menu_data.players
+    })
   },
 
   /**
@@ -62,5 +68,10 @@ Page({
    */
   onShareAppMessage: function () {
 
+  },
+
+  onTapTagItem: function (e) {
+    console.log("用户点击标签")
+    console.log(e)
   }
 })

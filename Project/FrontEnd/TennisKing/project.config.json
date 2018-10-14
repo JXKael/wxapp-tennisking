@@ -11,9 +11,9 @@
 		"newFeature": true
 	},
 	"compileType": "miniprogram",
-	"libVersion": "2.0.4",
-	"appid": "wx43fca80c2f4ccaae",
-	"projectname": "wxtest",
+	"libVersion": "2.3.0",
+	"appid": "wxa94a324400990875",
+	"projectname": "TennisKing",
 	"debugOptions": {
 		"hidedInDevtools": []
 	},

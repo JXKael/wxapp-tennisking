@@ -1,0 +1,63 @@
+<!--pages/playerNews/playerNews.wxml-->
+<view class='container'>
+  <view class="body">
+    <scroll-view class='body-scroll-Y' scroll-y enable-back-to-top>
+      <!-- 筛选标签列表 -->
+      <view class='scroll-tag'>
+        <scroll-view scroll-x='true'>
+          <block wx:for='{{scroll_menu}}' wx:key='{{tagItem.id}}' wx:for-item='tagItem'>
+            <view class="scroll-tag-item {{tagItem.choosed?'scroll-tag-item-choosed':''}}"  bindtap='onTapTagItem' data-index='{{tagItem.id}}'> 
+              <text>{{tagItem.name}}</text>
+            </view>
+          </block>
+        </scroll-view>
+      </view>
+      <view class='main'>
+        <block wx:for='{{newsData}}' wx:for-item='newsItem'>
+        <!-- <block> -->
+          <view class='main-item'>
+            <view class='mi-top'>
+              <!-- 日期或置顶 -->
+              <view class='mi-date'>
+                <text>02/30\n05:45</text>
+              </view>
+              <!-- 选手&标签 -->
+              <view class='mi-player'>
+                <text class='mi-player-name'>穆雷{{newsItem}}</text>
+                <view class='mi-player-tags'>
+                  <!-- <block wx:for='{{}}'> -->
+                  <block>
+                    <text class='mi-player-tag'>市场异动</text>
+                  </block>
+                  <block>
+                    <text class='mi-player-tag'>伤病/退赛</text>
+                  </block>
+                  <block>
+                    <text class='mi-player-tag'>打法对比</text>
+                  </block>
+                </view>
+              </view>
+            </view>
+            <view class='mi-content'>
+              <rich-text><b>aaaaa</b>aaaa</rich-text>
+            </view>
+            <view class='mi-bottom'>
+              <text class='mi-author'>网球帝小编</text>
+              <view class='mi-number'>
+                <view class='mi-like'>
+                  <!-- <image></image> -->
+                  <text>2222</text>
+                </view>
+                <view class='mi-hot'>
+                  <!-- <image></image> -->
+                  <text>1111</text>
+                </view>
+              </view>
+            </view>
+          </view>
+        </block>
+      </view>
+      <text class='main-loading'>加载中...</text>
+    </scroll-view>
+  </view>
+</view>
