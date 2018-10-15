@@ -25,14 +25,7 @@ Page({
       { id: 3, title: "穆3" },
       { id: 4, title: "穆4" },
       { id: 5, title: "穆5" },
-      { id: 6, title: "穆6" },
-      { id: 7, title: "穆7" },
-      { id: 8, title: "穆8" },
-      { id: 9, title: "穆9" },
-      { id: 10, title: "穆10" },
-      { id: 11, title: "穆11" },
-      { id: 12, title: "穆12" },
-      { id: 13, title: "穆13" },
+      { id: 6, title: "穆6" }
     ], // 临时数据
 
     image_path: resources.images_path,

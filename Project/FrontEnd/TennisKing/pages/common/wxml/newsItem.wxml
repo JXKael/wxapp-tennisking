@@ -29,11 +29,11 @@
       <text class='news-author'>网球帝小编</text>
       <view class='news-number'>
         <view class='news-number-item'>
-          <image class='news-number-icon' src="../../../resources/images/icon_like{{liked?'_click':''}}.png" mode='aspectFit'/>
+          <image class='news-number-icon' src="/resources/images/icon_like{{liked?'_click':''}}.png" mode='aspectFit'/>
           <text class="news-number-text {{liked?'news-number-text-liked':''}}">8888888</text>
         </view>
         <view class='news-number-item'>
-          <image class='news-number-icon' src='../../../resources/images/icon_hot.png' mode='aspectFit'/>
+          <image class='news-number-icon' src='/resources/images/icon_hot.png' mode='aspectFit'/>
           <text class="news-number-text">99</text>
         </view>
       </view>

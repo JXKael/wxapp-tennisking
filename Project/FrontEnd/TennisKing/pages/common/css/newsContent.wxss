@@ -110,9 +110,11 @@
 }
 
 .news-number-icon{
+  display: block;
   width: 30rpx;
   height: 30rpx;
-  margin: 0 8rpx;
+  margin-left: 8rpx;
+  margin-right: 8rpx;
 }
 
 .news-number-text{
