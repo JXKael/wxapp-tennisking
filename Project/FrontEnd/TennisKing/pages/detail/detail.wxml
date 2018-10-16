@@ -1,0 +1,17 @@
+<!--pages/detail/detail.wxml-->
+<view class='container'>
+  <text class='title'>{{title}}</text>
+  <view class='info'>
+    <text class='tag-item'>{{time}}</text>
+    <block wx:for='{{tags}}' wx:for-item='tagItem' wx:key='{{tagItem}}'>
+      <text class='tag-item'>{{tagItem}}</text>
+    </block>
+  </view>
+  <view class='info'>
+    <text class='author'>网球帝小编</text>
+    <view class='hot'>
+      <image src='../../resources/images/icon_hot.png'></image>
+      <text></text>
+    </view>
+  </view>
+</view>

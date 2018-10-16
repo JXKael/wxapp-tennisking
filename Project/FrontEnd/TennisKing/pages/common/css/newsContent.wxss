@@ -113,8 +113,7 @@
   display: block;
   width: 30rpx;
   height: 30rpx;
-  margin-left: 8rpx;
-  margin-right: 8rpx;
+  margin: 0 8rpx;
 }
 
 .news-number-text{

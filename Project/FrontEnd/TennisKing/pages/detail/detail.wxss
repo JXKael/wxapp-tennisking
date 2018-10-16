@@ -1,0 +1,60 @@
+/* pages/detail/detail.wxss */
+.title{
+  width: 100%;
+  height: auto;
+  font-size: 35rpx;
+  text-align: left;
+  margin-top: 20rpx;
+  margin-bottom: 10rpx;
+  padding-left: 30rpx;
+}
+
+.info{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: auto;
+  font-size: 25rpx;
+  color: #009b42;
+  margin: 5rpx 0;
+  padding-left: 30rpx;
+}
+
+.tag-item{
+  height: 28rpx;
+  line-height: 28rpx;
+  padding-right: 20rpx;
+  margin-right: 20rpx;
+  border-right: 1rpx solid #949494;
+}
+
+.tag-item:last-child{
+  padding-right: 0;
+  margin-right: 0;
+  border-right: none;
+}
+
+.author{
+  height: 30rpx;
+  line-height: 30rpx;
+  margin-right: 30rpx;
+  margin-top: 30rpx;
+  margin-bottom: 30rpx;
+}
+
+.hot{
+  height: 30rpx;
+  margin: 30rpx 0
+}
+
+.hot image{
+  width: 30rpx;
+  height: 30rpx;
+  margin: auto 8rpx;
+}
+
+.hot text{
+  height: 30rpx;
+  line-height: 30rpx;
+  color: #949494;
+}
