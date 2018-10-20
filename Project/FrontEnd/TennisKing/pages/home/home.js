@@ -1,6 +1,7 @@
 // pages/home/home.js
 
-var menu_data = require("../../utils/menus.js")
+var menusCtrl = require("../../utils/menusCtrl.js")
+var tagsCtrl = require("../../utils/tagsCtrl.js")
 var resources = require("../../utils/resources.js")
 
 var SCREEN_CONVERT_RATIO = 1
@@ -18,7 +19,10 @@ Page({
     txt_tab_players: "选手资讯",
     currTabID: 0,
     scroll_menu: [],
-    currMenuID: 0,
+    currNewsMenuIdx: 0,
+    currPlayersMenuIdx: 0,
+    tag: [],
+    currTagIdx: 0,
     newsData: [
       { id: 1, title: "穆1", liked: true },
       { id: 2, title: "穆2" },
@@ -59,15 +63,47 @@ Page({
       }
     })
 
-    this.setData({
-      currTabID: 0,
-      scroll_menu: menu_data.news
-    })
-
     // this.setData({
     //   currTabID: 1,
-    //   scroll_menu: menu_data.players
+    //   scroll_menu: menusCtrl.players
     // })
+    // wx.request({
+    //   url: "http://39.104.201.188/index/baseInfo/",
+    //   method: "GET",
+    //   success: function(res){
+    //     console.log(res)
+    //   },
+    //   fail: function(res) {
+    //     console.log(res)
+    //   }
+    // })
+    var that = this
+    wx.request({
+      url: "http://39.104.201.188/index/",
+      method: "GET",
+      success: function (res) {
+        console.log(res)
+        var menus = res.data.menus
+        for (var i = 0; i < menus.length; ++i) {
+          menusCtrl.addNewsMenu(menus[i].id, menus[i].name)
+        }
+        var tags = res.data.tags
+        for (var i = 0; i < tags.length; ++i) {
+          tagsCtrl.addTag(tags[i].id, tags[i].name)
+        }
+        that.setData({
+          currTabID: 0,
+          scroll_menu: menusCtrl.news,
+          currNewsMenuIdx: 0,
+          currPlayersMenuIdx: 0,
+          tag: { tags: tagsCtrl.tags }, // 这样包起来用于模板使用
+          currTagIdx: 0
+        })
+      },
+      fail: function (res) {
+        console.log(res)
+      }
+    })
   },
 
   /**
@@ -102,8 +138,8 @@ Page({
     console.log("点击赛事新闻")
     this.setData({
       currTabID: 0,
-      scroll_menu: menu_data.news,
-      currMenuID: 0
+      scroll_menu: menusCtrl.news,
+      currNewsMenuIdx: 0
     })
   },
 
@@ -114,8 +150,8 @@ Page({
     console.log("点击选手资讯")
     this.setData({
       currTabID: 1,
-      scroll_menu: menu_data.players,
-      currMenuID: 0
+      scroll_menu: menusCtrl.players,
+      currPlayersMenuIdx: 0
     })
   },
 
@@ -123,18 +159,34 @@ Page({
    * 用户点击菜单事件
    */
   onMenuItemTap: function (e) {
-    console.log("用户点击类目")
+    console.log("用户点击menu")
     console.log(e)
     var tapID = e.currentTarget.dataset.index
-    var menu = this.data.scroll_menu
-    menu[this.data.currMenuID].choosed = false
-    menu[tapID].choosed = true
-    this.setData({
-      scroll_menu: menu,
-      currMenuID: tapID,
-      curr_news_swiper_id: tapID,
-      curr_player_swiper_id: tapID
-    })
+    if (this.data.currTabID == 0) {
+      if (this.data.currNewsMenuIdx == tapID) {
+        return
+      }
+      var menu = this.data.scroll_menu
+      menu[this.data.currNewsMenuIdx].choosed = false
+      menu[tapID].choosed = true
+      this.setData({
+        scroll_menu: menu,
+        currNewsMenuIdx: tapID,
+        curr_news_swiper_id: tapID
+      })
+    }else if (this.data.currTabID == 1) {
+      if (this.data.currPlayersMenuIdx == tapID) {
+        return
+      }
+      var menu = this.data.scroll_menu
+      menu[this.data.currPlayersMenuIdx].choosed = false
+      menu[tapID].choosed = true
+      this.setData({
+        scroll_menu: menu,
+        currPlayersMenuIdx: tapID,
+        curr_player_swiper_id: tapID
+      })
+    }
   },
 
   /**
@@ -143,6 +195,17 @@ Page({
   onTagItemTap: function (e) {
     console.log("用户点击标签")
     console.log(e)
+    var tapID = e.currentTarget.dataset.index
+    if (this.data.currTagIdx == tapID) {
+      return
+    }
+    var tags = this.data.tag.tags
+    tags[this.data.currTagIdx].choosed = false
+    tags[tapID].choosed = true
+    this.setData({
+      tag: { tags: tags },
+      currTagIdx: tapID
+    })
   },
 
   /**
@@ -231,14 +294,31 @@ Page({
     console.log("用户横向滑动")
     console.log(e)
     var tapID = e.detail.current
-    var menu = this.data.scroll_menu
-    menu[this.data.currMenuID].choosed = false
-    menu[tapID].choosed = true
-    this.setData({
-      scroll_menu: menu,
-      currMenuID: tapID,
-      curr_news_swiper_id: tapID
-    })
+    if (this.data.currTabID == 0) {
+      if (this.data.currNewsMenuIdx == tapID) {
+        return
+      }
+      var menu = this.data.scroll_menu
+      menu[this.data.currNewsMenuIdx].choosed = false
+      menu[tapID].choosed = true
+      this.setData({
+        scroll_menu: menu,
+        currNewsMenuIdx: tapID,
+        curr_news_swiper_id: tapID
+      })
+    } else if (this.data.currTabID == 1) {
+      if (this.data.currPlayersMenuIdx == tapID) {
+        return
+      }
+      var menu = this.data.scroll_menu
+      menu[this.data.currPlayersMenuIdx].choosed = false
+      menu[tapID].choosed = true
+      this.setData({
+        scroll_menu: menu,
+        currPlayersMenuIdx: tapID,
+        curr_player_swiper_id: tapID
+      })
+    }
   },
 
   /**

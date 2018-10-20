@@ -64,5 +64,12 @@ Page({
    */
   onShareAppMessage: function () {
 
+  },
+
+  /**
+   * 点赞
+   */
+  onBtnLikeTap: function (e) {
+    console.log(e)
   }
 })

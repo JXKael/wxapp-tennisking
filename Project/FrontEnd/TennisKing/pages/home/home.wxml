@@ -21,8 +21,8 @@
     <!-- 类目 -->
     <view class='scroll-menu'>
       <scroll-view scroll-x='true' scroll-into-view='menu-{{currMenuID}}' scroll-with-animation>
-        <block wx:for='{{scroll_menu}}' wx:for-item='menuItem' wx:key='{{menuItem.id}}'>
-          <text class="scroll-menu-item {{menuItem.choosed?'scroll-menu-item-choosed':''}}" id='menu-{{menuItem.id}}' bindtap='onMenuItemTap' data-index='{{menuItem.id}}'>
+        <block wx:for='{{scroll_menu}}' wx:for-item='menuItem' wx:key='{{menuItem.idx}}'>
+          <text class="scroll-menu-item {{menuItem.choosed?'scroll-menu-item-choosed':''}}" id='menu-{{menuItem.idx}}' bindtap='onMenuItemTap' data-index='{{menuItem.idx}}'>
             <text>{{menuItem.name}}</text>
           </text>
         </block>
@@ -32,13 +32,13 @@
   <!-- 下方内容 -->
   <view class='body' style='position:relative;top:{{body_top}}'>
     <swiper class='body-swiper-X' duration='300' current='{{curr_news_swiper_id}}' bindchange='onSwiperChange'>
-      <block wx:for='{{scroll_menu}}' wx:for-item='swiperItem' wx:key='{{swiperItem.id}}'>
-        <swiper-item class='body-swiper-X-item' id='body-scroll-{{swiperItem.id}}'>
+      <block wx:for='{{scroll_menu}}' wx:for-item='swiperItem' wx:key='{{swiperItem.idx}}'>
+        <swiper-item class='body-swiper-X-item' id='body-scroll-{{swiperItem.idx}}'>
           <scroll-view class='body-scroll-Y' scroll-y scroll-with-animation enable-back-to-top bindscroll='onBodyScrollY' lower-threshold='5' bindscrolltolower='onBodyScrollYTolower'>
             <!-- 【赛事新闻】 -->
             <block wx:if='{{currTabID == 0}}'>
               <!-- 筛选标签列表 -->
-              <template is='scroll-tag' data='{{...swiperItem}}' wx:if='{{swiperItem.tags.length > 0}}'/>
+              <template is='scroll-tag' data='{{...tag}}' wx:if='{{tag.tags.length > 0}}'/>
               <view class='news-content'>
                 <block wx:for='{{newsData}}' wx:for-item='newsItem' wx:key='{{newsItem.id}}'>
                   <template is='news-item' data='{{...newsItem}}'/>

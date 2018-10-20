@@ -11,7 +11,15 @@
     <text class='author'>网球帝小编</text>
     <view class='hot'>
       <image src='../../resources/images/icon_hot.png'></image>
-      <text></text>
+      <text>9999999</text>
     </view>
+    <view class='like'>
+      <image src='../../resources/images/icon_like.png'></image>
+      <text>9999999</text>
+    </view>
+  </view>
+  <rich-text class='body'>奥德赛发送到发的说法飞洒发生大范德萨范德萨范德萨</rich-text>
+  <view class='btn-like' bindtap='onBtnLikeTap'>
+    <text>赞一下</text>
   </view>
 </view>

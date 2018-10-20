@@ -1,6 +1,6 @@
 // pages/playerNews/playerNews.js
 
-var menu_data = require("../../utils/menus.js")
+var menu_data = require("../../utils/menusCtrl.js")
 
 Page({
 

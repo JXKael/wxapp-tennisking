@@ -43,8 +43,10 @@
 }
 
 .hot{
+  display: flex;
+  flex-direction: row;
   height: 30rpx;
-  margin: 30rpx 0
+  margin: 30rpx 15rpx;
 }
 
 .hot image{
@@ -57,4 +59,36 @@
   height: 30rpx;
   line-height: 30rpx;
   color: #949494;
+}
+
+.like{
+  display: flex;
+  flex-direction: row;
+  height: 30rpx;
+  margin: 30rpx 15rpx;
+}
+
+.like image{
+  width: 30rpx;
+  height: 30rpx;
+  margin: auto 8rpx;
+}
+
+.like text{
+  height: 30rpx;
+  line-height: 30rpx;
+  color: #949494;
+}
+
+.body{
+  margin: 10rpx 30rpx;
+}
+
+.btn-like{
+  font-size: 28rpx;
+  color: #009b42;
+  padding: 12rpx 48rpx;
+  margin-top: 20rpx;
+  border: 1rpx solid #009b42;
+  border-radius: 12rpx;
 }
