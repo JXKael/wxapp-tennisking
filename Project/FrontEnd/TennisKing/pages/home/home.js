@@ -3,6 +3,7 @@
 var menusCtrl = require("../../utils/menusCtrl.js")
 var tagsCtrl = require("../../utils/tagsCtrl.js")
 var resources = require("../../utils/resources.js")
+var request = require('../../utils/request.js');
 
 var SCREEN_CONVERT_RATIO = 1
 var top_offset = 60
@@ -23,14 +24,7 @@ Page({
     currPlayersMenuIdx: 0,
     tag: [],
     currTagIdx: 0,
-    newsData: [
-      { id: 1, title: "穆1", liked: true },
-      { id: 2, title: "穆2" },
-      { id: 3, title: "穆3" },
-      { id: 4, title: "穆4" },
-      { id: 5, title: "穆5" },
-      { id: 6, title: "穆6" }
-    ], // 临时数据
+    news_post: [], // { id: 1, postId: 1, title: "哈哈哈", content: "<p></p>" , liked: true },
 
     image_path: resources.images_path,
 
@@ -63,47 +57,44 @@ Page({
       }
     })
 
-    // this.setData({
-    //   currTabID: 1,
-    //   scroll_menu: menusCtrl.players
-    // })
-    // wx.request({
-    //   url: "http://39.104.201.188/index/baseInfo/",
-    //   method: "GET",
-    //   success: function(res){
-    //     console.log(res)
-    //   },
-    //   fail: function(res) {
-    //     console.log(res)
-    //   }
-    // })
     var that = this
-    wx.request({
-      url: "http://39.104.201.188/index/",
-      method: "GET",
-      success: function (res) {
-        console.log(res)
-        var menus = res.data.menus
-        for (var i = 0; i < menus.length; ++i) {
-          menusCtrl.addNewsMenu(menus[i].id, menus[i].name)
-        }
-        var tags = res.data.tags
-        for (var i = 0; i < tags.length; ++i) {
-          tagsCtrl.addTag(tags[i].id, tags[i].name)
-        }
-        that.setData({
-          currTabID: 0,
-          scroll_menu: menusCtrl.news,
-          currNewsMenuIdx: 0,
-          currPlayersMenuIdx: 0,
-          tag: { tags: tagsCtrl.tags }, // 这样包起来用于模板使用
-          currTagIdx: 0
-        })
-      },
-      fail: function (res) {
-        console.log(res)
+    var successCallback = res => {
+      console.log("成功")
+      console.log(res)
+      // menu
+      var menus = res.data.menus
+      for (var i = 0; i < menus.length; ++i) {
+        menusCtrl.addNewsMenu(menus[i].id, menus[i].name)
       }
-    })
+      // tag
+      var tags = res.data.tags
+      for (var i = 0; i < tags.length; ++i) {
+        tagsCtrl.addTag(tags[i].id, tags[i].name)
+      }
+      // 资讯
+      var posts = res.data.posts
+      for (var i = 0; i < posts.length; ++i) {
+        posts[i].id = i
+        posts[i].liked = false
+        if (posts[i].likeCount == null) posts[i].likeCount = 0
+        if (posts[i].viewCount == null) posts[i].viewCount = 0
+        if (posts[i].memberName == null) posts[i].memberName = "网球帝小编"
+      }
+
+      that.setData({
+        currTabID: 0,
+        scroll_menu: menusCtrl.news,
+        currNewsMenuIdx: 0,
+        currPlayersMenuIdx: 0,
+        tag: { tags: tagsCtrl.tags }, // 这样包起来用于模板使用
+        currTagIdx: 0,
+        news_post: posts
+      })
+    }
+    var failCallback = res => {
+      console.log(res)
+    }
+    request.reqHomeInfo(successCallback, failCallback)
   },
 
   /**
@@ -148,6 +139,16 @@ Page({
    */
   onPlayersTabTap: function (e) {
     console.log("点击选手资讯")
+    wx.request({
+      url: "http://39.104.201.188/index/player/",
+      method: "GET",
+      success: function (res) {
+        console.log(res)
+      },
+      fail: function (res) {
+        console.log(res)
+      }
+    })
     this.setData({
       currTabID: 1,
       scroll_menu: menusCtrl.players,

@@ -4,7 +4,7 @@ const news_menu = [
 
 const players_menu = [
   { idx: 0, id: 0, name: "A", choosed: true },
-  { id: 1, name: "B", choosed: false },
+  { idx: 1, id: 1, name: "B", choosed: false },
   { idx: 2, id: 2, name: "C", choosed: false },
   { idx: 3, id: 3, name: "D", choosed: false },
   { idx: 4, id: 4, name: "E", choosed: false },

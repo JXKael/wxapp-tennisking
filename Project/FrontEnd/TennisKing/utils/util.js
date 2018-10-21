@@ -1,3 +1,12 @@
+/**
+ * 判断目标是否是函数
+ * @param {mixed} val
+ * @returns {boolean}
+ */
+const isFunction = val => {
+  return typeof val === 'function';
+}
+
 const formatTime = date => {
   const year = date.getFullYear()
   const month = date.getMonth() + 1
@@ -15,5 +24,6 @@ const formatNumber = n => {
 }
 
 module.exports = {
-  formatTime: formatTime
+  formatTime: formatTime,
+  isFunction: isFunction
 }
