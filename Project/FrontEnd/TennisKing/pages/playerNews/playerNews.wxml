@@ -8,7 +8,7 @@
     <!-- 筛选标签列表 -->
     <template is='scroll-tag' data='{{...tags}}'/>
     <view class='news-content'>
-      <block wx:for='{{newsData}}' wx:for-item='newsItem'>
+      <block wx:for='{{newsData}}' wx:for-item='newsItem' wx:key="{{newsItem.id}}">
       <!-- <block> -->
         <template is='news-item' data='{{...newsItem}}'/>
       </block>

@@ -1,6 +1,6 @@
 // pages/home/home.js
 
-var menusCtrl = require("../../utils/menusCtrl.js")
+var menusCtrl = require("../../utils/menuCtrl.js")
 var tagsCtrl = require("../../utils/tagsCtrl.js")
 var resources = require("../../utils/resources.js")
 var request = require('../../utils/request.js');
@@ -9,6 +9,46 @@ var SCREEN_CONVERT_RATIO = 1
 var top_offset = 60
 var head_alpha = 32
 var body_scroll_sudden = 50
+const newsMenu = new menusCtrl()
+const playersMenu = new menusCtrl()
+
+const newsDefault = [
+  { id: 0, name: "全部" }
+]
+
+const playersDefault = [
+  { id: 0, name: "A" },
+  { id: 1, name: "B" },
+  { id: 2, name: "C" },
+  { id: 3, name: "D" },
+  { id: 4, name: "E" },
+  { id: 5, name: "F" },
+  { id: 6, name: "G" },
+
+  { id: 7, name: "H" },
+  { id: 8, name: "I" },
+  { id: 9, name: "J" },
+  { id: 10, name: "K" },
+  { id: 11, name: "L" },
+  { id: 12, name: "M" },
+  { id: 13, name: "N" },
+
+  { id: 14, name: "O" },
+  { id: 15, name: "P" },
+  { id: 16, name: "Q" },
+
+  { id: 17, name: "R" },
+  { id: 18, name: "S" },
+  { id: 19, name: "T" },
+
+  { id: 20, name: "U" },
+  { id: 21, name: "V" },
+  { id: 22, name: "W" },
+
+  { id: 23, name: "X" },
+  { id: 24, name: "Y" },
+  { id: 25, name: "Z" },
+]
 
 Page({
 
@@ -25,6 +65,9 @@ Page({
     tag: [],
     currTagIdx: 0,
     news_post: [], // { id: 1, postId: 1, title: "哈哈哈", content: "<p></p>" , liked: true },
+    players_post: [
+      { id: 1 }
+    ],
 
     image_path: resources.images_path,
 
@@ -57,14 +100,18 @@ Page({
       }
     })
 
-    var that = this
+    for (var i = 0; i < playersDefault.length; ++i) {
+      playersMenu.add(playersDefault[i].id, playersDefault[i].name)
+    }
     var successCallback = res => {
-      console.log("成功")
       console.log(res)
       // menu
       var menus = res.data.menus
+      for (var i = 0; i < newsDefault.length; ++i) {
+        newsMenu.add(newsDefault[i].id, newsDefault[i].name)
+      }
       for (var i = 0; i < menus.length; ++i) {
-        menusCtrl.addNewsMenu(menus[i].id, menus[i].name)
+        newsMenu.add(menus[i].id, menus[i].name)
       }
       // tag
       var tags = res.data.tags
@@ -83,7 +130,7 @@ Page({
 
       that.setData({
         currTabID: 0,
-        scroll_menu: menusCtrl.news,
+        scroll_menu: newsMenu.getAll(),
         currNewsMenuIdx: 0,
         currPlayersMenuIdx: 0,
         tag: { tags: tagsCtrl.tags }, // 这样包起来用于模板使用
@@ -100,27 +147,27 @@ Page({
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
-  onReady: function () {},
+  onReady: function () { },
 
   /**
    * 生命周期函数--监听页面显示
    */
-  onShow: function () {},
+  onShow: function () { },
 
   /**
    * 生命周期函数--监听页面隐藏
    */
-  onHide: function () {},
+  onHide: function () { },
 
   /**
    * 生命周期函数--监听页面卸载
    */
-  onUnload: function () {},
+  onUnload: function () { },
 
   /**
    * 用户点击右上角分享
    */
-  onShareAppMessage: function () {},
+  onShareAppMessage: function () { },
 
   /**
    * 点击赛事新闻
@@ -129,7 +176,7 @@ Page({
     console.log("点击赛事新闻")
     this.setData({
       currTabID: 0,
-      scroll_menu: menusCtrl.news,
+      scroll_menu: newsMenu.getAll(),
       currNewsMenuIdx: 0
     })
   },
@@ -139,20 +186,21 @@ Page({
    */
   onPlayersTabTap: function (e) {
     console.log("点击选手资讯")
+    var that = this
     wx.request({
       url: "http://39.104.201.188/index/player/",
       method: "GET",
       success: function (res) {
         console.log(res)
+        that.setData({
+          currTabID: 1,
+          scroll_menu: playersMenu.getAll(),
+          currPlayersMenuIdx: 0
+        })
       },
       fail: function (res) {
         console.log(res)
       }
-    })
-    this.setData({
-      currTabID: 1,
-      scroll_menu: menusCtrl.players,
-      currPlayersMenuIdx: 0
     })
   },
 
@@ -175,7 +223,7 @@ Page({
         currNewsMenuIdx: tapID,
         curr_news_swiper_id: tapID
       })
-    }else if (this.data.currTabID == 1) {
+    } else if (this.data.currTabID == 1) {
       if (this.data.currPlayersMenuIdx == tapID) {
         return
       }
@@ -226,7 +274,7 @@ Page({
       isBottom: true
     })
     var that = this
-    setTimeout(function(){
+    setTimeout(function () {
       that.setData({
         isBottom: false
       })
@@ -238,7 +286,7 @@ Page({
    */
   onBodyScrollY: function (e) {
     // console.log(e)
-    if (e.detail.scrollTop < 0){ return }
+    if (e.detail.scrollTop < 0) { return }
 
     var newTop = 0
     if (e.detail.deltaY > 0) {
@@ -291,7 +339,7 @@ Page({
   /**
    * swiper current值改变事件函数
    */
-  onSwiperChange: function(e) {
+  onSwiperChange: function (e) {
     console.log("用户横向滑动")
     console.log(e)
     var tapID = e.detail.current
