@@ -3,8 +3,21 @@ var util = require('util.js');
 /**
  * 获取主页信息
  */
-function reqHomeInfo(successCallback, failCallback) {
-  requestData("index", "GET", null, successCallback, failCallback, null)
+const reqHomeInfo = (maxID, success, fail) => {
+  var data = null
+  if (maxID != null) {
+    data = {
+      maxID: maxID
+    }
+  }
+  requestData("index/", "GET", data, success, fail, null)
+}
+
+/**
+ * 获取选手列表
+ */
+const reqPlayerInfo = (success, fail) => {
+  requestData("index/player/", "GET", null, success, fail, null)
 }
 
 /**
@@ -12,26 +25,30 @@ function reqHomeInfo(successCallback, failCallback) {
  * @param url {string} 请求url
  * @param data {object} 参数
  * @param successCallback {function} 成功回调函数
- * @param errorCallback {function} 失败回调函数
+ * @param failCallback {function} 失败回调函数
  * @param completeCallback {function} 完成回调函数
  * @returns {void}
  */
 function requestData(url, method, data, successCallback, failCallback, completeCallback) {
+  var xURL = "http://39.104.201.188/" + url
+  console.log(xURL)
   wx.request({
-    url: "http://39.104.201.188/" + url,
+    url: xURL,
     data: data,
     header: { 'content-type': 'application/x-www-form-urlencoded' },
     method: method,
     success: function (res) {
-      // if (res.data.error == 0)
+      console.log(res)
       util.isFunction(successCallback) && successCallback(res);
       // else
       //   util.isFunction(failCallback) && failCallback(res);
     },
-    fail: function () {
+    fail: function (res) {
+      console.log("failed")
+      console.log(res)
       util.isFunction(failCallback) && failCallback(res);
     },
-    complete: function () {
+    complete: function (res) {
       util.isFunction(completeCallback) && completeCallback(res);
     }
   });
@@ -39,5 +56,6 @@ function requestData(url, method, data, successCallback, failCallback, completeC
 
 module.exports = {
   requestData: requestData,
-  reqHomeInfo: reqHomeInfo
+  reqHomeInfo: reqHomeInfo,
+  reqPlayerInfo: reqPlayerInfo
 };

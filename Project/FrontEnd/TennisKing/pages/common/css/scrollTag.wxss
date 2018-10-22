@@ -23,5 +23,5 @@
 .scroll-tag-item-choosed{
   background-color: #009b42;
   color: white;
-  border-width: 0rpx;
+  border-width: 1rpx solid white;
 }

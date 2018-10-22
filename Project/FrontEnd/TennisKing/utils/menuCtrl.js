@@ -1,6 +1,6 @@
 function menuCtrl() {
   this.menu = {}
-  this.news_count = 0
+  this.count = 0
   this.choosedID = 0
 
   this.check = id => Boolean(this.menu[String(id)] != null)
@@ -9,7 +9,7 @@ function menuCtrl() {
       id: Number(id),
       name: menuName
     }
-    if (!this.check(id)) ++this.news_count
+    if (!this.check(id)) ++this.count
     this.menu[String(id)] = newMenu
   }
   this.getAll = () => {
@@ -19,24 +19,35 @@ function menuCtrl() {
       news_menu.push(this.menu[id])
       news_menu[index].idx = index
       news_menu[index].choosed = (Number(id) == this.choosedID)
+      news_menu[index].isShow = false
       ++index
     }
+    this.setChoosedID(this.choosedID)
     return news_menu
   }
   this.remove = id => {
     if (this.check(id)) {
       this.menu[String(id)] = null
-      --this.news_count
+      --this.count
       if (id == this.choosedID) this.choosedID = 0
     }
   }
   this.clean = () => {
-    this.news_count = 0
+    this.count = 0
     this.choosedID = 0
     this.menu = {}
   }
   this.getChoosedID = () => this.choosedID
-  this.setChoosedID = id => { this.choosedID = id }
+  this.setChoosedID = id => {
+    var lastID = id - 1
+    if (lastID < 0) lastID = 0
+    var nextID = id + 1
+    if (nextID >= this.count) nextID = this.count - 1
+    this.menu[String(lastID)].isShow = true
+    this.menu[String(id)].isShow = true
+    this.menu[String(nextID)].isShow = true
+    this.choosedID = id
+  }
 }
 
 module.exports = menuCtrl
