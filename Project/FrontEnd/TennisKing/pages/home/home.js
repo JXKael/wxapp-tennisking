@@ -1,13 +1,14 @@
 // pages/home/home.js
-var resources = require("../../utils/resources.js")
-var menusCtrl = require("../../utils/menuCtrl.js")
-var tagsCtrl = require("../../utils/tagsCtrl.js")
-var request = require('../../utils/request.js');
+const resources = require("../../utils/resources.js")
+const menusCtrl = require("../../utils/menuCtrl.js")
+const tagsCtrl = require("../../utils/tagsCtrl.js")
+const request = require('../../utils/request.js');
 
 var SCREEN_CONVERT_RATIO = 1
-var top_offset = 60
-var head_alpha = 32
-var body_scroll_sudden = 50
+const top_offset = 60
+const head_alpha = 32
+const body_scroll_sudden = 50
+const top_loading_threshold = 100
 const newsMenu = new menusCtrl()
 const playersMenu = new menusCtrl()
 
@@ -84,7 +85,12 @@ Page({
     body_top: "0rpx",
     tab_opacity: 1,
 
-    isBottom: false
+    isBottom: false,
+    isTop: false,
+    topLoading: {
+      top_loading_height: '0rpx',
+      top_loading_fill: '0rpx'
+    }
   },
 
   /**
@@ -269,8 +275,20 @@ Page({
   /**
    * 页面滑动框【触顶】事件
    */
-  pageScrollToupper: function (e) {
-    // console.log(e);
+  onBodyScrollYToUpper: function (e) {
+    console.log("chuding")
+    console.log(e);
+    if (this.data.isTop) return
+
+    this.setData({
+      isTop: true
+    })
+    var that = this
+    // setTimeout(function () {
+    //   that.setData({
+    //     isTop: false
+    //   })
+    // }, 2000)
   },
 
   /**
@@ -279,6 +297,8 @@ Page({
   onBodyScrollYTolower: function (e) {
     console.log("竖向滑动触底")
     console.log(e)
+    if (this.data.isBottom) return
+
     this.setData({
       isBottom: true
     })
@@ -295,21 +315,38 @@ Page({
    */
   onBodyScrollY: function (e) {
     // console.log(e)
-    if (e.detail.scrollTop < 0) { return }
+    if (e.detail.scrollTop > 0) {
+      var newTop = 0
+      if (e.detail.deltaY > 0) {
+        if (e.detail.deltaY > body_scroll_sudden) {
+          // 突然上滑
+          this.setData({
+            head_top_num: 0,
+            body_top: "0rpx",
+            head_top: "0rpx",
+            tab_opacity: 1
+          })
+        } else if (e.detail.scrollTop < top_offset && this.data.head_top_num < 0) {
+          // 到顶端缓慢上滑
+          newTop = -e.detail.scrollTop + e.detail.deltaY
+          if (newTop < -top_offset) { newTop = -top_offset }
+          if (newTop > 0) { newTop = 0 }
 
-    var newTop = 0
-    if (e.detail.deltaY > 0) {
-      if (e.detail.deltaY > body_scroll_sudden) {
-        // 突然上滑
-        this.setData({
-          head_top_num: 0,
-          body_top: "0rpx",
-          head_top: "0rpx",
-          tab_opacity: 1
-        })
-      } else if (e.detail.scrollTop < top_offset && this.data.head_top_num < 0) {
-        // 到顶端缓慢上滑
-        newTop = -e.detail.scrollTop + e.detail.deltaY
+          var newOpacoty = 1 + newTop / head_alpha
+          if (newOpacoty < 0) { newOpacoty = 0 }
+          if (newOpacoty > 1) { newOpacoty = 1 }
+
+          var newTopStr = String(newTop * SCREEN_CONVERT_RATIO) + "rpx"
+          this.setData({
+            head_top_num: newTop,
+            body_top: newTopStr,
+            head_top: newTopStr,
+            tab_opacity: newOpacoty
+          })
+        }
+      } else {
+        // 下滑
+        var newTop = this.data.head_top_num + e.detail.deltaY
         if (newTop < -top_offset) { newTop = -top_offset }
         if (newTop > 0) { newTop = 0 }
 
@@ -326,22 +363,20 @@ Page({
         })
       }
     } else {
-      // 下滑
-      var newTop = this.data.head_top_num + e.detail.deltaY
-      if (newTop < -top_offset) { newTop = -top_offset }
-      if (newTop > 0) { newTop = 0 }
-
-      var newOpacoty = 1 + newTop / head_alpha
-      if (newOpacoty < 0) { newOpacoty = 0 }
-      if (newOpacoty > 1) { newOpacoty = 1 }
-
-      var newTopStr = String(newTop * SCREEN_CONVERT_RATIO) + "rpx"
-      this.setData({
-        head_top_num: newTop,
-        body_top: newTopStr,
-        head_top: newTopStr,
-        tab_opacity: newOpacoty
-      })
+      if (this.data.isTop) {
+        console.log("scroll top: " + e.detail.scrollTop)
+        var ballFill = 1 - Math.abs(e.detail.scrollTop) / top_loading_threshold
+        if (ballFill < 0) ballFill = 0
+        if (ballFill > 1) ballFill = 1
+        console.log("ballFill: " + ballFill)
+        var topLoading = {
+          top_loading_height: String(Math.abs(e.detail.scrollTop) * SCREEN_CONVERT_RATIO) + "rpx",
+          top_loading_fill: String(ballFill * 50) + "rpx"
+        }
+        this.setData({
+          topLoading: topLoading
+        })
+      }
     }
   },
 

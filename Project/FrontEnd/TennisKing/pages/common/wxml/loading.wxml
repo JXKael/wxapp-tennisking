@@ -1,3 +1,12 @@
 <template name='bottom-loading'>
   <text class='bottom-loading'>加载中...</text>
 </template>
+
+<template name='top-loading'>
+  <view class='top-loading' style='height:{{top_loading_height}}'>
+    <view class='top-loading-img'>
+      <image class='grey' src='/resources/images/ball_gray.png' mode='aspectFit'/>
+      <image class='green' src='/resources/images/ball_green.png' mode='aspectFit' style='clip:rect({{top_loading_fill}}, 50rpx, 50rpx, 0rpx)'/>
+    </view>
+  </view>
+</template>

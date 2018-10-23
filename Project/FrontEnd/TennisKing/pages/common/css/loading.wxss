@@ -8,3 +8,37 @@
   color: #949494;
   padding-bottom: 20rpx;
 }
+
+.top-loading{
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 200rpx;
+  border-bottom: 1rpx solid red;
+}
+
+.top-loading-img{
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: block;
+  width: 50rpx;
+  height: 50rpx;
+  margin: auto;
+  padding-bottom: 80rpx;
+}
+
+.grey{
+  width: 100%;
+  height: 100%;
+}
+
+.green{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50rpx;
+  height: 50rpx;
+}
