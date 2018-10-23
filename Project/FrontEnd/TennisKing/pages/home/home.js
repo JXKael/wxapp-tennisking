@@ -1,17 +1,18 @@
 // pages/home/home.js
 const resources = require("../../utils/resources.js")
 const menusCtrl = require("../../utils/menuCtrl.js")
-const tagsCtrl = require("../../utils/tagsCtrl.js")
 const request = require('../../utils/request.js');
 
 var SCREEN_CONVERT_RATIO = 1
+var isScrolling = false
 const top_offset = 60
 const head_alpha = 32
 const body_scroll_sudden = 50
 const top_loading_threshold = 80
-var isVibrate = false
+var needNewPost = false
 const newsMenu = new menusCtrl()
 const playersMenu = new menusCtrl()
+const tagsCtrl = new menusCtrl()
 
 const newsDefault = [
   { id: 0, name: "全部" }
@@ -49,6 +50,10 @@ const playersDefault = [
   { id: 23, name: "X" },
   { id: 24, name: "Y" },
   { id: 25, name: "Z" },
+]
+
+const tagsDefault = [
+  { id: 0, name: "全部"}
 ]
 
 Page({
@@ -116,19 +121,27 @@ Page({
       playersMenu.add(playersDefault[i].id, playersDefault[i].name)
     }
 
+    this.reqHomeInfo()
+  },
+
+  reqHomeInfo: function (maxID, playerID) {
+    var that = this
     var success = res => {
       // menu
-      var menus = res.data.menus
       for (var i = 0; i < newsDefault.length; ++i) {
         newsMenu.add(newsDefault[i].id, newsDefault[i].name)
       }
+      var menus = res.data.menus
       for (var i = 0; i < menus.length; ++i) {
         newsMenu.add(menus[i].id, menus[i].name)
       }
       // tag
+      for (var i = 0; i < tagsDefault.length; ++i) {
+        tagsCtrl.add(tagsDefault[i].id, tagsDefault[i].name)
+      }
       var tags = res.data.tags
       for (var i = 0; i < tags.length; ++i) {
-        tagsCtrl.addTag(tags[i].id, tags[i].name)
+        tagsCtrl.add(tags[i].id, tags[i].name)
       }
       // 资讯
       var posts = res.data.posts
@@ -145,7 +158,7 @@ Page({
         scroll_menu: newsMenu.getAll(),
         currNewsMenuIdx: 0,
         currPlayersMenuIdx: 0,
-        tag: { tags: tagsCtrl.tags }, // 这样包起来用于模板使用
+        tag: { tags: tagsCtrl.getAll() }, // 这样包起来用于模板使用
         currTagIdx: 0,
         news_post: posts
       })
@@ -157,7 +170,7 @@ Page({
     wx.showLoading({
       title: "加载中",
     })
-    request.reqHomeInfo(null, success, fail)
+    request.reqHomeInfo(null, null, success, fail)
   },
 
   /**
@@ -317,10 +330,11 @@ Page({
   onBodyScrollY: function (e) {
     // console.log(e)
     if (e.detail.scrollTop > 0) {
+      isScrolling = true
       var newTop = 0
       if (e.detail.deltaY > 0) {
         if (e.detail.deltaY > body_scroll_sudden) {
-          // 突然上滑
+          // 突然上滚
           this.setData({
             head_top_num: 0,
             body_top: "0rpx",
@@ -328,7 +342,7 @@ Page({
             tab_opacity: 1
           })
         } else if (e.detail.scrollTop < top_offset && this.data.head_top_num < 0) {
-          // 到顶端缓慢上滑
+          // 到顶端缓慢上滚
           newTop = -e.detail.scrollTop + e.detail.deltaY
           if (newTop < -top_offset) { newTop = -top_offset }
           if (newTop > 0) { newTop = 0 }
@@ -346,7 +360,7 @@ Page({
           })
         }
       } else {
-        // 下滑
+        // 下滚
         var newTop = this.data.head_top_num + e.detail.deltaY
         if (newTop < -top_offset) { newTop = -top_offset }
         if (newTop > 0) { newTop = 0 }
@@ -369,10 +383,7 @@ Page({
         // 触顶刷新
         var ballFill = 1 - absScrollTop / top_loading_threshold
         if (ballFill < 0) {
-          if (!isVibrate){
-            wx.vibrateShort()
-            isVibrate = true
-          }
+          if (!needNewPost) needNewPost = true;
           ballFill = 0
         }
         if (ballFill > 1) ballFill = 1
@@ -384,6 +395,43 @@ Page({
           topLoading: topLoading
         })
       }
+    }
+  },
+
+  /**
+   * 
+   */
+  onBodyTouchEnd: function (e) {
+    console.log("触摸结束")
+    if (isScrolling) {
+      if (Math.abs(this.data.head_top_num) < top_offset / 2) {
+        // 下弹回来
+        // var newTop = this.data.head_top_num + 
+        // if (newTop < -top_offset) { newTop = -top_offset }
+        // if (newTop > 0) { newTop = 0 }
+
+        // var newOpacoty = 1 + newTop / head_alpha
+        // if (newOpacoty < 0) { newOpacoty = 0 }
+        // if (newOpacoty > 1) { newOpacoty = 1 }
+
+        // var newTopStr = String(newTop * SCREEN_CONVERT_RATIO) + "rpx"
+        // this.setData({
+        //   head_top_num: newTop,
+        //   body_top: newTopStr,
+        //   head_top: newTopStr,
+        //   tab_opacity: newOpacoty
+        // })
+      }else{
+        // 上缩回去
+      }
+      isScrolling = false
+    }
+
+    if (this.data.isTop) {
+      if (needNewPost) {
+        this.reqHomeInfo()
+      }
+      needNewPost = false
     }
   },
 

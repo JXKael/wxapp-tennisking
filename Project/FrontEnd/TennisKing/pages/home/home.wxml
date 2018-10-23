@@ -35,7 +35,7 @@
       <block wx:for='{{scroll_menu}}' wx:for-item='swiperItem' wx:key='{{swiperItem.idx}}'>
         <swiper-item class='body-swiper-X-item' id='body-scroll-{{swiperItem.idx}}'>
           <template is='top-loading' data='{{...topLoading}}' wx:if='{{isTop}}'/>
-          <scroll-view class='body-scroll-Y' scroll-y scroll-with-animation enable-back-to-top bindscroll='onBodyScrollY' lower-threshold='5' bindscrolltolower='onBodyScrollYTolower' upper-threshold='5' bindscrolltoupper='onBodyScrollYToUpper'>
+          <scroll-view class='body-scroll-Y' scroll-y scroll-with-animation enable-back-to-top bindscroll='onBodyScrollY' lower-threshold='5' bindscrolltolower='onBodyScrollYTolower' upper-threshold='5' bindscrolltoupper='onBodyScrollYToUpper' bindtouchend='onBodyTouchEnd'>
             <!-- 【赛事新闻】 -->
             <block wx:if='{{currTabID == 0 && swiperItem.isShow}}'>
               <!-- 筛选标签列表 -->

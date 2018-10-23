@@ -3,12 +3,13 @@ var util = require('util.js');
 /**
  * 获取主页信息
  */
-const reqHomeInfo = (maxID, success, fail) => {
+const reqHomeInfo = (maxID, playerID, success, fail) => {
   var data = null
   if (maxID != null) {
-    data = {
-      maxID: maxID
-    }
+    data.maxID = maxID
+  }
+  if (playerID != null) {
+    data.playerID = playerID
   }
   requestData("index/", "GET", data, success, fail, null)
 }
