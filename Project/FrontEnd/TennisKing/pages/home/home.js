@@ -8,7 +8,8 @@ var SCREEN_CONVERT_RATIO = 1
 const top_offset = 60
 const head_alpha = 32
 const body_scroll_sudden = 50
-const top_loading_threshold = 100
+const top_loading_threshold = 80
+var isVibrate = false
 const newsMenu = new menusCtrl()
 const playersMenu = new menusCtrl()
 
@@ -364,13 +365,19 @@ Page({
       }
     } else {
       if (this.data.isTop) {
-        console.log("scroll top: " + e.detail.scrollTop)
-        var ballFill = 1 - Math.abs(e.detail.scrollTop) / top_loading_threshold
-        if (ballFill < 0) ballFill = 0
+        var absScrollTop = Math.abs(e.detail.scrollTop)
+        // 触顶刷新
+        var ballFill = 1 - absScrollTop / top_loading_threshold
+        if (ballFill < 0) {
+          if (!isVibrate){
+            wx.vibrateShort()
+            isVibrate = true
+          }
+          ballFill = 0
+        }
         if (ballFill > 1) ballFill = 1
-        console.log("ballFill: " + ballFill)
         var topLoading = {
-          top_loading_height: String(Math.abs(e.detail.scrollTop) * SCREEN_CONVERT_RATIO) + "rpx",
+          top_loading_height: String(absScrollTop * SCREEN_CONVERT_RATIO) + "rpx",
           top_loading_fill: String(ballFill * 50) + "rpx"
         }
         this.setData({
