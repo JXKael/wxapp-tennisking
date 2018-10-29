@@ -39,10 +39,25 @@ function menuCtrl() {
   }
   this.getChoosedID = () => this.choosedID
   this.setChoosedID = id => {
-    var lastID = id - 1
-    if (lastID < 0) lastID = 0
-    var nextID = id + 1
-    if (nextID >= this.count) nextID = this.count - 1
+    var currIdx = this.menu[this.choosedID].idx
+    var lastID = id
+    var lastIdx = currIdx - 1
+    if (lastIdx < 0) lastIdx = 0
+    var nextID = id
+    var nextIdx = currIdx + 1
+    if (nextIdx >= this.count) nextIdx = this.count - 1
+    for (var menuID in this.menu) {
+      if (this.menu[menuID].idx == lastIdx) {
+        lastID = menuID
+        break
+      }
+    }
+    for (var menuID in this.menu) {
+      if (this.menu[menuID].idx == nextIdx) {
+        nextID = menuID
+        break
+      }
+    }
     this.menu[String(lastID)].isShow = true
     this.menu[String(id)].isShow = true
     this.menu[String(nextID)].isShow = true
