@@ -2,6 +2,7 @@
 const resources = require("../../utils/resources.js")
 const menusCtrl = require("../../utils/menuCtrl.js")
 const postsCtrl = require("../../utils/postCtrl.js")
+const playersCtrl = require("../../utils/playerCtrl.js")
 const request = require('../../utils/request.js');
 const util = require('../../utils/util.js')
 
@@ -15,7 +16,8 @@ var needNewPost = false
 const newsMenuCtrl = new menusCtrl()
 const playersMenuCtrl = new menusCtrl()
 const tagCtrl = new menusCtrl()
-const postCtrl = new postsCtrl()
+const newsPostCtrl = new postsCtrl()
+const playersPostCtrl = new playersCtrl()
 var isTapMenuOnly = false // 点击菜单会调用swiper current change事件，重复设置data，用此变量控制
 
 const newsDefault = [
@@ -144,7 +146,7 @@ Page({
         posts_res[i].id = i
         var date = util.formatTime(new Date(posts_res[i].createTime * 1000))
         posts_res[i].time = date.month + "/" + date.day + "\n" + date.hour + ":" + date.minute
-        postCtrl.add(posts_res[i])
+        newsPostCtrl.add(posts_res[i].postId, posts_res[i])
         // posts[i].liked = false
       }
       var choosedMenuId = newsMenuCtrl.getChoosed()
@@ -155,7 +157,7 @@ Page({
       var choosedTagId = tagCtrl.getChoosed()
       var tagsMenu = tagCtrl.getAll()
 
-      var posts = postCtrl.getPost(choosedMenuId, choosedTagId, playerId)
+      var posts = newsPostCtrl.getPost(choosedMenuId, choosedTagId, playerId)
       that.setData({
         currTabID: 0,
         scroll_menu: newsMenu,
@@ -232,20 +234,22 @@ Page({
   reqPlayerInfo: function () {
     var that = this
     var success = (res) => {
-      var players_post = res.data.players
-      for (var i = 0; i < players_post.length; ++i){
-        players_post[i].idx = i
+      var posts_res = res.data.players
+      for (var i = 0; i < posts_res.length; ++i){
+        posts_res[i].idx = i
+        playersPostCtrl.add(posts_res[i].playerId, posts_res[i])
       }
       var choosedMenuId = playersMenuCtrl.getChoosed()
       playersMenuCtrl.setChoosed(choosedMenuId)
       var choosedIdx = playersMenuCtrl.getIdxById()
       var playersMenu = playersMenuCtrl.getAll()
+      var players = playersPostCtrl.getPlayer(playersMenuCtrl.get(choosedMenuId).name)
       that.setData({
         currTabID: 1,
         scroll_menu: playersMenu,
         currPlayersMenuIdx: choosedIdx,
         curr_player_swiper_id: choosedIdx,
-        players_post: players_post,
+        players_post: players
       })
       wx.hideLoading()
     }
@@ -281,10 +285,12 @@ Page({
       }
       playersMenuCtrl.setChoosed(tapId)
       var playersMenu = playersMenuCtrl.getAll()
+      var players = playersPostCtrl.getPlayer(playersMenuCtrl.get(tapId).name)
       this.setData({
         scroll_menu: playersMenu,
         currPlayersMenuIdx: tapIdx,
-        curr_player_swiper_id: tapIdx
+        curr_player_swiper_id: tapIdx,
+        players_post: players
       })
     }
 
@@ -305,12 +311,49 @@ Page({
     tagCtrl.setChoosed(tapId)
     var tagsMenu = tagCtrl.getAll()
     var currMenuId = newsMenuCtrl.getChoosed()
-    var posts = postCtrl.getPost(currMenuId, tapId, null)
+    var posts = newsPostCtrl.getPost(currMenuId, tapId, null)
     this.setData({
       tag: { tags: tagsMenu },
       currTagIdx: tapIdx,
       news_post: posts
     })
+  },
+
+  /**
+   * swiper current值改变事件函数，用户横向滑动
+   */
+  onSwiperChange: function (e) {
+    if (isTapMenuOnly) {
+      isTapMenuOnly = false
+      return
+    }
+    console.log("用户横向滑动至idx: " + e.detail.current)
+    // console.log(e)
+    var tapIdx = e.detail.current
+    if (this.data.currTabID == 0) {
+      if (this.data.currNewsMenuIdx == tapIdx) {
+        return
+      }
+      var tapId = newsMenuCtrl.getIdByIdx(tapIdx)
+      newsMenuCtrl.setChoosed(tapId)
+      tagCtrl.clean()
+      if (tapId == 0) tapId = null
+      this.reqHomeInfo(null, tapId, null)
+    } else if (this.data.currTabID == 1) {
+      if (this.data.currPlayersMenuIdx == tapIdx) {
+        return
+      }
+      var tapId = playersMenuCtrl.getIdByIdx(tapIdx)
+      playersMenuCtrl.setChoosed(tapId)
+      var playersMenu = playersMenuCtrl.getAll()
+      var players = playersPostCtrl.getPlayer(playersMenuCtrl.get(tapId).name)
+      this.setData({
+        scroll_menu: playersMenu,
+        currPlayersMenuIdx: tapIdx,
+        curr_player_swiper_id: tapIdx,
+        players_post: players
+      })
+    }
   },
 
   /**
@@ -460,44 +503,6 @@ Page({
     //   }
     //   needNewPost = false
     // }
-  },
-
-  /**
-   * swiper current值改变事件函数，用户横向滑动
-   */
-  onSwiperChange: function (e) {
-    if (isTapMenuOnly) {
-      isTapMenuOnly = false
-      return
-    }
-    console.log("用户横向滑动至idx: " + e.detail.current)
-    // console.log(e)
-    var tapIdx = e.detail.current
-    if (this.data.currTabID == 0) {
-      if (this.data.currNewsMenuIdx == tapIdx) {
-        return
-      }
-      console.log("tapIdx: " + tapIdx)
-      var tapId = newsMenuCtrl.getIdByIdx(tapIdx)
-      console.log("tapId: " + tapId)
-      newsMenuCtrl.setChoosed(tapId)
-      tagCtrl.clean()
-      if (tapId == 0) tapId = null
-      this.reqHomeInfo(null, tapId, null)
-    } else if (this.data.currTabID == 1) {
-      if (this.data.currPlayersMenuIdx == tapIdx) {
-        return
-      }
-      var tapId = playersMenuCtrl.getIdByIdx(tapIdx)
-      playersMenuCtrl.setChoosed(tapId)
-      var playersMenu = playersMenuCtrl.getAll()
-      this.setData({
-        scroll_menu: playersMenu,
-        currPlayersMenuIdx: tapIdx,
-        curr_player_swiper_id: tapIdx
-      })
-
-    }
   },
 
   /**

@@ -27,6 +27,7 @@ function menuCtrl() {
     }
     return news_menu
   }
+  this.get = id => this.menu[id]
   this.remove = key => {
     if (this.check(key)) {
       this.menu[String(key)] = null

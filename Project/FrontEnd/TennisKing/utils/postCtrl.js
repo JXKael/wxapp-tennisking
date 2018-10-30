@@ -4,8 +4,7 @@ function postCtrl() {
 
   this.check = key => Boolean(this.post[String(key)] != null)
 
-  this.add = (postData) => {
-    const key = postData.postId
+  this.add = (key, postData) => {
     if (!this.check(key)) {
       ++this.count
     }
