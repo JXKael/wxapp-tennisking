@@ -2,7 +2,7 @@
   <view class='scroll-tag'>
     <scroll-view scroll-x='true'>
       <block wx:for='{{tags}}' wx:for-item='tagItem' wx:key='{{tagItem.idx}}'>
-        <view class="scroll-tag-item {{tagItem.choosed?'scroll-tag-item-choosed':''}}"  bindtap='onTagItemTap' data-index='{{tagItem.idx}}'> 
+        <view class="scroll-tag-item {{tagItem.choosed?'scroll-tag-item-choosed':''}}"  bindtap='onTagItemTap' data-id='{{tagItem.id}}' data-idx='{{tagItem.idx}}'> 
           <text>{{tagItem.name}}</text>
         </view>
       </block>

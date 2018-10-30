@@ -1,7 +1,7 @@
 <template name='player-item'>
   <view class='player-item' bindtap='onPlayerItemTap'>
-    <text class='player-name'>诺瓦克·德约科维奇</text>
-    <text class='player-news-num'>{{id}}</text>
+    <text class='player-name'>{{playerName}}</text>
+    <text class='player-news-num'>{{idx}}</text>
     <image class='player-left-arrow' src='/resources/images/left_arrow.png'></image>
   </view>
 </template>

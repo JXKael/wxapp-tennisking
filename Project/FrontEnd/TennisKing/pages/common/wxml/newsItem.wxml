@@ -1,16 +1,16 @@
 <template name='news-item'>
-  <view class='news-item' bindtap='onNewsItemTap'>
+  <view class='news-item' bindtap='onNewsItemTap' data-id='{{id}}' data-postId='{{postId}}'>
     <view class='news-top'>
       <!-- 日期或置顶 -->
       <view class='news-date'>
-        <text>{{createTime}}</text>
+        <text>{{time}}</text>
       </view>
       <!-- 选手&标签 -->
       <view class='news-player'>
         <text class='news-player-name'>{{title}}</text>
         <view class='news-player-tags'>
-          <block wx:for='{{tag}}' wx:for-item='tagItem' wx:key='{{tagItem.id}}'>
-            <text class='news-player-tag'>{{tagItem.name}}</text>
+          <block wx:for='{{tags}}' wx:for-item='tagItem' wx:key='{{tagItem.tagId}}'>
+            <text class='news-player-tag'>{{tagItem.tagName}}</text>
           </block>
         </view>
       </view>

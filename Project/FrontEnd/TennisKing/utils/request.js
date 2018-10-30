@@ -3,13 +3,16 @@ var util = require('util.js');
 /**
  * 获取主页信息
  */
-const reqHomeInfo = (maxID, playerID, success, fail) => {
-  var data = null
-  if (maxID != null) {
-    data.maxID = maxID
+const reqHomeInfo = (postId, menuId, playerId, success, fail) => {
+  var data = {}
+  if (postId != null) {
+    data.postId = postId
   }
-  if (playerID != null) {
-    data.playerID = playerID
+  if (playerId != null) {
+    data.playerId = playerId
+  }
+  if (menuId != null) {
+    data.menuId = menuId
   }
   requestData("index/", "GET", data, success, fail, null)
 }
@@ -31,8 +34,9 @@ const reqPlayerInfo = (success, fail) => {
  * @returns {void}
  */
 function requestData(url, method, data, successCallback, failCallback, completeCallback) {
-  var xURL = "http://39.104.201.188/" + url
+  var xURL = "https://wangqiudi.com/" + url
   console.log(xURL)
+  console.log(data)
   wx.request({
     url: xURL,
     data: data,
