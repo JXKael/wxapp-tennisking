@@ -108,7 +108,7 @@ Page({
     var success = (res) => {
       console.log("点赞成功")
       console.log(res.data)
-      var like = this.data.like
+      var like = Number(this.data.like)
       this.setData({
         like: like + 1
       })

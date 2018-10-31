@@ -47,14 +47,14 @@
               </view>
             </block>
             <!-- 【选手资讯】 -->
-            <block wx:elif='{{currTabID==1}}'>
+            <block wx:elif='{{currTabID==1&&swiperItem.isShow}}'>
               <view class='player-content'>
                 <block wx:for='{{players_post[swiperItem.id]}}' wx:for-item='playerItem' wx:key='{{playerItem.id}}'>
                   <template is='player-item' data='{{...playerItem}}' />
                 </block>
               </view>
             </block>
-            <!-- <template is='bottom-loading' wx:if='{{isBottom}}'/> -->
+            <template is='bottom-loading' wx:if='{{isBottom&&!hasNoMore}}'/>
             <text class='has-no-more' wx:if='{{currTabID==0&&hasNoMore}}'>没有更多了</text>
           </scroll-view>
         </swiper-item>

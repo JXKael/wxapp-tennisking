@@ -12,7 +12,6 @@ const top_offset = 60
 const head_alpha = 32
 const body_scroll_sudden = 50
 const top_loading_threshold = 80
-var needNewPost = false
 
 const newsMenuCtrl = new menusCtrl()
 const playersMenuCtrl = new menusCtrl()
@@ -21,6 +20,8 @@ const postPageCtrl = new postCtrl()
 const playerPageCtrl = new playerCtrl()
 var isTapMenuOnly = false // 点击菜单会调用swiper current change事件，重复设置data，用此变量控制
 
+// 刷新相关
+var needNewPost = false
 var oldestPostId = 0
 
 const newsDefault = [
@@ -213,7 +214,9 @@ Page({
         postPageCtrl.add(res.data.postId, res.data)
         var currMenuId = newsMenuCtrl.getChoosed()
         var new_news_post = that.data.news_post
-        new_news_post[currMenuId].posts[res.data.idx] = res.data
+        if (new_news_post[currMenuId] != null) {
+          new_news_post[currMenuId].posts[res.data.idx] = res.data
+        }
         that.setData({
           news_post: new_news_post
         })
@@ -235,7 +238,9 @@ Page({
   /**
    * 生命周期函数--监听页面卸载
    */
-  onUnload: function () { },
+  onUnload: function () {
+    wx.clearStorage()
+  },
 
   /**
    * 用户点击右上角分享
@@ -431,6 +436,7 @@ Page({
     console.log("竖向滑动触底")
     if (this.data.isBottom) return
     if (this.data.currTabID == 1) return
+    if (this.data.hasNoMore) return
     console.log(e)
 
     this.setData({

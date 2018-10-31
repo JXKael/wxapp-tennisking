@@ -4,7 +4,8 @@
 <import src='../common/wxml/loading.wxml'/>
 
 <view class='container'>
-  <scroll-view class='body-scroll-Y' scroll-y enable-back-to-top>
+    <template is='top-loading' data='{{...topLoading}}' wx:if='{{isTop}}'/>
+    <scroll-view class='body-scroll-Y' scroll-y scroll-with-animation enable-back-to-top bindscroll='onBodyScrollY' lower-threshold='5' bindscrolltolower='onBodyScrollYTolower' upper-threshold='5' bindscrolltoupper='onBodyScrollYToUpper' bindtouchend='onBodyTouchEnd'>
     <!-- 筛选标签列表 -->
     <template is='scroll-tag' data='{{...news_post}}'/>
     <view class='news-content'>
@@ -13,6 +14,7 @@
         <template is='news-item' data='{{...newsItem}}'/>
       </block>
     </view>
-    <template is='bottom-loading'/>
+    <template is='bottom-loading' wx:if='{{isBottom&&!hasNoMore}}'/>
+    <text class='has-no-more' wx:if='{{hasNoMore}}'>没有更多了</text>
   </scroll-view>
 </view>

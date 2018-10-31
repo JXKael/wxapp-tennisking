@@ -5,8 +5,15 @@ const postCtrl = require("../../utils/postCtrl.js")
 const request = require('../../utils/request.js')
 const util = require('../../utils/util.js')
 
+var SCREEN_CONVERT_RATIO = 1
+
 const tagCtrl = new menusCtrl()
 const postPageCtrl = new postCtrl()
+
+const top_loading_threshold = 80
+
+var needNewPost = false
+var oldestPostId = 0
 
 const tagsDefault = [
   { id: 0, name: "全部" }
@@ -20,18 +27,30 @@ Page({
   data: {
     playerId: 0,
     news_post: {},
-    currTagIdx: 0
+    currTagIdx: 0,
+    isBottom: false,
+    hasNoMore: false,
+    isTop: false,
+    topLoading: {
+      top_loading_height: '0rpx',
+      top_loading_fill: '0rpx'
+    }
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    wx.getSystemInfo({
+      success: function (res) {
+        SCREEN_CONVERT_RATIO = 750 / res.windowWidth
+      }
+    })
     var playerId = options.playerId
-    this.reqHomeInfo(null, null, playerId)
+    this.reqHomeInfo(null, null, playerId, true)
   },
 
-  reqHomeInfo: function (postId, menuId, playerId) {
+  reqHomeInfo: function (postId, menuId, playerId, showLoading) {
     var that = this
     var success = res => {
       // tag
@@ -49,20 +68,26 @@ Page({
         var date = util.formatTime(new Date(posts_res[i].createTime * 1000))
         posts_res[i].time = date.month + "/" + date.day + "\n" + date.hour + ":" + date.minute
         postPageCtrl.add(posts_res[i].postId, posts_res[i])
-        // posts[i].liked = false
       }
+      var hasNoMore = posts_res.length <= 0
+      if (!hasNoMore) oldestPostId = posts_res[posts_res.length - 1].postId
+      needNewPost = false
 
       var choosedTagId = tagCtrl.getChoosed()
       var tagsMenu = tagCtrl.getAll()
 
       var new_news_post = this.data.news_post
       var posts = postPageCtrl.getPost(0, choosedTagId, playerId)
+      console.log(postPageCtrl.getAll())
       new_news_post.posts = posts
       new_news_post.tags = tagsMenu
       that.setData({
         playerId: playerId,
         currTagIdx: choosedTagId,
-        news_post: new_news_post
+        news_post: new_news_post,
+        isBottom: false,
+        hasNoMore: hasNoMore,
+        isTop: false
       })
 
       wx.hideLoading()
@@ -70,9 +95,11 @@ Page({
     var fail = res => {
       wx.hideLoading()
     }
-    wx.showLoading({
-      title: "加载中",
-    })
+    if (showLoading) {
+      wx.showLoading({
+        title: "加载中",
+      })
+    }
     request.reqHomeInfo(postId, menuId, playerId, success, fail)
   },
 
@@ -87,7 +114,28 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
+    var that = this
+    wx.getStorage({
+      key: "cache_post",
+      success: function (res) {
+        console.log("读取缓存成功")
+        console.log(res.data)
+        postPageCtrl.add(res.data.postId, res.data)
+        var new_news_post = that.data.news_post
+        if (new_news_post.posts[res.data.idx] != null) {
+          new_news_post.posts[res.data.idx] = res.data
+        }
+        that.setData({
+          news_post: new_news_post
+        })
+        wx.removeStorage({
+          key: 'cache_post',
+          success: function (res) {
+            console.log("移除缓存cache_post成功")
+          },
+        })
+      },
+    })
   },
 
   /**
@@ -125,6 +173,75 @@ Page({
 
   },
 
+  /**
+   * 页面滑动框【触顶】事件
+   */
+  onBodyScrollYToUpper: function (e) {
+    console.log("触顶事件")
+    // console.log(e);
+    if (this.data.isTop) return
+
+    this.setData({
+      isTop: true
+    })
+  },
+
+  /**
+   * 页面滑动框【触底】事件
+   */
+  onBodyScrollYTolower: function (e) {
+    console.log("竖向滑动触底")
+    if (this.data.isBottom) return
+    if (this.data.hasNoMore) return
+    console.log(e)
+
+    this.setData({
+      isBottom: true
+    })
+    
+    this.reqHomeInfo(oldestPostId, null, this.data.playerId, false)
+  },
+
+  /**
+   * 竖向【滑动】事件
+   */
+  onBodyScrollY: function (e) {
+    // console.log(e)
+    if (e.detail.scrollTop <= 0) {
+      if (this.data.isTop) {
+        var absScrollTop = Math.abs(e.detail.scrollTop)
+        // 触顶刷新
+        var ballFill = 1 - absScrollTop / top_loading_threshold
+        if (ballFill < 0) {
+          if (!needNewPost) needNewPost = true;
+          ballFill = 0
+        }
+        if (ballFill > 1) ballFill = 1
+        var topLoading = {
+          top_loading_height: String(absScrollTop * SCREEN_CONVERT_RATIO) + "rpx",
+          top_loading_fill: String(ballFill * 50) + "rpx"
+        }
+        this.setData({
+          topLoading: topLoading
+        })
+      }
+    }
+  },
+
+  /**
+   * 触摸结束，用于下滑刷新
+   */
+  onBodyTouchEnd: function (e) {
+    console.log("触摸结束")
+    console.log(this.data.isTop)
+    console.log(needNewPost)
+    if (this.data.isTop) {
+      if (needNewPost) {
+        this.reqHomeInfo(null, null, this.data.playerId, true)
+      }
+    }
+  },
+
   onTagItemTap: function (e) {
     console.log("用户点击 tag, id: " + e.currentTarget.dataset.id + ", idx: " + e.currentTarget.dataset.idx)
     // console.log(e)
@@ -143,5 +260,22 @@ Page({
       currTagIdx: tapIdx,
       news_post: new_news_post
     })
-  }
+  },
+
+  /**
+   * 点击新闻item
+   */
+  onNewsItemTap: function (e) {
+    console.log("点击赛事新闻中的item，postId: " + e.currentTarget.dataset.postid + ", idx: " + e.currentTarget.dataset.idx)
+    // console.log(e)
+    var postId = e.currentTarget.dataset.postid
+    var idx = e.currentTarget.dataset.idx
+    wx.setStorage({
+      key: 'cache_post',
+      data: this.data.news_post.posts[idx],
+    })
+    wx.navigateTo({
+      url: "../detail/detail?postId=" + postId,
+    })
+  },
 })
