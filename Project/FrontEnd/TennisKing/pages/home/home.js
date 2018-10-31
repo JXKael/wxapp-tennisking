@@ -1,8 +1,8 @@
 // pages/home/home.js
 const resources = require("../../utils/resources.js")
 const menusCtrl = require("../../utils/menuCtrl.js")
-const postsCtrl = require("../../utils/postCtrl.js")
-const playersCtrl = require("../../utils/playerCtrl.js")
+const postCtrl = require("../../utils/postCtrl.js")
+const playerCtrl = require("../../utils/playerCtrl.js")
 const request = require('../../utils/request.js');
 const util = require('../../utils/util.js')
 
@@ -16,8 +16,8 @@ var needNewPost = false
 const newsMenuCtrl = new menusCtrl()
 const playersMenuCtrl = new menusCtrl()
 const tagCtrl = new menusCtrl()
-const newsPostCtrl = new postsCtrl()
-const playersPostCtrl = new playersCtrl()
+const postPageCtrl = new postCtrl()
+const playerPageCtrl = new playerCtrl()
 var isTapMenuOnly = false // 点击菜单会调用swiper current change事件，重复设置data，用此变量控制
 
 const newsDefault = [
@@ -142,10 +142,10 @@ Page({
       // 资讯
       var posts_res = res.data.posts
       for (var i = 0; i < posts_res.length; ++i) {
-        posts_res[i].id = i
+        posts_res[i].idx = i
         var date = util.formatTime(new Date(posts_res[i].createTime * 1000))
         posts_res[i].time = date.month + "/" + date.day + "\n" + date.hour + ":" + date.minute
-        newsPostCtrl.add(posts_res[i].postId, posts_res[i])
+        postPageCtrl.add(posts_res[i].postId, posts_res[i])
         // posts[i].liked = false
       }
       var choosedMenuId = newsMenuCtrl.getChoosed()
@@ -157,7 +157,7 @@ Page({
       var tagsMenu = tagCtrl.getAll()
 
       var new_news_post = that.data.news_post
-      var posts = newsPostCtrl.getPost(choosedMenuId, choosedTagId, playerId)
+      var posts = postPageCtrl.getPost(choosedMenuId, choosedTagId, playerId)
       new_news_post[choosedMenuId] = {
         posts: posts,
         tags: tagsMenu
@@ -190,7 +190,27 @@ Page({
   /**
    * 生命周期函数--监听页面显示
    */
-  onShow: function () { },
+  onShow: function () {
+    var that = this
+    wx.getStorage({
+      key: "cache_post",
+      success: function (res) {
+        postPageCtrl.add(res.data.postId, res.data)
+        var currMenuId = newsMenuCtrl.getChoosed()
+        var new_news_post = that.data.news_post
+        new_news_post[currMenuId].posts[res.data.idx] = res.data
+        that.setData({
+          news_post: new_news_post
+        })
+        wx.removeStorage({
+          key: 'cache_post',
+          success: function(res) {
+            console.log("移除缓存cache_post成功")
+          },
+        })
+      },
+    })
+  },
 
   /**
    * 生命周期函数--监听页面隐藏
@@ -240,14 +260,14 @@ Page({
       var posts_res = res.data.players
       for (var i = 0; i < posts_res.length; ++i){
         posts_res[i].idx = i
-        playersPostCtrl.add(posts_res[i].playerId, posts_res[i])
+        playerPageCtrl.add(posts_res[i].playerId, posts_res[i])
       }
       var choosedMenuId = playersMenuCtrl.getChoosed()
       playersMenuCtrl.setChoosed(choosedMenuId)
       var choosedIdx = playersMenuCtrl.getIdxById()
       var playersMenu = playersMenuCtrl.getAll()
       var new_players_post = that.data.players_post
-      var players = playersPostCtrl.getPlayer(playersMenuCtrl.get(choosedMenuId).name)
+      var players = playerPageCtrl.getPlayer(playersMenuCtrl.get(choosedMenuId).name)
       new_players_post[choosedMenuId] = players
       that.setData({
         currTabID: 1,
@@ -320,24 +340,24 @@ Page({
   newsSwiperChange: function (tapId, tapIdx) {
     newsMenuCtrl.setChoosed(tapId)
     tagCtrl.clean()
-    if (this.data.news_post[tapId] != null) {
-      var newsMenu = newsMenuCtrl.getAll()
-      this.setData({
-        scroll_menu: newsMenu,
-        currNewsMenuIdx: tapIdx,
-        curr_news_swiper_id: tapIdx,
-      })
-    } else {
+    // if (this.data.news_post[tapId] != null) {
+    //   var newsMenu = newsMenuCtrl.getAll()
+    //   this.setData({
+    //     scroll_menu: newsMenu,
+    //     currNewsMenuIdx: tapIdx,
+    //     curr_news_swiper_id: tapIdx,
+    //   })
+    // } else {
       if (tapId == 0) tapId = null
       this.reqHomeInfo(null, tapId, null)
-    }
+    // }
   },
 
   playersSwiperChange: function (tapId, tapIdx) {
     playersMenuCtrl.setChoosed(tapId)
     var playersMenu = playersMenuCtrl.getAll()
     var new_players_post = this.data.players_post
-    var players = playersPostCtrl.getPlayer(playersMenuCtrl.get(tapId).name)
+    var players = playerPageCtrl.getPlayer(playersMenuCtrl.get(tapId).name)
     new_players_post[tapId] = players
     this.setData({
       scroll_menu: playersMenu,
@@ -362,7 +382,7 @@ Page({
     var tagsMenu = tagCtrl.getAll()
     var currMenuId = newsMenuCtrl.getChoosed()
     var new_news_post = this.data.news_post
-    var posts = newsPostCtrl.getPost(currMenuId, tapId, null)
+    var posts = postPageCtrl.getPost(currMenuId, tapId, null)
     new_news_post[currMenuId] = {
       posts: posts,
       tags: tagsMenu
@@ -526,9 +546,15 @@ Page({
    * 点击新闻item
    */
   onNewsItemTap: function (e) {
-    console.log("点击赛事新闻中的item")
-    console.log(e)
+    console.log("点击赛事新闻中的item，postId: " + e.currentTarget.dataset.postid + ", idx: " + e.currentTarget.dataset.idx)
+    // console.log(e)
     var postId = e.currentTarget.dataset.postid
+    var idx = e.currentTarget.dataset.idx
+    var currMenuId = newsMenuCtrl.getChoosed()
+    wx.setStorage({
+      key: 'cache_post',
+      data: this.data.news_post[currMenuId].posts[idx],
+    })
     wx.navigateTo({
       url: "../detail/detail?postId=" + postId,
     })

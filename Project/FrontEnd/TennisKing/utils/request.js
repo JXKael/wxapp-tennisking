@@ -36,6 +36,17 @@ const reqPostDetail = (postId, wechatId, success, fail) => {
 }
 
 /**
+ * 点赞
+ */
+const reqLike = (postId, wechatId, success, fail) => {
+  var data = {
+    postId: postId,
+    wechatId: wechatId
+  }
+  requestData("index/like/", "POST", data, success, fail, null)
+}
+
+/**
  * 网络请求基本方法
  * @param url {string} 请求url
  * @param data {object} 参数
@@ -74,5 +85,6 @@ module.exports = {
   requestData: requestData,
   reqHomeInfo: reqHomeInfo,
   reqPlayerInfo: reqPlayerInfo,
-  reqPostDetail: reqPostDetail
+  reqPostDetail: reqPostDetail,
+  reqLike: reqLike
 };

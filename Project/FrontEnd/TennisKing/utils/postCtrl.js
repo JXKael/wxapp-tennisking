@@ -59,6 +59,8 @@ function postCtrl() {
         posts.push(currPost)
       }
     }
+    var sortFunc = (a, b) => Number(b.postId) - Number(a.postId)
+    posts.sort(sortFunc)
     return posts
   }
 

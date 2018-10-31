@@ -4,6 +4,7 @@ function menuCtrl() {
   this.choosed = 0
 
   this.check = key => Boolean(this.menu[String(key)] != null)
+
   this.add = (id, menuName) => {
     const key = id
     var item = {}
@@ -17,6 +18,7 @@ function menuCtrl() {
       this.menu[String(key)] = item
     }
   }
+
   this.getAll = () => {
     var news_menu = []
     var index = 0
@@ -27,7 +29,9 @@ function menuCtrl() {
     }
     return news_menu
   }
+
   this.get = id => this.menu[id]
+
   this.remove = key => {
     if (this.check(key)) {
       this.menu[String(key)] = null
@@ -35,18 +39,23 @@ function menuCtrl() {
       if (Number(key) == this.choosed) this.choosed = 0
     }
   }
+
   this.clean = () => {
     this.count = 0
     this.choosed = 0
     this.menu = {}
   }
+
   this.getChoosed = () => this.choosed
+
   this.setChoosed = id => {
     this.setCacheDisplay(this.choosed, false)
     this.choosed = id
     this.setCacheDisplay(this.choosed, true)
   }
+
   this.getIdxById = () => this.menu[this.choosed].idx
+
   this.getIdByIdx = idx => {
     for (var id in this.menu) {
       if (this.menu[id].idx == idx) {
@@ -54,6 +63,7 @@ function menuCtrl() {
       }
     }
   }
+
   this.setCacheDisplay = (currId, isDisplay) =>{
     var currIdx = this.menu[currId].idx
     // 上一个

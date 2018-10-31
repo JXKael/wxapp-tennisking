@@ -8,6 +8,7 @@ Page({
    * 页面的初始数据
    */
   data: {
+    postId: 0,
     title: "美网 男单西里奇会师锦织圭 米尔曼逆转费德勒",
     time: "02/30 05:40",
     tags: [],
@@ -29,6 +30,7 @@ Page({
       var date = util.formatTime(new Date(post.createTime * 1000))
       var time = date.month + "/" + date.day + " " + date.hour + ":" + date.minute
       this.setData({
+        postId: postId,
         title: title,
         time: time,
         tags: post.tags,
@@ -102,6 +104,35 @@ Page({
    * 点赞
    */
   onBtnLikeTap: function (e) {
-    console.log(e)
+    console.log("点赞")
+    var success = (res) => {
+      console.log("点赞成功")
+      console.log(res.data)
+      var like = this.data.like
+      this.setData({
+        like: like + 1
+      })
+      var cacheData = null
+      wx.getStorage({
+        key: 'cache_post',
+        success: function(cache) {
+          cacheData = cache.data
+          cacheData.likeCount = res.data.post.likeCount
+          cacheData.viewCount = res.data.post.viewCount
+          wx.setStorage({
+            key: "cache_post",
+            data: cacheData,
+          })
+        },
+      })
+      wx.hideLoading()
+    }
+    var fail = (res) => {
+      wx.hideLoading()
+    }
+    wx.showLoading({
+      title: "加载中",
+    })
+    request.reqLike(this.data.postId, "f-magician", success, fail)
   }
 })
