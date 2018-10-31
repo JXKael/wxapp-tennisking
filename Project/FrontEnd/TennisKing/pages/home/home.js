@@ -66,6 +66,8 @@ const tagsDefault = [
   { id: 0, name: "全部"}
 ]
 
+const app = getApp()
+
 Page({
 
   /**
@@ -97,15 +99,35 @@ Page({
     topLoading: {
       top_loading_height: '0rpx',
       top_loading_fill: '0rpx'
-    }
+    },
+
+    canIUse: wx.canIUse('button.open-type.getUserInfo')
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    // 设置page-scroll的高
     var that = this
+    // 查看是否授权
+    wx.getSetting({
+      success(res) {
+        if (res.authSetting['scope.userInfo']) {
+          // 已经授权，可以直接调用 getUserInfo 获取头像昵称
+          wx.getUserInfo({
+            success: function (res) {
+              console.log(res.userInfo)
+              app.globalData.userInfo = res.userInfo
+              that.setData({
+                userInfo: res.userInfo,
+                hasUserInfo: true,
+              })
+            }
+          })
+        }
+      }
+    })
+    // 设置page-scroll的高
     wx.getSystemInfo({
       success: function (res) {
         SCREEN_CONVERT_RATIO = 750 / res.windowWidth
@@ -586,6 +608,15 @@ Page({
     var playerId = e.currentTarget.dataset.playerid
     wx.navigateTo({
       url: "../playerNews/playerNews?playerId=" + playerId,
+    })
+  },
+
+  bindGetUserInfo: function (e) {
+    console.log(e)
+    app.globalData.userInfo = e.detail.userInfo
+    this.setData({
+      userInfo: e.detail.userInfo,
+      hasUserInfo: true,
     })
   }
 })

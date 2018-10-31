@@ -29,8 +29,9 @@
       </scroll-view>
     </view>
   </view>
+  <button class='btn-userinfo'  wx:if="{{canIUse&&!hasUserInfo}}" open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo">授权登录</button>
   <!-- 下方内容 -->
-  <view class='body' style='position:relative;top:{{body_top}}'>
+  <view class='body' style='position:relative;top:{{body_top}}' wx:if='{{hasUserInfo}}'>
     <swiper class='body-swiper-X' duration='300' current='{{currTabID==0?curr_news_swiper_id:curr_player_swiper_id}}' bindchange='onSwiperChange'>
       <block wx:for='{{scroll_menu}}' wx:for-item='swiperItem' wx:key='{{swiperItem.idx}}'>
         <swiper-item class='body-swiper-X-item' id='body-scroll-{{swiperItem.idx}}'>

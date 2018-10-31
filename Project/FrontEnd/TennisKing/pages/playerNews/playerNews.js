@@ -46,6 +46,7 @@ Page({
         SCREEN_CONVERT_RATIO = 750 / res.windowWidth
       }
     })
+    postPageCtrl.clean()
     var playerId = options.playerId
     this.reqHomeInfo(null, null, playerId, true)
   },

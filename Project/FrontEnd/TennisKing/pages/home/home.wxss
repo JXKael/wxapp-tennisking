@@ -84,6 +84,11 @@ page{
   border-bottom: 6rpx solid #009b42;
 }
 
+.btn-userinfo{
+  margin: 300rpx;
+  width: 270rpx;
+}
+
 .body{
   display: flex;
   flex-direction: column;
