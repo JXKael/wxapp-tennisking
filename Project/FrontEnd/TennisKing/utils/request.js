@@ -14,14 +14,14 @@ const reqHomeInfo = (postId, menuId, playerId, success, fail) => {
   if (menuId != null) {
     data.menuId = menuId
   }
-  requestData("index/", "GET", data, success, fail, null)
+  requestData("index/", "POST", data, success, fail, null)
 }
 
 /**
  * 获取选手列表
  */
 const reqPlayerInfo = (success, fail) => {
-  requestData("index/player/", "GET", null, success, fail, null)
+  requestData("index/player/", "POST", null, success, fail, null)
 }
 
 /**

@@ -21,6 +21,8 @@ const postPageCtrl = new postCtrl()
 const playerPageCtrl = new playerCtrl()
 var isTapMenuOnly = false // 点击菜单会调用swiper current change事件，重复设置data，用此变量控制
 
+var oldestPostId = 0
+
 const newsDefault = [
   { id: 0, name: "全部" }
 ]
@@ -89,6 +91,7 @@ Page({
     tab_opacity: 1,
 
     isBottom: false,
+    hasNoMore: false,
     isTop: false,
     topLoading: {
       top_loading_height: '0rpx',
@@ -118,10 +121,10 @@ Page({
       playersMenuCtrl.add(playersDefault[i].id, playersDefault[i].name)
     }
 
-    this.reqHomeInfo(null, null, null)
+    this.reqHomeInfo(null, null, null, true)
   },
 
-  reqHomeInfo: function (postId, menuId, playerId) {
+  reqHomeInfo: function (postId, menuId, playerId, showLoading) {
     var that = this
     var success = res => {
       // menu
@@ -149,6 +152,10 @@ Page({
         postPageCtrl.add(posts_res[i].postId, posts_res[i])
         // posts[i].liked = false
       }
+      var hasNoMore = posts_res.length <= 0
+      if (!hasNoMore) oldestPostId = posts_res[posts_res.length - 1].postId
+      needNewPost = false
+
       var choosedMenuId = newsMenuCtrl.getChoosed()
       newsMenuCtrl.setChoosed(choosedMenuId)
       var choosedIdx = newsMenuCtrl.getIdxById(choosedMenuId)
@@ -169,7 +176,10 @@ Page({
         currNewsMenuIdx: choosedIdx,
         curr_news_swiper_id: choosedIdx,
         currTagIdx: choosedTagId,
-        news_post: new_news_post
+        news_post: new_news_post,
+        isBottom: false,
+        hasNoMore: hasNoMore,
+        isTop: false
       })
 
       wx.hideLoading()
@@ -177,9 +187,11 @@ Page({
     var fail = res => {
       wx.hideLoading()
     }
-    wx.showLoading({
-      title: "加载中",
-    })
+    if (showLoading) {
+      wx.showLoading({
+        title: "加载中",
+      })
+    }
     request.reqHomeInfo(postId, menuId, playerId, success, fail)
   },
 
@@ -196,6 +208,8 @@ Page({
     wx.getStorage({
       key: "cache_post",
       success: function (res) {
+        console.log("读取缓存成功")
+        console.log(res.data)
         postPageCtrl.add(res.data.postId, res.data)
         var currMenuId = newsMenuCtrl.getChoosed()
         var new_news_post = that.data.news_post
@@ -336,7 +350,7 @@ Page({
   },
 
   /**
-   * 横向滑动处理
+   * 资讯界面横向滑动处理
    */
   newsSwiperChange: function (tapId, tapIdx) {
     newsMenuCtrl.setChoosed(tapId)
@@ -350,10 +364,13 @@ Page({
     //   })
     // } else {
       if (tapId == 0) tapId = null
-      this.reqHomeInfo(null, tapId, null)
+      this.reqHomeInfo(null, tapId, null, true)
     // }
   },
 
+  /**
+   * 玩家列表界面横向滑动处理
+   */
   playersSwiperChange: function (tapId, tapIdx) {
     playersMenuCtrl.setChoosed(tapId)
     var playersMenu = playersMenuCtrl.getAll()
@@ -405,12 +422,6 @@ Page({
     this.setData({
       isTop: true
     })
-    var that = this
-    // setTimeout(function () {
-    //   that.setData({
-    //     isTop: false
-    //   })
-    // }, 2000)
   },
 
   /**
@@ -418,18 +429,16 @@ Page({
    */
   onBodyScrollYTolower: function (e) {
     console.log("竖向滑动触底")
-    console.log(e)
     if (this.data.isBottom) return
+    if (this.data.currTabID == 1) return
+    console.log(e)
 
     this.setData({
       isBottom: true
     })
-    var that = this
-    setTimeout(function () {
-      that.setData({
-        isBottom: false
-      })
-    }, 2000)
+    var currMenuId = newsMenuCtrl.getChoosed()
+    if (currMenuId == 0) currMenuId = null
+    this.reqHomeInfo(oldestPostId, currMenuId, null, false)
   },
 
   /**
@@ -507,40 +516,41 @@ Page({
   },
 
   /**
-   * 
+   * 触摸结束，用于下滑刷新
    */
   onBodyTouchEnd: function (e) {
-    // console.log("触摸结束")
-    // if (isScrolling) {
-    //   if (Math.abs(this.data.head_top_num) < top_offset / 2) {
-    //     // 下弹回来
-    //     // var newTop = this.data.head_top_num + 
-    //     // if (newTop < -top_offset) { newTop = -top_offset }
-    //     // if (newTop > 0) { newTop = 0 }
+    console.log("触摸结束")
+    if (isScrolling) {
+      if (Math.abs(this.data.head_top_num) < top_offset / 2) {
+        // 下弹回来
+        // var newTop = this.data.head_top_num + 
+        // if (newTop < -top_offset) { newTop = -top_offset }
+        // if (newTop > 0) { newTop = 0 }
 
-    //     // var newOpacoty = 1 + newTop / head_alpha
-    //     // if (newOpacoty < 0) { newOpacoty = 0 }
-    //     // if (newOpacoty > 1) { newOpacoty = 1 }
+        // var newOpacoty = 1 + newTop / head_alpha
+        // if (newOpacoty < 0) { newOpacoty = 0 }
+        // if (newOpacoty > 1) { newOpacoty = 1 }
 
-    //     // var newTopStr = String(newTop * SCREEN_CONVERT_RATIO) + "rpx"
-    //     // this.setData({
-    //     //   head_top_num: newTop,
-    //     //   body_top: newTopStr,
-    //     //   head_top: newTopStr,
-    //     //   tab_opacity: newOpacoty
-    //     // })
-    //   }else{
-    //     // 上缩回去
-    //   }
-    //   isScrolling = false
-    // }
+        // var newTopStr = String(newTop * SCREEN_CONVERT_RATIO) + "rpx"
+        // this.setData({
+        //   head_top_num: newTop,
+        //   body_top: newTopStr,
+        //   head_top: newTopStr,
+        //   tab_opacity: newOpacoty
+        // })
+      }else{
+        // 上缩回去
+      }
+      isScrolling = false
+    }
 
-    // if (this.data.isTop) {
-    //   if (needNewPost) {
-    //     this.reqHomeInfo()
-    //   }
-    //   needNewPost = false
-    // }
+    if (this.data.isTop) {
+      if (needNewPost) {
+        var currMenuId = newsMenuCtrl.getChoosed()
+        if (currMenuId == 0) currMenuId = null
+        this.reqHomeInfo(null, currMenuId, null, true)
+      }
+    }
   },
 
   /**
