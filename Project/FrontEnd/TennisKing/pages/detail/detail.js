@@ -14,7 +14,7 @@ Page({
     author: "",
     view: 0,
     like: 0,
-    content: ""
+    content: "",
     cache: {}
   },
 
