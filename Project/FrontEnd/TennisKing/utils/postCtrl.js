@@ -51,7 +51,7 @@ function postCtrl() {
       }
       // 匹配选手
       if (playerId > 0) {
-
+        isPlayerMatch = true
       } else {
         isPlayerMatch = true
       }

@@ -3,7 +3,7 @@ const resources = require("../../utils/resources.js")
 const menusCtrl = require("../../utils/menuCtrl.js")
 const postCtrl = require("../../utils/postCtrl.js")
 const playerCtrl = require("../../utils/playerCtrl.js")
-const request = require('../../utils/request.js');
+const request = require('../../utils/request.js')
 const util = require('../../utils/util.js')
 
 var SCREEN_CONVERT_RATIO = 1
@@ -13,6 +13,7 @@ const head_alpha = 32
 const body_scroll_sudden = 50
 const top_loading_threshold = 80
 var needNewPost = false
+
 const newsMenuCtrl = new menusCtrl()
 const playersMenuCtrl = new menusCtrl()
 const tagCtrl = new menusCtrl()
@@ -167,7 +168,7 @@ Page({
         scroll_menu: newsMenu,
         currNewsMenuIdx: choosedIdx,
         curr_news_swiper_id: choosedIdx,
-        currTagIdx: 0,
+        currTagIdx: choosedTagId,
         news_post: new_news_post
       })
 
@@ -566,8 +567,9 @@ Page({
   onPlayerItemTap: function (e) {
     console.log("点击选手资讯中的选手")
     console.log(e)
+    var playerId = e.currentTarget.dataset.playerid
     wx.navigateTo({
-      url: "../playerNews/playerNews",
+      url: "../playerNews/playerNews?playerId=" + playerId,
     })
   }
 })

@@ -6,9 +6,9 @@
 <view class='container'>
   <scroll-view class='body-scroll-Y' scroll-y enable-back-to-top>
     <!-- 筛选标签列表 -->
-    <template is='scroll-tag' data='{{...tags}}'/>
+    <template is='scroll-tag' data='{{...news_post}}'/>
     <view class='news-content'>
-      <block wx:for='{{newsData}}' wx:for-item='newsItem' wx:key="{{newsItem.id}}">
+      <block wx:for='{{news_post.posts}}' wx:for-item='newsItem' wx:key="{{newsItem.id}}">
       <!-- <block> -->
         <template is='news-item' data='{{...newsItem}}'/>
       </block>
