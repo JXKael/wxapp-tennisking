@@ -3,22 +3,25 @@
   <text class='title'>{{title}}</text>
   <view class='info'>
     <text class='tag-item'>{{time}}</text>
-    <block wx:for='{{tags}}' wx:for-item='tagItem' wx:key='{{tagItem}}'>
-      <text class='tag-item'>{{tagItem}}</text>
+    <block wx:for='{{tags}}' wx:for-item='tagItem' wx:key='{{tagItem.tagId}}'>
+      <text class='tag-item'>{{tagItem.tagName}}</text>
     </block>
   </view>
   <view class='info'>
-    <text class='author'>网球帝小编</text>
+    <text class='author'>{{author}}</text>
     <view class='hot'>
       <image src='../../resources/images/icon_hot.png'></image>
-      <text>9999999</text>
+      <text>{{view}}</text>
     </view>
     <view class='like'>
       <image src='../../resources/images/icon_like.png'></image>
-      <text>9999999</text>
+      <text>{{like}}</text>
     </view>
   </view>
-  <rich-text class='body'>奥德赛发送到发的说法飞洒发生大范德萨范德萨范德萨</rich-text>
+  <view class='body'>
+    <rich-text nodes='{{content}}'></rich-text>
+    <!-- <text>aaaa</text> -->
+  </view>
   <view class='btn-like' bindtap='onBtnLikeTap'>
     <text>赞一下</text>
   </view>

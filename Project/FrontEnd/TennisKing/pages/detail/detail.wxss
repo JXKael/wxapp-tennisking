@@ -1,4 +1,8 @@
 /* pages/detail/detail.wxss */
+.container{
+  padding: 0 30rpx;
+}
+
 .title{
   width: 100%;
   height: auto;
@@ -6,7 +10,6 @@
   text-align: left;
   margin-top: 20rpx;
   margin-bottom: 10rpx;
-  padding-left: 30rpx;
 }
 
 .info{
@@ -17,7 +20,6 @@
   font-size: 25rpx;
   color: #009b42;
   margin: 5rpx 0;
-  padding-left: 30rpx;
 }
 
 .tag-item{
@@ -81,7 +83,14 @@
 }
 
 .body{
-  margin: 10rpx 30rpx;
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 10rpx 0;  
+}
+
+.body rich-text{
+  width: 100%;
 }
 
 .btn-like{
@@ -89,6 +98,6 @@
   color: #009b42;
   padding: 12rpx 48rpx;
   margin-top: 20rpx;
-  border: 1rpx solid #009b42;
+  border: 2rpx solid #009b42;
   border-radius: 12rpx;
 }

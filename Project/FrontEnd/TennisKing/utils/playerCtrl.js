@@ -20,8 +20,6 @@ function playerCtrl() {
   }
 
   this.getPlayer = (initial) => {
-    console.log(initial)
-    console.log(this.player)
     if (initial == null) {
       initial = "A"
     }
@@ -37,7 +35,6 @@ function playerCtrl() {
         players.push(currPlayer)
       }
     }
-    console.log(players)
     return players
   }
 

@@ -77,10 +77,9 @@ Page({
     curr_news_swiper_id: 0,
     currPlayersMenuIdx: 0,
     curr_player_swiper_id: 0,
-    tag: [],
     currTagIdx: 0,
-    news_post: [], // { id: 1, postId: 1, title: "哈哈哈", content: "<p></p>" , liked: true },
-    players_post: [], // {idx: 1, playerId: "1", playerName: "", postNum: 0, letter: "" }
+    news_post: {}, // { id: 1, postId: 1, title: "哈哈哈", content: "<p></p>" , liked: true },
+    players_post: {}, // {idx: 1, playerId: "1", playerName: "", postNum: 0, letter: "" }
 
     // 顶部tab相关参数
     head_top_num: 0,
@@ -157,15 +156,19 @@ Page({
       var choosedTagId = tagCtrl.getChoosed()
       var tagsMenu = tagCtrl.getAll()
 
+      var new_news_post = that.data.news_post
       var posts = newsPostCtrl.getPost(choosedMenuId, choosedTagId, playerId)
+      new_news_post[choosedMenuId] = {
+        posts: posts,
+        tags: tagsMenu
+      }
       that.setData({
         currTabID: 0,
         scroll_menu: newsMenu,
         currNewsMenuIdx: choosedIdx,
         curr_news_swiper_id: choosedIdx,
-        tag: { tags: tagsMenu }, // 这样包起来用于模板使用
         currTagIdx: 0,
-        news_post: posts
+        news_post: new_news_post
       })
 
       wx.hideLoading()
@@ -243,13 +246,15 @@ Page({
       playersMenuCtrl.setChoosed(choosedMenuId)
       var choosedIdx = playersMenuCtrl.getIdxById()
       var playersMenu = playersMenuCtrl.getAll()
+      var new_players_post = that.data.players_post
       var players = playersPostCtrl.getPlayer(playersMenuCtrl.get(choosedMenuId).name)
+      new_players_post[choosedMenuId] = players
       that.setData({
         currTabID: 1,
         scroll_menu: playersMenu,
         currPlayersMenuIdx: choosedIdx,
         curr_player_swiper_id: choosedIdx,
-        players_post: players
+        players_post: new_players_post
       })
       wx.hideLoading()
     }
@@ -272,29 +277,74 @@ Page({
     var tapId = e.currentTarget.dataset.id
     var tapIdx = e.currentTarget.dataset.idx
     if (this.data.currTabID == 0) {
-      if (this.data.currNewsMenuIdx == tapIdx) {
-        return
-      }
-      newsMenuCtrl.setChoosed(tapId)
-      tagCtrl.clean()
+      if (this.data.currNewsMenuIdx == tapIdx) return
+
+      isTapMenuOnly = true
+      this.newsSwiperChange(tapId, tapIdx)
+    } else if (this.data.currTabID == 1) {
+      if (this.data.currPlayersMenuIdx == tapIdx) return
+
+      isTapMenuOnly = true
+      this.playersSwiperChange(tapId, tapIdx)
+    }
+  },
+
+  /**
+   * swiper current值改变事件函数，用户横向滑动
+   */
+  onSwiperChange: function (e) {
+    if (isTapMenuOnly) {
+      isTapMenuOnly = false
+      return
+    }
+    console.log("用户横向滑动至idx: " + e.detail.current)
+    // console.log(e)
+
+    var tapIdx = e.detail.current
+    if (this.data.currTabID == 0) {
+      if (this.data.currNewsMenuIdx == tapIdx) return
+
+      var tapId = newsMenuCtrl.getIdByIdx(tapIdx)
+      this.newsSwiperChange(tapId, tapIdx)
+    } else if (this.data.currTabID == 1) {
+      if (this.data.currPlayersMenuIdx == tapIdx) return
+
+      var tapId = playersMenuCtrl.getIdByIdx(tapIdx)
+      this.playersSwiperChange(tapId, tapIdx)
+    }
+  },
+
+  /**
+   * 横向滑动处理
+   */
+  newsSwiperChange: function (tapId, tapIdx) {
+    newsMenuCtrl.setChoosed(tapId)
+    tagCtrl.clean()
+    if (this.data.news_post[tapId] != null) {
+      var newsMenu = newsMenuCtrl.getAll()
+      this.setData({
+        scroll_menu: newsMenu,
+        currNewsMenuIdx: tapIdx,
+        curr_news_swiper_id: tapIdx,
+      })
+    } else {
       if (tapId == 0) tapId = null
       this.reqHomeInfo(null, tapId, null)
-    } else if (this.data.currTabID == 1) {
-      if (this.data.currPlayersMenuIdx == tapIdx) {
-        return
-      }
-      playersMenuCtrl.setChoosed(tapId)
-      var playersMenu = playersMenuCtrl.getAll()
-      var players = playersPostCtrl.getPlayer(playersMenuCtrl.get(tapId).name)
-      this.setData({
-        scroll_menu: playersMenu,
-        currPlayersMenuIdx: tapIdx,
-        curr_player_swiper_id: tapIdx,
-        players_post: players
-      })
     }
+  },
 
-    isTapMenuOnly = true
+  playersSwiperChange: function (tapId, tapIdx) {
+    playersMenuCtrl.setChoosed(tapId)
+    var playersMenu = playersMenuCtrl.getAll()
+    var new_players_post = this.data.players_post
+    var players = playersPostCtrl.getPlayer(playersMenuCtrl.get(tapId).name)
+    new_players_post[tapId] = players
+    this.setData({
+      scroll_menu: playersMenu,
+      currPlayersMenuIdx: tapIdx,
+      curr_player_swiper_id: tapIdx,
+      players_post: new_players_post
+    })
   },
 
   /**
@@ -311,49 +361,16 @@ Page({
     tagCtrl.setChoosed(tapId)
     var tagsMenu = tagCtrl.getAll()
     var currMenuId = newsMenuCtrl.getChoosed()
+    var new_news_post = this.data.news_post
     var posts = newsPostCtrl.getPost(currMenuId, tapId, null)
+    new_news_post[currMenuId] = {
+      posts: posts,
+      tags: tagsMenu
+    }
     this.setData({
-      tag: { tags: tagsMenu },
       currTagIdx: tapIdx,
-      news_post: posts
+      news_post: new_news_post
     })
-  },
-
-  /**
-   * swiper current值改变事件函数，用户横向滑动
-   */
-  onSwiperChange: function (e) {
-    if (isTapMenuOnly) {
-      isTapMenuOnly = false
-      return
-    }
-    console.log("用户横向滑动至idx: " + e.detail.current)
-    // console.log(e)
-    var tapIdx = e.detail.current
-    if (this.data.currTabID == 0) {
-      if (this.data.currNewsMenuIdx == tapIdx) {
-        return
-      }
-      var tapId = newsMenuCtrl.getIdByIdx(tapIdx)
-      newsMenuCtrl.setChoosed(tapId)
-      tagCtrl.clean()
-      if (tapId == 0) tapId = null
-      this.reqHomeInfo(null, tapId, null)
-    } else if (this.data.currTabID == 1) {
-      if (this.data.currPlayersMenuIdx == tapIdx) {
-        return
-      }
-      var tapId = playersMenuCtrl.getIdByIdx(tapIdx)
-      playersMenuCtrl.setChoosed(tapId)
-      var playersMenu = playersMenuCtrl.getAll()
-      var players = playersPostCtrl.getPlayer(playersMenuCtrl.get(tapId).name)
-      this.setData({
-        scroll_menu: playersMenu,
-        currPlayersMenuIdx: tapIdx,
-        curr_player_swiper_id: tapIdx,
-        players_post: players
-      })
-    }
   },
 
   /**
@@ -511,8 +528,9 @@ Page({
   onNewsItemTap: function (e) {
     console.log("点击赛事新闻中的item")
     console.log(e)
+    var postId = e.currentTarget.dataset.postid
     wx.navigateTo({
-      url: "../detail/detail",
+      url: "../detail/detail?postId=" + postId,
     })
   },
 

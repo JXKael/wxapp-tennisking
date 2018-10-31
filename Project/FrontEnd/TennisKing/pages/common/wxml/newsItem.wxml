@@ -1,5 +1,5 @@
 <template name='news-item'>
-  <view class='news-item' bindtap='onNewsItemTap' data-id='{{id}}' data-postId='{{postId}}'>
+  <view class='news-item' bindtap='onNewsItemTap' data-id='{{id}}' data-postid='{{postId}}'>
     <view class='news-top'>
       <!-- 日期或置顶 -->
       <view class='news-date'>

@@ -25,6 +25,17 @@ const reqPlayerInfo = (success, fail) => {
 }
 
 /**
+ * 获取资讯详情
+ */
+const reqPostDetail = (postId, wechatId, success, fail) => {
+  var data = {
+    postId: postId,
+    wechatId: wechatId
+  }
+  requestData("index/post/", "POST", data, success, fail, null)
+}
+
+/**
  * 网络请求基本方法
  * @param url {string} 请求url
  * @param data {object} 参数
@@ -62,5 +73,6 @@ function requestData(url, method, data, successCallback, failCallback, completeC
 module.exports = {
   requestData: requestData,
   reqHomeInfo: reqHomeInfo,
-  reqPlayerInfo: reqPlayerInfo
+  reqPlayerInfo: reqPlayerInfo,
+  reqPostDetail: reqPostDetail
 };

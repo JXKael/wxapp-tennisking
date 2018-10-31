@@ -31,7 +31,9 @@ function postCtrl() {
       var isPlayerMatch = false
       // 匹配menu
       if (menuId > 0) {
-        isMenuMatch = true
+        if (Number(currPost.menuId) == menuId) {
+          isMenuMatch = true
+        }
       } else {
         isMenuMatch = true
       }
