@@ -101,7 +101,7 @@ Page({
       top_loading_fill: '0rpx'
     },
 
-    canIUse: wx.canIUse('button.open-type.getUserInfo')
+    // canIUse: wx.canIUse('button.open-type.getUserInfo')
   },
 
   /**
@@ -110,23 +110,24 @@ Page({
   onLoad: function (options) {
     var that = this
     // 查看是否授权
-    wx.getSetting({
-      success(res) {
-        if (res.authSetting['scope.userInfo']) {
-          // 已经授权，可以直接调用 getUserInfo 获取头像昵称
-          wx.getUserInfo({
-            success: function (res) {
-              console.log(res.userInfo)
-              app.globalData.userInfo = res.userInfo
-              that.setData({
-                userInfo: res.userInfo,
-                hasUserInfo: true,
-              })
-            }
-          })
-        }
-      }
-    })
+    // wx.getSetting({
+    //   success(res) {
+    //     if (res.authSetting['scope.userInfo']) {
+    //       // 已经授权，可以直接调用 getUserInfo 获取头像昵称
+    //       wx.getUserInfo({
+    //         success: function (res) {
+    //           console.log(res.userInfo)
+    //           app.globalData.userInfo = res.userInfo
+    //           that.setData({
+    //             userInfo: res.userInfo,
+    //             hasUserInfo: true,
+    //           })
+    //         }
+    //       })
+    //     }
+    //   }
+    // })
+  
     // 设置page-scroll的高
     wx.getSystemInfo({
       success: function (res) {
@@ -147,6 +148,13 @@ Page({
     this.reqHomeInfo(null, null, null, true)
   },
 
+  /**
+   * 请求资讯
+   * @param postId {string} 最后一条postId，null代表请求新数据
+   * @param menuId {string} 当前menuId，null代表全部菜单
+   * @param playerId {string} 当前playerId，null代表全部球员
+   * @param showLoading {boolean} 是否显示加载中toast
+   */
   reqHomeInfo: function (postId, menuId, playerId, showLoading) {
     var that = this
     var success = res => {
@@ -170,8 +178,14 @@ Page({
       var posts_res = res.data.posts
       for (var i = 0; i < posts_res.length; ++i) {
         posts_res[i].idx = i
+        if (posts_res[i].memberName == null) posts_res[i].memberName = "网球帝小编"
+        posts_res[i].isTop = Number(posts_res[i].top) == 1
         var date = util.formatTime(new Date(posts_res[i].createTime * 1000))
-        posts_res[i].time = date.month + "/" + date.day + "\n" + date.hour + ":" + date.minute
+        if (posts_res[i].isTop) {
+          posts_res[i].time = date.month + "/" + date.day + "\n" + "置顶"
+        } else {
+          posts_res[i].time = date.month + "/" + date.day + "\n" + date.hour + ":" + date.minute
+        }
         postPageCtrl.add(posts_res[i].postId, posts_res[i])
         // posts[i].liked = false
       }
@@ -179,17 +193,17 @@ Page({
       if (!hasNoMore) oldestPostId = posts_res[posts_res.length - 1].postId
       needNewPost = false
 
-      var choosedMenuId = newsMenuCtrl.getChoosed()
-      newsMenuCtrl.setChoosed(choosedMenuId)
-      var choosedIdx = newsMenuCtrl.getIdxById(choosedMenuId)
+      var currMenuId = newsMenuCtrl.getChoosed()
+      newsMenuCtrl.setChoosed(currMenuId)
+      var choosedIdx = newsMenuCtrl.getIdxById(currMenuId)
       var newsMenu = newsMenuCtrl.getAll()
 
       var choosedTagId = tagCtrl.getChoosed()
       var tagsMenu = tagCtrl.getAll()
 
       var new_news_post = that.data.news_post
-      var posts = postPageCtrl.getPost(choosedMenuId, choosedTagId, playerId)
-      new_news_post[choosedMenuId] = {
+      var posts = postPageCtrl.getPost(currMenuId, choosedTagId, playerId)
+      new_news_post[currMenuId] = {
         posts: posts,
         tags: tagsMenu
       }
@@ -227,25 +241,21 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
+    if (this.data.currTabID == 1) return
     var that = this
     wx.getStorage({
-      key: "cache_post",
+      key: "need_refresh",
       success: function (res) {
         console.log("读取缓存成功")
-        console.log(res.data)
-        postPageCtrl.add(res.data.postId, res.data)
         var currMenuId = newsMenuCtrl.getChoosed()
-        var new_news_post = that.data.news_post
-        if (new_news_post[currMenuId] != null) {
-          new_news_post[currMenuId].posts[res.data.idx] = res.data
+        if (res.data) {
+          console.log("需要更新")
+          that.reqHomeInfo(null, currMenuId, null, false)
         }
-        that.setData({
-          news_post: new_news_post
-        })
         wx.removeStorage({
-          key: 'cache_post',
-          success: function(res) {
-            console.log("移除缓存cache_post成功")
+          key: 'need_refresh',
+          success: function (res) {
+            console.log("移除缓存need_refresh成功")
           },
         })
       },
@@ -275,15 +285,42 @@ Page({
   onNewsTabTap: function (e) {
     console.log("点击赛事新闻")
     if (this.data.currTabID == 0) return
-
-    var newsMenu = newsMenuCtrl.getAll()
-    var choosedMenuId = newsMenuCtrl.getChoosed()
-    var choosedIdx = newsMenuCtrl.getIdxById(choosedMenuId)
-    this.setData({
-      currTabID: 0,
-      scroll_menu: newsMenu,
-      currNewsMenuIdx: choosedIdx,
-      curr_news_swiper_id: choosedIdx
+    var that = this
+    var currMenuId = newsMenuCtrl.getChoosed()
+    wx.getStorage({
+      key: "need_refresh",
+      success: function (res) {
+        console.log("读取缓存成功")
+        if (res.data) {
+          console.log("需要更新")
+          that.reqHomeInfo(null, currMenuId, null, false)
+        } else {
+          var newsMenu = newsMenuCtrl.getAll()
+          var choosedIdx = newsMenuCtrl.getIdxById(currMenuId)
+          that.setData({
+            currTabID: 0,
+            scroll_menu: newsMenu,
+            currNewsMenuIdx: choosedIdx,
+            curr_news_swiper_id: choosedIdx
+          })
+        }
+        wx.removeStorage({
+          key: 'need_refresh',
+          success: function (res) {
+            console.log("移除缓存need_refresh成功")
+          },
+        })
+      },
+      fail: function (res) {
+        var newsMenu = newsMenuCtrl.getAll()
+        var choosedIdx = newsMenuCtrl.getIdxById(currMenuId)
+        that.setData({
+          currTabID: 0,
+          scroll_menu: newsMenu,
+          currNewsMenuIdx: choosedIdx,
+          curr_news_swiper_id: choosedIdx
+        })
+      }
     })
   },
 
@@ -304,13 +341,13 @@ Page({
         posts_res[i].idx = i
         playerPageCtrl.add(posts_res[i].playerId, posts_res[i])
       }
-      var choosedMenuId = playersMenuCtrl.getChoosed()
-      playersMenuCtrl.setChoosed(choosedMenuId)
+      var currMenuId = playersMenuCtrl.getChoosed()
+      playersMenuCtrl.setChoosed(currMenuId)
       var choosedIdx = playersMenuCtrl.getIdxById()
       var playersMenu = playersMenuCtrl.getAll()
       var new_players_post = that.data.players_post
-      var players = playerPageCtrl.getPlayer(playersMenuCtrl.get(choosedMenuId).name)
-      new_players_post[choosedMenuId] = players
+      var players = playerPageCtrl.getPlayer(playersMenuCtrl.get(currMenuId).name)
+      new_players_post[currMenuId] = players
       that.setData({
         currTabID: 1,
         scroll_menu: playersMenu,
@@ -340,12 +377,10 @@ Page({
     var tapIdx = e.currentTarget.dataset.idx
     if (this.data.currTabID == 0) {
       if (this.data.currNewsMenuIdx == tapIdx) return
-
       isTapMenuOnly = true
       this.newsSwiperChange(tapId, tapIdx)
     } else if (this.data.currTabID == 1) {
       if (this.data.currPlayersMenuIdx == tapIdx) return
-
       isTapMenuOnly = true
       this.playersSwiperChange(tapId, tapIdx)
     }
@@ -382,6 +417,7 @@ Page({
   newsSwiperChange: function (tapId, tapIdx) {
     newsMenuCtrl.setChoosed(tapId)
     tagCtrl.clean()
+    // 缓存处理先屏蔽，tag出错
     // if (this.data.news_post[tapId] != null) {
     //   var newsMenu = newsMenuCtrl.getAll()
     //   this.setData({
@@ -588,12 +624,6 @@ Page({
     console.log("点击赛事新闻中的item，postId: " + e.currentTarget.dataset.postid + ", idx: " + e.currentTarget.dataset.idx)
     // console.log(e)
     var postId = e.currentTarget.dataset.postid
-    var idx = e.currentTarget.dataset.idx
-    var currMenuId = newsMenuCtrl.getChoosed()
-    wx.setStorage({
-      key: 'cache_post',
-      data: this.data.news_post[currMenuId].posts[idx],
-    })
     wx.navigateTo({
       url: "../detail/detail?postId=" + postId,
     })
@@ -611,12 +641,16 @@ Page({
     })
   },
 
+  /**
+   * 获取用户信息button回调
+   */
   bindGetUserInfo: function (e) {
+    console.log("点击授权登录按钮")
     console.log(e)
-    app.globalData.userInfo = e.detail.userInfo
-    this.setData({
-      userInfo: e.detail.userInfo,
-      hasUserInfo: true,
-    })
+    // app.globalData.userInfo = e.detail.userInfo
+    // this.setData({
+    //   userInfo: e.detail.userInfo,
+    //   hasUserInfo: true,
+    // })
   }
 })

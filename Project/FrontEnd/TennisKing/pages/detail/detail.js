@@ -16,7 +16,8 @@ Page({
     view: 0,
     like: 0,
     content: "",
-    cache: {}
+    cache: {},
+    isLiked: false
   },
 
   /**
@@ -29,6 +30,7 @@ Page({
       var title = post.title
       var date = util.formatTime(new Date(post.createTime * 1000))
       var time = date.month + "/" + date.day + " " + date.hour + ":" + date.minute
+      var isLiked = Number(res.data.like) == 1
       this.setData({
         postId: postId,
         title: title,
@@ -38,7 +40,8 @@ Page({
         view: post.viewCount,
         like: post.likeCount,
         content: post.content,
-        cache: post
+        cache: post,
+        isLiked: isLiked
       })
       wx.hideLoading()
     }
@@ -105,26 +108,31 @@ Page({
    */
   onBtnLikeTap: function (e) {
     console.log("点赞")
+    if (this.data.isLiked){
+      console.log("已点赞")
+      return
+    }
     var success = (res) => {
       console.log("点赞成功")
-      console.log(res.data)
+
       var like = Number(this.data.like)
       this.setData({
-        like: like + 1
+        like: like + 1,
+        isLiked: true
       })
-      var cacheData = null
-      wx.getStorage({
-        key: 'cache_post',
-        success: function(cache) {
-          cacheData = cache.data
-          cacheData.likeCount = res.data.post.likeCount
-          cacheData.viewCount = res.data.post.viewCount
+      // var cacheData = null
+      // wx.getStorage({
+      //   key: 'need_refresh',
+      //   success: function(cache) {
+      //     cacheData = cache.data
+      //     cacheData.likeCount = res.data.post.likeCount
+      //     cacheData.viewCount = res.data.post.viewCount
           wx.setStorage({
-            key: "cache_post",
-            data: cacheData,
+            key: "need_refresh",
+            data: true,
           })
-        },
-      })
+      //   },
+      // })
       wx.hideLoading()
     }
     var fail = (res) => {

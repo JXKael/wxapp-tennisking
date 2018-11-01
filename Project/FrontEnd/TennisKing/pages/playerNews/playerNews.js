@@ -51,6 +51,14 @@ Page({
     this.reqHomeInfo(null, null, playerId, true)
   },
 
+
+  /**
+   * 请求资讯
+   * @param postId {string} 最后一条postId，null代表请求新数据
+   * @param menuId {string} 当前menuId，null代表全部菜单
+   * @param playerId {string} 当前playerId，null代表全部球员
+   * @param showLoading {boolean} 是否显示加载中toast
+   */
   reqHomeInfo: function (postId, menuId, playerId, showLoading) {
     var that = this
     var success = res => {
@@ -79,7 +87,6 @@ Page({
 
       var new_news_post = this.data.news_post
       var posts = postPageCtrl.getPost(0, choosedTagId, playerId)
-      console.log(postPageCtrl.getAll())
       new_news_post.posts = posts
       new_news_post.tags = tagsMenu
       that.setData({
@@ -117,24 +124,13 @@ Page({
   onShow: function () {
     var that = this
     wx.getStorage({
-      key: "cache_post",
+      key: "need_refresh",
       success: function (res) {
         console.log("读取缓存成功")
-        console.log(res.data)
-        postPageCtrl.add(res.data.postId, res.data)
-        var new_news_post = that.data.news_post
-        if (new_news_post.posts[res.data.idx] != null) {
-          new_news_post.posts[res.data.idx] = res.data
+        if (res.data) {
+          console.log("需要更新")
+          that.reqHomeInfo(null, null, that.data.playerId, false)
         }
-        that.setData({
-          news_post: new_news_post
-        })
-        wx.removeStorage({
-          key: 'cache_post',
-          success: function (res) {
-            console.log("移除缓存cache_post成功")
-          },
-        })
       },
     })
   },
@@ -270,11 +266,6 @@ Page({
     console.log("点击赛事新闻中的item，postId: " + e.currentTarget.dataset.postid + ", idx: " + e.currentTarget.dataset.idx)
     // console.log(e)
     var postId = e.currentTarget.dataset.postid
-    var idx = e.currentTarget.dataset.idx
-    wx.setStorage({
-      key: 'cache_post',
-      data: this.data.news_post.posts[idx],
-    })
     wx.navigateTo({
       url: "../detail/detail?postId=" + postId,
     })

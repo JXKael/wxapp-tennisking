@@ -30,7 +30,7 @@ const reqPlayerInfo = (success, fail) => {
 const reqPostDetail = (postId, wechatId, success, fail) => {
   var data = {
     postId: postId,
-    wechatId: wechatId
+    wechatId: null
   }
   requestData("index/post/", "POST", data, success, fail, null)
 }
@@ -41,7 +41,7 @@ const reqPostDetail = (postId, wechatId, success, fail) => {
 const reqLike = (postId, wechatId, success, fail) => {
   var data = {
     postId: postId,
-    wechatId: wechatId
+    wechatId: null // 暂时屏蔽
   }
   requestData("index/like/", "POST", data, success, fail, null)
 }

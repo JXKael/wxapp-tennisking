@@ -59,7 +59,11 @@ function postCtrl() {
         posts.push(currPost)
       }
     }
-    var sortFunc = (a, b) => Number(b.postId) - Number(a.postId)
+    var sortFunc = (a, b) => {
+      if (a.isTop) return false
+      if (b.isTop) return true
+      return Number(b.postId) - Number(a.postId)
+    }
     posts.sort(sortFunc)
     return posts
   }

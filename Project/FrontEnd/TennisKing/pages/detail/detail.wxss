@@ -101,3 +101,9 @@
   border: 2rpx solid #009b42;
   border-radius: 12rpx;
 }
+
+.btn-liked{
+  color: white;
+  background-color: #e99900;
+  border: 2rpx solid #e99900;
+}

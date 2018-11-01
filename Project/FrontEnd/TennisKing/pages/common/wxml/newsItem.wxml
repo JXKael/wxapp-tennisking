@@ -2,7 +2,7 @@
   <view class='news-item' bindtap='onNewsItemTap' data-idx='{{idx}}' data-postid='{{postId}}'>
     <view class='news-top'>
       <!-- 日期或置顶 -->
-      <view class='news-date'>
+      <view class="news-date {{isTop?'news-date-top':''}}">
         <text>{{time}}</text>
       </view>
       <!-- 选手&标签 -->

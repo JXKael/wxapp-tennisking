@@ -22,7 +22,8 @@
     <rich-text nodes='{{content}}'></rich-text>
     <!-- <text>aaaa</text> -->
   </view>
-  <view class='btn-like' bindtap='onBtnLikeTap'>
-    <text>赞一下</text>
+  <view class="btn-like {{isLiked?'btn-liked':''}}" bindtap='onBtnLikeTap'>
+    <text wx-if='{{!isLiked}}'>赞一下</text>
+    <text wx-if='{{isLiked}}'>已点赞</text>
   </view>
 </view>
