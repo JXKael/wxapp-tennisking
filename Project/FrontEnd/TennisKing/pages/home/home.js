@@ -181,10 +181,14 @@ Page({
         if (posts_res[i].memberName == null) posts_res[i].memberName = "网球帝小编"
         posts_res[i].isTop = Number(posts_res[i].top) == 1
         var date = util.formatTime(new Date(posts_res[i].createTime * 1000))
+        var month = date.month >= 10 ? date.month : "0" + date.month
+        var day = date.day >= 10 ? date.day : "0" + date.day
+        var hour = date.hour >= 10 ? date.hour : "0" + date.hour
+        var minute = date.minute >= 10 ? date.minute : "0" + date.minute
         if (posts_res[i].isTop) {
-          posts_res[i].time = date.month + "/" + date.day + "\n" + "置顶"
+          posts_res[i].time = month + "/" + day + "\n" + "置顶"
         } else {
-          posts_res[i].time = date.month + "/" + date.day + "\n" + date.hour + ":" + date.minute
+          posts_res[i].time = month + "/" + day + "\n" + hour + ":" + minute
         }
         postPageCtrl.add(posts_res[i].postId, posts_res[i])
         // posts[i].liked = false

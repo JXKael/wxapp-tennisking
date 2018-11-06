@@ -75,7 +75,11 @@ Page({
       for (var i = 0; i < posts_res.length; ++i) {
         posts_res[i].idx = i
         var date = util.formatTime(new Date(posts_res[i].createTime * 1000))
-        posts_res[i].time = date.month + "/" + date.day + "\n" + date.hour + ":" + date.minute
+        var month = date.month >= 10 ? date.month : "0" + date.month
+        var day = date.day >= 10 ? date.day : "0" + date.day
+        var hour = date.hour >= 10 ? date.hour : "0" + date.hour
+        var minute = date.minute >= 10 ? date.minute : "0" + date.minute
+        posts_res[i].time = month + "/" + day + "\n" + hour + ":" + minute
         postPageCtrl.add(posts_res[i].postId, posts_res[i])
       }
       var hasNoMore = posts_res.length <= 0

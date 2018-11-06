@@ -29,7 +29,11 @@ Page({
       var post = res.data.post
       var title = post.title
       var date = util.formatTime(new Date(post.createTime * 1000))
-      var time = date.month + "/" + date.day + " " + date.hour + ":" + date.minute
+      var month = date.month >= 10 ? date.month : "0" + date.month
+      var day = date.day >= 10 ? date.day : "0" + date.day
+      var hour = date.hour >= 10 ? date.hour : "0" + date.hour
+      var minute = date.minute >= 10 ? date.minute : "0" + date.minute
+      var time = month + "/" + day + " " + hour + ":" + minute
       var isLiked = Number(res.data.like) == 1
       this.setData({
         postId: postId,
