@@ -79,11 +79,18 @@
 }
 
 .news-middle{
+  height: auto;
+  max-height: 250rpx;
+  overflow: hidden;
   margin: 20rpx 0;
   display: block;
   color: #7a7a7a;
   font-size: 30rpx;
   line-height: 50rpx;
+}
+
+.news-middle-notfold{
+  max-height: none;
 }
 
 .news-bottom{

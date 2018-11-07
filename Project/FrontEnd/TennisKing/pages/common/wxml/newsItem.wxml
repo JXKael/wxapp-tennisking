@@ -1,5 +1,5 @@
 <template name='news-item'>
-  <view class='news-item' bindtap='onNewsItemTap' data-idx='{{idx}}' data-postid='{{postId}}'>
+  <view class='news-item' data-idx='{{idx}}' data-postid='{{postId}}'>
     <view class='news-top'>
       <!-- 日期或置顶 -->
       <view class="news-date {{isTop?'news-date-top':''}}">
@@ -15,7 +15,7 @@
         </view>
       </view>
     </view>
-    <view class='news-middle'>
+    <view class="news-middle {{isFold?'':'news-middle-notfold'}}" bindtap='onNewsItemTap' data-idx='{{idx}}' data-postid='{{postId}}'>
       <rich-text nodes='{{content}}'></rich-text>
     </view>
     <view class='news-bottom'>

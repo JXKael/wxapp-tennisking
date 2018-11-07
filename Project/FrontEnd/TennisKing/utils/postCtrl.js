@@ -56,6 +56,7 @@ function postCtrl() {
         isPlayerMatch = true
       }
       if (isMenuMatch && isTagMatch && isPlayerMatch) {
+        currPost.isFold = true
         posts.push(currPost)
       }
     }
@@ -65,6 +66,9 @@ function postCtrl() {
       return Number(b.postId) - Number(a.postId)
     }
     posts.sort(sortFunc)
+    for (var i = 0; i < posts.length; ++i) {
+      posts[i].idx = i
+    }
     return posts
   }
 

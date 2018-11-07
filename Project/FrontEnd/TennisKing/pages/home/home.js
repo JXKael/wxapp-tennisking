@@ -177,7 +177,6 @@ Page({
       // 资讯
       var posts_res = res.data.posts
       for (var i = 0; i < posts_res.length; ++i) {
-        posts_res[i].idx = i
         if (posts_res[i].memberName == null) posts_res[i].memberName = "网球帝小编"
         posts_res[i].isTop = Number(posts_res[i].top) == 1
         var date = util.formatTime(new Date(posts_res[i].createTime * 1000))
@@ -191,7 +190,6 @@ Page({
           posts_res[i].time = month + "/" + day + "\n" + hour + ":" + minute
         }
         postPageCtrl.add(posts_res[i].postId, posts_res[i])
-        // posts[i].liked = false
       }
       var hasNoMore = posts_res.length <= 0
       if (!hasNoMore) oldestPostId = posts_res[posts_res.length - 1].postId
@@ -627,9 +625,15 @@ Page({
   onNewsItemTap: function (e) {
     console.log("点击赛事新闻中的item，postId: " + e.currentTarget.dataset.postid + ", idx: " + e.currentTarget.dataset.idx)
     // console.log(e)
-    var postId = e.currentTarget.dataset.postid
-    wx.navigateTo({
-      url: "../detail/detail?postId=" + postId,
+    // var postId = e.currentTarget.dataset.postid
+    // wx.navigateTo({
+    //   url: "../detail/detail?postId=" + postId,
+    // })
+    var currMenuId = newsMenuCtrl.getChoosed()
+    var new_news_post = this.data.news_post
+    new_news_post[currMenuId].posts[e.currentTarget.dataset.idx].isFold = !new_news_post[currMenuId].posts[e.currentTarget.dataset.idx].isFold
+    this.setData({
+      news_post: new_news_post
     })
   },
 
