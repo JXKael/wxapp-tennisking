@@ -189,6 +189,14 @@ Page({
         } else {
           posts_res[i].time = month + "/" + day + "\n" + hour + ":" + minute
         }
+        var playerNames = ""
+        for (var j = 0; j < posts_res[i].players.length; ++j) {
+          playerNames = playerNames + posts_res[i].players[j].playerName + "、"
+        }
+        posts_res[i].playerNames = playerNames.substring(0, playerNames.length - 1)
+        // posts_res[i].content = posts_res[i].content.replace(/<p(.*<p>)|(>)/, "<p><span style='color:black'><b>" + posts_res[i].title  + " </b></span>")
+        posts_res[i].content = posts_res[i].content.replace(/<([a-zA-Z]+)\s*[^><]*>/g,"<$1>")
+        posts_res[i].content = "<span style='color:black'><b>" + posts_res[i].title + "</b></span>" + posts_res[i].content
         postPageCtrl.add(posts_res[i].postId, posts_res[i])
       }
       var hasNoMore = posts_res.length <= 0
@@ -635,6 +643,21 @@ Page({
     this.setData({
       news_post: new_news_post
     })
+  },
+
+  /**
+   * 点击选手名称
+   */
+  onPlayerNameTap: function (e) {
+    console.log("点击赛事新闻中的选手名称，postId: " + e.currentTarget.dataset.postid + ", idx: " + e.currentTarget.dataset.idx)
+    var currMenuId = newsMenuCtrl.getChoosed()
+    var new_news_post = this.data.news_post
+    var players = new_news_post[currMenuId].posts[e.currentTarget.dataset.idx].players
+    if (players.length > 0) {
+      wx.navigateTo({
+        url: "../playerNews/playerNews?playerId=" + players[0].playerId,
+      })
+    }
   },
 
   /**

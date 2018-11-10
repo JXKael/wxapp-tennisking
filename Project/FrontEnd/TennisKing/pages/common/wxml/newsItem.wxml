@@ -7,7 +7,7 @@
       </view>
       <!-- 选手&标签 -->
       <view class='news-player'>
-        <text class='news-player-name'>{{title}}</text>
+        <text class='news-player-name' data-idx='{{idx}}' data-postid='{{postId}}' bindtap='onPlayerNameTap'>{{playerNames}}</text>
         <view class='news-player-tags'>
           <block wx:for='{{tags}}' wx:for-item='tagItem' wx:key='{{tagItem.tagId}}'>
             <text class='news-player-tag'>{{tagItem.tagName}}</text>
@@ -16,7 +16,12 @@
       </view>
     </view>
     <view class="news-middle {{isFold?'':'news-middle-notfold'}}" bindtap='onNewsItemTap' data-idx='{{idx}}' data-postid='{{postId}}'>
-      <rich-text nodes='{{content}}'></rich-text>
+      <block wx:if='{{isFold}}'>
+        <text class='news-middle-title'>{{title+'  '}}</text>
+        <text class='news-middle-summary'>{{summary+'... '}}</text>
+        <text class='news-middle-open'>全文</text>
+      </block>
+      <rich-text wx:if='{{!isFold}}' nodes='{{content}}'></rich-text>
     </view>
     <view class='news-bottom'>
       <text class='news-author'>{{memberName}}</text>

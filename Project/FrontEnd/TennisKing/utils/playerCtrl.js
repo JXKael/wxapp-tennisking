@@ -35,6 +35,10 @@ function playerCtrl() {
         players.push(currPlayer)
       }
     }
+    // var sortFunc = (a, b) => {
+    //   return Number(b.playerId) - Number(a.playerId)
+    // }
+    // players.sort(sortFunc)
     return players
   }
 

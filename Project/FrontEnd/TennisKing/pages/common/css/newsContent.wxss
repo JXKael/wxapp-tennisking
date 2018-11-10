@@ -21,9 +21,9 @@
 .news-date{
   display: flex;
   flex-direction: column;
-  margin: 10rpx 10rpx 10rpx 0rpx;
-  width: 150rpx;
-  height: 100rpx;
+  margin: 16rpx 10rpx 10rpx 0rpx;
+  width: 128rpx;
+  height: 90rpx;
   background-color: #009b42;
   border-radius: 15rpx;
 }
@@ -55,6 +55,7 @@
   font-size: 35rpx;
   font-weight: bold;
   margin-bottom: 5rpx;
+  overflow: hidden;
 }
 
 .news-player-tags{
@@ -91,6 +92,15 @@
 
 .news-middle-notfold{
   max-height: none;
+}
+
+.news-middle-title{
+  font-weight: bold;
+  color: black;
+}
+
+.news-middle-open{
+  color: #009b42;
 }
 
 .news-bottom{

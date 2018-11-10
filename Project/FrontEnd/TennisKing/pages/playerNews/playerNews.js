@@ -80,6 +80,12 @@ Page({
         var hour = date.hour >= 10 ? date.hour : "0" + date.hour
         var minute = date.minute >= 10 ? date.minute : "0" + date.minute
         posts_res[i].time = month + "/" + day + "\n" + hour + ":" + minute
+        var playerNames = ""
+        for (var j = 0; j < posts_res[i].players.length; ++j) {
+          playerNames = playerNames + posts_res[i].players[j].playerName + "、"
+        }
+        posts_res[i].playerNames = playerNames.substring(0, playerNames.length - 1)
+        posts_res[i].content = "<span style='color:black'><b>" + posts_res[i].title + "</b></span>" + posts_res[i].content
         postPageCtrl.add(posts_res[i].postId, posts_res[i])
       }
       var hasNoMore = posts_res.length <= 0
