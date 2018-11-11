@@ -85,7 +85,11 @@ Page({
           playerNames = playerNames + posts_res[i].players[j].playerName + "、"
         }
         posts_res[i].playerNames = playerNames.substring(0, playerNames.length - 1)
-        posts_res[i].content = "<span style='color:black'><b>" + posts_res[i].title + "</b></span>" + posts_res[i].content
+        // 清除所有格式
+        posts_res[i].content = posts_res[i].content.replace(/<([a-zA-Z]+)\s*[^><]*>/g, "<$1>")
+        // 前面插入标题
+        // posts_res[i].content = "<span style='color:black'><b>" + posts_res[i].title + "</b></span>" + posts_res[i].content
+        posts_res[i].content = posts_res[i].content.replace(/<p(><\/p><p)*>/, "<p><span style='color:black'><b>" + posts_res[i].title + "</b> </span>")
         postPageCtrl.add(posts_res[i].postId, posts_res[i])
       }
       var hasNoMore = posts_res.length <= 0
