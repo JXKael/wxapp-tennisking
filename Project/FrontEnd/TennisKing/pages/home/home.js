@@ -648,6 +648,18 @@ Page({
   },
 
   /**
+   * 点击转发
+   */
+  onRepostTap: function (e) {
+    console.log("点击转发，postId: " + e.currentTarget.dataset.postid + ", idx: " + e.currentTarget.dataset.idx)
+    // console.log(e)
+    var postId = e.currentTarget.dataset.postid
+    wx.navigateTo({
+      url: "../detail/detail?postId=" + postId,
+    })
+  },
+
+  /**
    * 点击选手名称
    */
   onPlayerNameTap: function (e) {

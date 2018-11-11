@@ -86,7 +86,9 @@
   display: block;
   width: 100%;
   height: auto;
-  margin: 10rpx 0;  
+  margin: 10rpx 0;
+  color: #949494;
+  font-size: 32rpx;
 }
 
 .body rich-text{
@@ -97,7 +99,7 @@
   font-size: 28rpx;
   color: #009b42;
   padding: 12rpx 48rpx;
-  margin-top: 20rpx;
+  margin-top: 40rpx;
   border: 2rpx solid #009b42;
   border-radius: 12rpx;
 }

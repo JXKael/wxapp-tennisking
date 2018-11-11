@@ -35,6 +35,9 @@ Page({
       var minute = date.minute >= 10 ? date.minute : "0" + date.minute
       var time = month + "/" + day + " " + hour + ":" + minute
       var isLiked = Number(res.data.like) == 1
+      // 清除所有格式
+      post.content = post.content.replace(/<([a-zA-Z]+)\s*[^><]*>/g, "<$1>")
+      if (post.memberName == null) post.memberName = "网球帝小编"
       this.setData({
         postId: postId,
         title: title,
