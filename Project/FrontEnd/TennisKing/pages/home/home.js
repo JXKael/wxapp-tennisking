@@ -197,8 +197,8 @@ Page({
         // 清除所有格式
         posts_res[i].content = posts_res[i].content.replace(/<([a-zA-Z]+)\s*[^><]*>/g,"<$1>")
         // 前面插入标题
-        // posts_res[i].content = "<span style='color:black'><b>" + posts_res[i].title + "</b></span>" + posts_res[i].content
-        posts_res[i].content = posts_res[i].content.replace(/<p(><\/p><p)*>/, "<p><span style='color:black'><b>" + posts_res[i].title  + "</b> </span>")
+        posts_res[i].content = "<p style='color:black'><b>" + posts_res[i].title + "</b></p>" + posts_res[i].content
+        // posts_res[i].content = posts_res[i].content.replace(/<p(><\/p><p)*>/, "<p><span style='color:black'><b>" + posts_res[i].title  + "</b> </span>")
         postPageCtrl.add(posts_res[i].postId, posts_res[i])
       }
       var hasNoMore = posts_res.length <= 0
@@ -635,10 +635,6 @@ Page({
   onNewsItemTap: function (e) {
     console.log("点击赛事新闻中的item，postId: " + e.currentTarget.dataset.postid + ", idx: " + e.currentTarget.dataset.idx)
     // console.log(e)
-    // var postId = e.currentTarget.dataset.postid
-    // wx.navigateTo({
-    //   url: "../detail/detail?postId=" + postId,
-    // })
     var currMenuId = newsMenuCtrl.getChoosed()
     var new_news_post = this.data.news_post
     new_news_post[currMenuId].posts[e.currentTarget.dataset.idx].isFold = !new_news_post[currMenuId].posts[e.currentTarget.dataset.idx].isFold
