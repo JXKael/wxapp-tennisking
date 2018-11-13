@@ -17,12 +17,12 @@
     </view>
     <!-- 中间正文 -->
     <view class="news-middle {{isFold?'':'news-middle-notfold'}}" bindtap='onNewsItemTap' data-idx='{{idx}}' data-postid='{{postId}}'>
-      <block wx:if='{{isFold}}'>
+      <block wx:if='{{isFold&&canFold}}'>
         <text class='news-middle-title'>{{title+'  '}}</text>
         <text class='news-middle-summary'>{{summary+'... '}}</text>
         <text class='news-middle-open'>全文</text>
       </block>
-      <rich-text wx:if='{{!isFold}}' nodes='{{content}}'></rich-text>
+      <rich-text wx:if='{{!isFold||!canFold}}' nodes='{{content}}'></rich-text>
     </view>
     <view class='news-bottom'>
       <!-- 作者 -->

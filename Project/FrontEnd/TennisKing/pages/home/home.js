@@ -134,7 +134,8 @@ Page({
         SCREEN_CONVERT_RATIO = 750 / res.windowWidth
         var windowHeight = (res.windowHeight * SCREEN_CONVERT_RATIO); //将高度乘以换算后的该设备的rpx与px的比例
         that.setData({
-          windowHeight: windowHeight + "rpx"
+          windowHeight: windowHeight + "rpx",
+          scrollHeight: (windowHeight - 62) + "rpx"
         })
         console.log("window height: " + windowHeight) //最后获得转化后得rpx单位的窗口高度
       }

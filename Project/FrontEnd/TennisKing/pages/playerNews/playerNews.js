@@ -41,9 +41,16 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    // 设置page-scroll的高
     wx.getSystemInfo({
       success: function (res) {
         SCREEN_CONVERT_RATIO = 750 / res.windowWidth
+        var windowHeight = (res.windowHeight * SCREEN_CONVERT_RATIO); //将高度乘以换算后的该设备的rpx与px的比例
+        that.setData({
+          windowHeight: windowHeight + "rpx",
+          scrollHeight: (windowHeight - 62) + "rpx"
+        })
+        console.log("window height: " + windowHeight) //最后获得转化后得rpx单位的窗口高度
       }
     })
     postPageCtrl.clean()
@@ -76,7 +83,7 @@ Page({
         postPageCtrl.polishPost(posts_res[i])
         postPageCtrl.add(posts_res[i].postId, posts_res[i])
       }
-      var hasNoMore = posts_res.length <= 0
+      var hasNoMore = posts_res.length <= 10
       if (!hasNoMore) oldestPostId = posts_res[posts_res.length - 1].postId
       needNewPost = false
 

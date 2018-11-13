@@ -5,7 +5,7 @@
 
 <view class='container'>
     <template is='top-loading' data='{{...topLoading}}' wx:if='{{isTop}}'/>
-    <scroll-view class='body-scroll-Y' scroll-y scroll-with-animation enable-back-to-top bindscroll='onBodyScrollY' lower-threshold='5' bindscrolltolower='onBodyScrollYTolower' upper-threshold='5' bindscrolltoupper='onBodyScrollYToUpper' bindtouchend='onBodyTouchEnd'>
+    <scroll-view class='body-scroll-Y' style='height:{{scrollHeight}}' scroll-y scroll-with-animation enable-back-to-top bindscroll='onBodyScrollY' lower-threshold='5' bindscrolltolower='onBodyScrollYTolower' upper-threshold='5' bindscrolltoupper='onBodyScrollYToUpper' bindtouchend='onBodyTouchEnd'>
     <!-- 筛选标签列表 -->
     <template is='scroll-tag' data='{{...news_post}}'/>
     <view class='news-content'>

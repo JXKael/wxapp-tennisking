@@ -1,7 +1,7 @@
 /* pages/home/home.wxss */
 @import "../common/css/scrollTag.wxss";
-@import "../common/css/newsContent.wxss";
-@import "../common/css/playerContent.wxss";
+@import "../common/css/newsItem.wxss";
+@import "../common/css/playerItem.wxss";
 @import "../common/css/loading.wxss";
 
 page{
@@ -103,7 +103,7 @@ page{
   display: flex;
   flex-direction: row;
   width: auto;
-  height: 1200rpx;
+  /* border-bottom: solid 1rpx red; */
 }
 
 .body-swiper-X-item{
@@ -116,7 +116,6 @@ page{
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 1145rpx;
   min-height: 1145rpx;
 }
 
