@@ -7,6 +7,7 @@ const request = require('../../utils/request.js')
 const util = require('../../utils/util.js')
 
 var SCREEN_CONVERT_RATIO = 1
+var windowHeight = 0
 var isScrolling = false
 const top_offset = 60
 const head_alpha = 32
@@ -132,9 +133,8 @@ Page({
     wx.getSystemInfo({
       success: function (res) {
         SCREEN_CONVERT_RATIO = 750 / res.windowWidth
-        var windowHeight = (res.windowHeight * SCREEN_CONVERT_RATIO); //将高度乘以换算后的该设备的rpx与px的比例
+        windowHeight = (res.windowHeight * SCREEN_CONVERT_RATIO); //将高度乘以换算后的该设备的rpx与px的比例
         that.setData({
-          windowHeight: windowHeight + "rpx",
           bodyHeight: (windowHeight - 60) + "rpx",
           scrollHeight: (windowHeight - 150) + "rpx"
         })
@@ -315,6 +315,10 @@ Page({
         })
       }
     })
+    this.setData({
+      bodyHeight: (windowHeight - 60) + "rpx",
+      scrollHeight: (windowHeight - 150) + "rpx"
+    })
   },
 
   /**
@@ -324,6 +328,10 @@ Page({
     console.log("点击选手资讯")
     if (this.data.currTabID == 1) return
     this.reqPlayerInfo()
+    this.setData({
+      bodyHeight: (windowHeight - 70) + "rpx",
+      scrollHeight: (windowHeight - 70) + "rpx"
+    })
   },
 
   reqPlayerInfo: function () {
@@ -474,6 +482,7 @@ Page({
     console.log("触顶事件")
     console.log(e);
     if (this.data.isTop) return
+    if (this.data.currTabID != 0) return
     var topLoading = {
       top_loading_height: "0rpx",
       top_loading_fill: "0rpx"

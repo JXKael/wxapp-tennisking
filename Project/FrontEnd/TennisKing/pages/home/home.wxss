@@ -103,7 +103,7 @@ page{
   display: flex;
   flex-direction: row;
   width: auto;
-  /* border-bottom: solid 1rpx red; */
+  /* border: solid 1rpx red; */
 }
 
 .body-swiper-X-item{
@@ -116,7 +116,7 @@ page{
   display: flex;
   flex-direction: column;
   width: 100%;
-  min-height: 1000rpx;
+  /* min-height: 1000rpx; */
   /* border: solid 1rpx green; */
 }
 
