@@ -30,7 +30,7 @@ Page({
     currTagIdx: 0,
     isBottom: false,
     hasNoMore: false,
-    isTop: false,
+    isTop: true,
     topLoading: {
       top_loading_height: '0rpx',
       top_loading_fill: '0rpx'
@@ -42,13 +42,14 @@ Page({
    */
   onLoad: function (options) {
     // 设置page-scroll的高
+    var that = this
     wx.getSystemInfo({
       success: function (res) {
         SCREEN_CONVERT_RATIO = 750 / res.windowWidth
         var windowHeight = (res.windowHeight * SCREEN_CONVERT_RATIO); //将高度乘以换算后的该设备的rpx与px的比例
         that.setData({
           windowHeight: windowHeight + "rpx",
-          scrollHeight: (windowHeight - 62) + "rpx"
+          scrollHeight: (windowHeight - 90) + "rpx"
         })
         console.log("window height: " + windowHeight) //最后获得转化后得rpx单位的窗口高度
       }
@@ -100,7 +101,7 @@ Page({
         news_post: new_news_post,
         isBottom: false,
         hasNoMore: hasNoMore,
-        isTop: false
+        // isTop: false
       })
 
       wx.hideLoading()
@@ -176,15 +177,42 @@ Page({
   },
 
   /**
+   * 点击标签
+   */
+  onTagItemTap: function (e) {
+    console.log("用户点击 tag, id: " + e.currentTarget.dataset.id + ", idx: " + e.currentTarget.dataset.idx)
+    // console.log(e)
+    var tapId = e.currentTarget.dataset.id
+    var tapIdx = e.currentTarget.dataset.idx
+    if (this.data.currTagIdx == tapIdx) {
+      return
+    }
+    tagCtrl.setChoosed(tapId)
+    var tagsMenu = tagCtrl.getAll()
+    var new_news_post = this.data.news_post
+    var posts = postPageCtrl.getPost(null, tapId, this.data.playerId, false)
+    new_news_post.posts = posts
+    new_news_post.tags = tagsMenu
+    this.setData({
+      currTagIdx: tapIdx,
+      news_post: new_news_post
+    })
+  },
+
+  /**
    * 页面滑动框【触顶】事件
    */
   onBodyScrollYToUpper: function (e) {
     console.log("触顶事件")
     // console.log(e);
     if (this.data.isTop) return
-
+    var topLoading = {
+      top_loading_height: "0rpx",
+      top_loading_fill: "0rpx"
+    }
     this.setData({
-      isTop: true
+      // isTop: true,
+      topLoading: topLoading
     })
   },
 
@@ -212,15 +240,16 @@ Page({
     if (e.detail.scrollTop <= 0) {
       if (this.data.isTop) {
         var absScrollTop = Math.abs(e.detail.scrollTop)
-        var isTop = thsi.data.isTop
         // 触顶刷新
         var ballFill = 1 - absScrollTop / top_loading_threshold
         if (ballFill < 0) {
-          if (!needNewPost) needNewPost = true;
+          if (!needNewPost) {
+            needNewPost = true
+            wx.vibrateShort()
+          }
           ballFill = 0
         }
         if (ballFill >= 1) {
-          isTop = false
           ballFill = 1
         }
         var topLoading = {
@@ -228,7 +257,6 @@ Page({
           top_loading_fill: String(ballFill * 50) + "rpx"
         }
         this.setData({
-          isTop: isTop,
           topLoading: topLoading
         })
       }
@@ -240,33 +268,11 @@ Page({
    */
   onBodyTouchEnd: function (e) {
     console.log("触摸结束")
-    console.log(this.data.isTop)
-    console.log(needNewPost)
     if (this.data.isTop) {
       if (needNewPost) {
         this.reqHomeInfo(null, null, this.data.playerId, true)
       }
     }
-  },
-
-  onTagItemTap: function (e) {
-    console.log("用户点击 tag, id: " + e.currentTarget.dataset.id + ", idx: " + e.currentTarget.dataset.idx)
-    // console.log(e)
-    var tapId = e.currentTarget.dataset.id
-    var tapIdx = e.currentTarget.dataset.idx
-    if (this.data.currTagIdx == tapIdx) {
-      return
-    }
-    tagCtrl.setChoosed(tapId)
-    var tagsMenu = tagCtrl.getAll()
-    var new_news_post = this.data.news_post
-    var posts = postPageCtrl.getPost(null, tapId, this.data.playerId, false)
-    new_news_post.posts = posts
-    new_news_post.tags = tagsMenu
-    this.setData({
-      currTagIdx: tapIdx,
-      news_post: new_news_post
-    })
   },
 
   /**

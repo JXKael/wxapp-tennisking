@@ -135,7 +135,8 @@ Page({
         var windowHeight = (res.windowHeight * SCREEN_CONVERT_RATIO); //将高度乘以换算后的该设备的rpx与px的比例
         that.setData({
           windowHeight: windowHeight + "rpx",
-          scrollHeight: (windowHeight - 62) + "rpx"
+          bodyHeight: (windowHeight - 60) + "rpx",
+          scrollHeight: (windowHeight - 150) + "rpx"
         })
         console.log("window height: " + windowHeight) //最后获得转化后得rpx单位的窗口高度
       }
@@ -473,9 +474,13 @@ Page({
     console.log("触顶事件")
     console.log(e);
     if (this.data.isTop) return
-
+    var topLoading = {
+      top_loading_height: "0rpx",
+      top_loading_fill: "0rpx"
+    }
     this.setData({
-      isTop: true
+      isTop: true,
+      topLoading: topLoading
     })
   },
 
@@ -551,17 +556,18 @@ Page({
         })
       }
     } else {
-      if (this.data.isTop) {
+      if (this.data.isTop && this.data.currTabID == 0) {
         var absScrollTop = Math.abs(e.detail.scrollTop)
-        var isTop = this.data.isTop
         // 触顶刷新
         var ballFill = 1 - absScrollTop / top_loading_threshold
         if (ballFill < 0) {
-          if (!needNewPost) needNewPost = true;
+          if (!needNewPost) {
+            needNewPost = true
+            wx.vibrateShort()
+          }
           ballFill = 0
         }
         if (ballFill >= 1) {
-          isTop = false
           ballFill = 1
         }
         var topLoading = {
@@ -569,7 +575,6 @@ Page({
           top_loading_fill: String(ballFill * 50) + "rpx"
         }
         this.setData({
-          isTop: isTop,
           topLoading: topLoading
         })
       }

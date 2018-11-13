@@ -12,9 +12,10 @@
 .top-loading{
   display: block;
   position: absolute;
-  top: -25rpx;
+  top: 60rpx;
   width: 100%;
   height: 200rpx;
+  z-index: -2;
 }
 
 .top-loading-img{

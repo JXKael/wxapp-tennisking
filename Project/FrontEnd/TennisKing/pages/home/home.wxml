@@ -33,15 +33,15 @@
   <!-- 下方内容 -->
   <!-- <view class='body' style='position:relative;top:{{body_top}}' wx:if='{{hasUserInfo}}'> -->
   <view class='body' style='position:relative;top:{{body_top}}'>
-    <swiper class='body-swiper-X' style='height:{{scrollHeight}}' duration='300' current='{{currTabID==0?curr_news_swiper_id:curr_player_swiper_id}}' bindchange='onSwiperChange'>
+    <swiper class='body-swiper-X' style='height:{{bodyHeight}}' duration='300' current='{{currTabID==0?curr_news_swiper_id:curr_player_swiper_id}}' bindchange='onSwiperChange'>
       <block wx:for='{{scroll_menu}}' wx:for-item='swiperItem' wx:key='{{swiperItem.idx}}'>
         <swiper-item class='body-swiper-X-item' id='body-scroll-{{swiperItem.idx}}'>
+          <!-- 筛选标签列表 -->
+          <template is='scroll-tag' data='{{...news_post[swiperItem.id]}}' wx:if='{{news_post[swiperItem.id].tags.length>0&&currTabID==0}}'/>
           <template is='top-loading' data='{{...topLoading}}' wx:if='{{isTop}}'/>
           <scroll-view class='body-scroll-Y' style='height:{{scrollHeight}}' scroll-y scroll-with-animation enable-back-to-top bindscroll='onBodyScrollY' lower-threshold='5' bindscrolltolower='onBodyScrollYTolower' upper-threshold='5' bindscrolltoupper='onBodyScrollYToUpper' bindtouchend='onBodyTouchEnd'>
             <!-- 【赛事新闻】 -->
             <block wx:if='{{currTabID==0&&swiperItem.isShow}}'>
-              <!-- 筛选标签列表 -->
-              <template is='scroll-tag' data='{{...news_post[swiperItem.id]}}' wx:if='{{news_post[swiperItem.id].tags.length > 0}}'/>
               <view class='news-content'>
                 <block wx:for='{{news_post[swiperItem.id].posts}}' wx:for-item='newsItem' wx:key='{{newsItem.id}}'>
                   <template is='news-item' data='{{...newsItem}}'/>

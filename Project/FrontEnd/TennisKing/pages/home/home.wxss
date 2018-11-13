@@ -116,7 +116,8 @@ page{
   display: flex;
   flex-direction: column;
   width: 100%;
-  min-height: 1145rpx;
+  min-height: 1000rpx;
+  /* border: solid 1rpx green; */
 }
 
 .has-no-more{
