@@ -83,7 +83,7 @@ Page({
         postPageCtrl.polishPost(posts_res[i])
         postPageCtrl.add(posts_res[i].postId, posts_res[i])
       }
-      var hasNoMore = posts_res.length <= 10
+      var hasNoMore = posts_res.length < 10
       if (!hasNoMore) oldestPostId = posts_res[posts_res.length - 1].postId
       needNewPost = false
 
@@ -212,18 +212,23 @@ Page({
     if (e.detail.scrollTop <= 0) {
       if (this.data.isTop) {
         var absScrollTop = Math.abs(e.detail.scrollTop)
+        var isTop = thsi.data.isTop
         // 触顶刷新
         var ballFill = 1 - absScrollTop / top_loading_threshold
         if (ballFill < 0) {
           if (!needNewPost) needNewPost = true;
           ballFill = 0
         }
-        if (ballFill > 1) ballFill = 1
+        if (ballFill >= 1) {
+          isTop = false
+          ballFill = 1
+        }
         var topLoading = {
           top_loading_height: String(absScrollTop * SCREEN_CONVERT_RATIO) + "rpx",
           top_loading_fill: String(ballFill * 50) + "rpx"
         }
         this.setData({
+          isTop: isTop,
           topLoading: topLoading
         })
       }
