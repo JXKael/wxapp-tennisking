@@ -44,39 +44,20 @@
   margin-bottom: 30rpx;
 }
 
-.hot{
+.number{
   display: flex;
   flex-direction: row;
   height: 30rpx;
   margin: 30rpx 15rpx;
 }
 
-.hot image{
+.number image{
   width: 30rpx;
   height: 30rpx;
   margin: auto 8rpx;
 }
 
-.hot text{
-  height: 30rpx;
-  line-height: 30rpx;
-  color: #949494;
-}
-
-.like{
-  display: flex;
-  flex-direction: row;
-  height: 30rpx;
-  margin: 30rpx 15rpx;
-}
-
-.like image{
-  width: 30rpx;
-  height: 30rpx;
-  margin: auto 8rpx;
-}
-
-.like text{
+.number text{
   height: 30rpx;
   line-height: 30rpx;
   color: #949494;

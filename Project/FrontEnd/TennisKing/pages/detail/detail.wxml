@@ -9,11 +9,15 @@
   </view>
   <view class='info'>
     <text class='author'>{{author}}</text>
-    <view class='hot'>
+    <view class='number'>
+      <image src='../../resources/images/icon_repost.png'></image>
+      <text>{{view}}</text>
+    </view>
+    <view class='number'>
       <image src='../../resources/images/icon_hot.png'></image>
       <text>{{view}}</text>
     </view>
-    <view class='like'>
+    <view class='number'>
       <image src='../../resources/images/icon_like.png'></image>
       <text>{{like}}</text>
     </view>

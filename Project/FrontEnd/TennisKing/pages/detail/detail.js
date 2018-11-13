@@ -127,19 +127,10 @@ Page({
         like: like + 1,
         isLiked: true
       })
-      // var cacheData = null
-      // wx.getStorage({
-      //   key: 'need_refresh',
-      //   success: function(cache) {
-      //     cacheData = cache.data
-      //     cacheData.likeCount = res.data.post.likeCount
-      //     cacheData.viewCount = res.data.post.viewCount
-          wx.setStorage({
-            key: "need_refresh",
-            data: true,
-          })
-      //   },
-      // })
+      wx.setStorage({
+        key: "need_refresh",
+        data: true,
+      })
       wx.hideLoading()
     }
     var fail = (res) => {
