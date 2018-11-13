@@ -74,7 +74,7 @@ Page({
    * 页面的初始数据
    */
   data: {
-    txt_tab_news: "赛事新闻",
+    txt_tab_news: "赛事资讯",
     txt_tab_players: "选手资讯",
     image_path: resources.images_path,
     currTabID: 0,
