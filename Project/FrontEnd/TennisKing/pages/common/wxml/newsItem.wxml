@@ -2,8 +2,8 @@
   <view class='news-item' data-idx='{{idx}}' data-postid='{{postId}}'>
     <view class='news-top'>
       <!-- 日期或置顶 -->
-      <view class="news-date {{isTop?'news-date-top':''}}">
-        <text>{{time}}</text>
+      <view class="news-date {{isTop&&isTopActive?'news-date-top':''}}">
+        <text>{{isTop&&isTopActive?timeTop:time}}</text>
       </view>
       <!-- 选手&标签 -->
       <view class='news-player'>
@@ -15,6 +15,7 @@
         </view>
       </view>
     </view>
+    <!-- 中间正文 -->
     <view class="news-middle {{isFold?'':'news-middle-notfold'}}" bindtap='onNewsItemTap' data-idx='{{idx}}' data-postid='{{postId}}'>
       <block wx:if='{{isFold}}'>
         <text class='news-middle-title'>{{title+'  '}}</text>
@@ -24,16 +25,20 @@
       <rich-text wx:if='{{!isFold}}' nodes='{{content}}'></rich-text>
     </view>
     <view class='news-bottom'>
+      <!-- 作者 -->
       <text class='news-author'>{{memberName}}</text>
       <view class='news-number'>
-        <view class='news-number-item'>
+        <!-- 点赞 -->
+        <view class='news-number-item' data-idx='{{idx}}' data-postid='{{postId}}' bindtap='onLikeTap'>
           <image class='news-number-icon' src="/resources/images/icon_like{{liked?'_click':''}}.png" mode='aspectFit'/>
           <text class="news-number-text {{liked?'news-number-text-liked':''}}">{{likeCount}}</text>
         </view>
+        <!-- 浏览 -->
         <view class='news-number-item'>
           <image class='news-number-icon' src='/resources/images/icon_hot.png' mode='aspectFit'/>
           <text class="news-number-text">{{viewCount}}</text>
         </view>
+        <!-- 转发 -->
         <view class='news-number-item' data-idx='{{idx}}' data-postid='{{postId}}' bindtap='onRepostTap'>
           <image class='news-number-icon' src='/resources/images/icon_repost.png' mode='aspectFit'/>
           <text class="news-number-text">{{viewCount}}</text>

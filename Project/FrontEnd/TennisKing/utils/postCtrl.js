@@ -1,3 +1,5 @@
+const util = require('util.js')
+
 function postCtrl() {
   this.post = {}
   this.count = 0
@@ -19,10 +21,11 @@ function postCtrl() {
     return posts
   }
 
-  this.getPost = (menuId, tagId, playerId) => {
+  this.getPost = (menuId, tagId, playerId, isTopActive) => {
     menuId = menuId != null ? Number(menuId) : 0
     tagId = tagId != null ? Number(tagId) : 0
     playerId = playerId != null ? Number(playerId) : 0
+    isTopActive = isTopActive != null ? isTopActive : true
     var posts = []
     for (var key in this.post) {
       var currPost = this.post[key]
@@ -57,12 +60,15 @@ function postCtrl() {
       }
       if (isMenuMatch && isTagMatch && isPlayerMatch) {
         currPost.isFold = true
+        currPost.isTopActive = isTopActive
         posts.push(currPost)
       }
     }
     var sortFunc = (a, b) => {
-      if (a.isTop) return false
-      if (b.isTop) return true
+      if (isTopActive) {
+        if (a.isTop) return false
+        if (b.isTop) return true
+      }
       return Number(b.postId) - Number(a.postId)
     }
     posts.sort(sortFunc)
@@ -82,6 +88,35 @@ function postCtrl() {
   this.clean = () => {
     this.count = 0
     this.post = {}
+  }
+
+  this.polishPost = (aPost) => {
+    // 默认作者
+    if (aPost.memberName == null) aPost.memberName = "网球帝小编"
+    aPost.isTop = Number(aPost.top) == 1
+    // 设置时间
+    var date = util.formatTime(new Date(aPost.createTime * 1000))
+    var month = date.month >= 10 ? date.month : "0" + date.month
+    var day = date.day >= 10 ? date.day : "0" + date.day
+    var hour = date.hour >= 10 ? date.hour : "0" + date.hour
+    var minute = date.minute >= 10 ? date.minute : "0" + date.minute
+    aPost.date = date
+    // 置顶
+    if (aPost.isTop) {
+      aPost.timeTop = month + "/" + day + "\n" + "置顶"
+    }
+    aPost.time = month + "/" + day + "\n" + hour + ":" + minute
+    // 选手姓名 TO DO
+    var playerNames = ""
+    for (var j = 0; j < aPost.players.length; ++j) {
+      playerNames = playerNames + aPost.players[j].playerName + "、"
+    }
+    aPost.playerNames = playerNames.substring(0, playerNames.length - 1)
+    // 清除所有格式
+    aPost.content = aPost.content.replace(/<([a-zA-Z]+)\s*[^><]*>/g, "<$1>")
+    // 前面插入标题
+    aPost.content = "<p style='color:black'><b>" + aPost.title + "</b></p>" + aPost.content
+    // aPost.content = aPost.content.replace(/<p(><\/p><p)*>/, "<p><span style='color:black'><b>" + aPost.title  + "</b> </span>")
   }
 }
 

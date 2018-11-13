@@ -177,28 +177,7 @@ Page({
       // 资讯
       var posts_res = res.data.posts
       for (var i = 0; i < posts_res.length; ++i) {
-        if (posts_res[i].memberName == null) posts_res[i].memberName = "网球帝小编"
-        posts_res[i].isTop = Number(posts_res[i].top) == 1
-        var date = util.formatTime(new Date(posts_res[i].createTime * 1000))
-        var month = date.month >= 10 ? date.month : "0" + date.month
-        var day = date.day >= 10 ? date.day : "0" + date.day
-        var hour = date.hour >= 10 ? date.hour : "0" + date.hour
-        var minute = date.minute >= 10 ? date.minute : "0" + date.minute
-        if (posts_res[i].isTop) {
-          posts_res[i].time = month + "/" + day + "\n" + "置顶"
-        } else {
-          posts_res[i].time = month + "/" + day + "\n" + hour + ":" + minute
-        }
-        var playerNames = ""
-        for (var j = 0; j < posts_res[i].players.length; ++j) {
-          playerNames = playerNames + posts_res[i].players[j].playerName + "、"
-        }
-        posts_res[i].playerNames = playerNames.substring(0, playerNames.length - 1)
-        // 清除所有格式
-        posts_res[i].content = posts_res[i].content.replace(/<([a-zA-Z]+)\s*[^><]*>/g,"<$1>")
-        // 前面插入标题
-        posts_res[i].content = "<p style='color:black'><b>" + posts_res[i].title + "</b></p>" + posts_res[i].content
-        // posts_res[i].content = posts_res[i].content.replace(/<p(><\/p><p)*>/, "<p><span style='color:black'><b>" + posts_res[i].title  + "</b> </span>")
+        postPageCtrl.polishPost(posts_res[i])
         postPageCtrl.add(posts_res[i].postId, posts_res[i])
       }
       var hasNoMore = posts_res.length <= 0
@@ -214,7 +193,7 @@ Page({
       var tagsMenu = tagCtrl.getAll()
 
       var new_news_post = that.data.news_post
-      var posts = postPageCtrl.getPost(currMenuId, choosedTagId, playerId)
+      var posts = postPageCtrl.getPost(currMenuId, choosedTagId, playerId, true)
       new_news_post[currMenuId] = {
         posts: posts,
         tags: tagsMenu
@@ -475,7 +454,7 @@ Page({
     var tagsMenu = tagCtrl.getAll()
     var currMenuId = newsMenuCtrl.getChoosed()
     var new_news_post = this.data.news_post
-    var posts = postPageCtrl.getPost(currMenuId, tapId, null)
+    var posts = postPageCtrl.getPost(currMenuId, tapId, null, true)
     new_news_post[currMenuId] = {
       posts: posts,
       tags: tagsMenu

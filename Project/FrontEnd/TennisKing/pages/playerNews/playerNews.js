@@ -73,23 +73,7 @@ Page({
       // 资讯
       var posts_res = res.data.posts
       for (var i = 0; i < posts_res.length; ++i) {
-        posts_res[i].idx = i
-        var date = util.formatTime(new Date(posts_res[i].createTime * 1000))
-        var month = date.month >= 10 ? date.month : "0" + date.month
-        var day = date.day >= 10 ? date.day : "0" + date.day
-        var hour = date.hour >= 10 ? date.hour : "0" + date.hour
-        var minute = date.minute >= 10 ? date.minute : "0" + date.minute
-        posts_res[i].time = month + "/" + day + "\n" + hour + ":" + minute
-        var playerNames = ""
-        for (var j = 0; j < posts_res[i].players.length; ++j) {
-          playerNames = playerNames + posts_res[i].players[j].playerName + "、"
-        }
-        posts_res[i].playerNames = playerNames.substring(0, playerNames.length - 1)
-        // 清除所有格式
-        posts_res[i].content = posts_res[i].content.replace(/<([a-zA-Z]+)\s*[^><]*>/g, "<$1>")
-        // 前面插入标题
-        posts_res[i].content = "<p style='color:black'><b>" + posts_res[i].title + "</b></p>" + posts_res[i].content
-        // posts_res[i].content = posts_res[i].content.replace(/<p(><\/p><p)*>/, "<p><span style='color:black'><b>" + posts_res[i].title + "</b> </span>")
+        postPageCtrl.polishPost(posts_res[i])
         postPageCtrl.add(posts_res[i].postId, posts_res[i])
       }
       var hasNoMore = posts_res.length <= 0
@@ -100,7 +84,7 @@ Page({
       var tagsMenu = tagCtrl.getAll()
 
       var new_news_post = this.data.news_post
-      var posts = postPageCtrl.getPost(0, choosedTagId, playerId)
+      var posts = postPageCtrl.getPost(0, choosedTagId, playerId, false)
       new_news_post.posts = posts
       new_news_post.tags = tagsMenu
       that.setData({
@@ -264,7 +248,7 @@ Page({
     tagCtrl.setChoosed(tapId)
     var tagsMenu = tagCtrl.getAll()
     var new_news_post = this.data.news_post
-    var posts = postPageCtrl.getPost(null, tapId, this.data.playerId)
+    var posts = postPageCtrl.getPost(null, tapId, this.data.playerId, false)
     new_news_post.posts = posts
     new_news_post.tags = tagsMenu
     this.setData({
