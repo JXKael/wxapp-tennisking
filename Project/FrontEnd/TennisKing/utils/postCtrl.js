@@ -117,7 +117,7 @@ function postCtrl() {
     // 前面插入标题
     aPost.content = "<p style='color:black'><b>" + aPost.title + "</b></p>" + aPost.content
     // 是否需要折叠
-    aPost.canFold = aPost.summary.length >= 90
+    aPost.canFold = aPost.summary.length >= 70
     // aPost.content = aPost.content.replace(/<p(><\/p><p)*>/, "<p><span style='color:black'><b>" + aPost.title  + "</b> </span>")
   }
 }
