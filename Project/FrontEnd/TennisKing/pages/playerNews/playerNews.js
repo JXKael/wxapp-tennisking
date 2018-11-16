@@ -16,7 +16,7 @@ var needNewPost = false
 var oldestPostId = 0
 
 const tagsDefault = [
-  { id: 0, name: "全部" }
+  { id: 0, name: "全部", weight: 999999999 }
 ]
 
 Page({
@@ -72,11 +72,11 @@ Page({
     var success = res => {
       // tag
       for (var i = 0; i < tagsDefault.length; ++i) {
-        tagCtrl.add(tagsDefault[i].id, tagsDefault[i].name)
+        tagCtrl.add(tagsDefault[i].id, tagsDefault[i])
       }
       var tags_res = res.data.tags
       for (var i = 0; i < tags_res.length; ++i) {
-        tagCtrl.add(tags_res[i].id, tags_res[i].name)
+        tagCtrl.add(tags_res[i].id, tags_res[i])
       }
       // 资讯
       var posts_res = res.data.posts

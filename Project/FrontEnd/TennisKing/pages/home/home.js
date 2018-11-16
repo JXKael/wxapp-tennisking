@@ -26,45 +26,45 @@ var needNewPost = false
 var oldestPostId = 0
 
 const newsDefault = [
-  { id: 0, name: "全部" }
+  { id: 0, name: "全部", weight: 999999999 }
 ]
 
 const playersDefault = [
-  { id: 0, name: "A" },
-  { id: 1, name: "B" },
-  { id: 2, name: "C" },
-  { id: 3, name: "D" },
-  { id: 4, name: "E" },
-  { id: 5, name: "F" },
-  { id: 6, name: "G" },
+  { id: 0, name: "A", weight: 26 },
+  { id: 1, name: "B", weight: 25 },
+  { id: 2, name: "C", weight: 24 },
+  { id: 3, name: "D", weight: 23 },
+  { id: 4, name: "E", weight: 22 },
+  { id: 5, name: "F", weight: 21 },
+  { id: 6, name: "G", weight: 20 },
 
-  { id: 7, name: "H" },
-  { id: 8, name: "I" },
-  { id: 9, name: "J" },
-  { id: 10, name: "K" },
-  { id: 11, name: "L" },
-  { id: 12, name: "M" },
-  { id: 13, name: "N" },
+  { id: 7, name: "H", weight: 19 },
+  { id: 8, name: "I", weight: 18 },
+  { id: 9, name: "J", weight: 17 },
+  { id: 10, name: "K", weight: 16 },
+  { id: 11, name: "L", weight: 15 },
+  { id: 12, name: "M", weight: 14 },
+  { id: 13, name: "N", weight: 13 },
 
-  { id: 14, name: "O" },
-  { id: 15, name: "P" },
-  { id: 16, name: "Q" },
+  { id: 14, name: "O", weight: 12 },
+  { id: 15, name: "P", weight: 11 },
+  { id: 16, name: "Q", weight: 10 },
 
-  { id: 17, name: "R" },
-  { id: 18, name: "S" },
-  { id: 19, name: "T" },
+  { id: 17, name: "R", weight: 9 },
+  { id: 18, name: "S", weight: 8 },
+  { id: 19, name: "T", weight: 7 },
 
-  { id: 20, name: "U" },
-  { id: 21, name: "V" },
-  { id: 22, name: "W" },
+  { id: 20, name: "U", weight: 6 },
+  { id: 21, name: "V", weight: 5 },
+  { id: 22, name: "W", weight: 4 },
 
-  { id: 23, name: "X" },
-  { id: 24, name: "Y" },
-  { id: 25, name: "Z" },
+  { id: 23, name: "X", weight: 3 },
+  { id: 24, name: "Y", weight: 2 },
+  { id: 25, name: "Z", weight: 1 },
 ]
 
 const tagsDefault = [
-  { id: 0, name: "全部"}
+  { id: 0, name: "全部", weight: 999999999}
 ]
 
 const app = getApp()
@@ -144,7 +144,7 @@ Page({
 
     // 初始化选手资讯menu
     for (var i = 0; i < playersDefault.length; ++i) {
-      playersMenuCtrl.add(playersDefault[i].id, playersDefault[i].name)
+      playersMenuCtrl.add(playersDefault[i].id, playersDefault[i])
     }
 
     this.reqHomeInfo(null, null, null, true)
@@ -162,19 +162,19 @@ Page({
     var success = res => {
       // menu
       for (var i = 0; i < newsDefault.length; ++i) {
-        newsMenuCtrl.add(newsDefault[i].id, newsDefault[i].name)
+        newsMenuCtrl.add(newsDefault[i].id, newsDefault[i])
       }
       var menus_res = res.data.menus
       for (var i = 0; i < menus_res.length; ++i) {
-        newsMenuCtrl.add(menus_res[i].id, menus_res[i].name)
+        newsMenuCtrl.add(menus_res[i].id, menus_res[i])
       }
       // tag
       for (var i = 0; i < tagsDefault.length; ++i) {
-        tagCtrl.add(tagsDefault[i].id, tagsDefault[i].name)
+        tagCtrl.add(tagsDefault[i].id, tagsDefault[i])
       }
       var tags_res = res.data.tags
       for (var i = 0; i < tags_res.length; ++i) {
-        tagCtrl.add(tags_res[i].id, tags_res[i].name)
+        tagCtrl.add(tags_res[i].id, tags_res[i])
       }
       // 资讯
       var posts_res = res.data.posts
@@ -186,10 +186,9 @@ Page({
       if (!hasNoMore) oldestPostId = posts_res[posts_res.length - 1].postId
       needNewPost = false
 
+      var newsMenu = newsMenuCtrl.getAll() // 获得所有menu，idx在此时设置
       var currMenuId = newsMenuCtrl.getChoosed()
-      newsMenuCtrl.setChoosed(currMenuId)
       var choosedIdx = newsMenuCtrl.getIdxById(currMenuId)
-      var newsMenu = newsMenuCtrl.getAll()
 
       var choosedTagId = tagCtrl.getChoosed()
       var tagsMenu = tagCtrl.getAll()
@@ -342,10 +341,10 @@ Page({
         posts_res[i].idx = i
         playerPageCtrl.add(posts_res[i].playerId, posts_res[i])
       }
-      var currMenuId = playersMenuCtrl.getChoosed()
-      playersMenuCtrl.setChoosed(currMenuId)
-      var choosedIdx = playersMenuCtrl.getIdxById()
       var playersMenu = playersMenuCtrl.getAll()
+      var currMenuId = playersMenuCtrl.getChoosed()
+      var choosedIdx = playersMenuCtrl.getIdxById()
+
       var new_players_post = that.data.players_post
       var players = playerPageCtrl.getPlayer(playersMenuCtrl.get(currMenuId).name)
       new_players_post[currMenuId] = players
