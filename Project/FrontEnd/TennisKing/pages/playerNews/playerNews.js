@@ -289,6 +289,14 @@ Page({
   },
 
   /**
+   * 点击选手名称
+   */
+  onPlayerNameTap: function (e) {
+    console.log("点击赛事新闻中的选手名称，postId: " + e.currentTarget.dataset.postid + ", idx: " + e.currentTarget.dataset.idx + ", playerId: " + e.currentTarget.dataset.playerid)
+    // console.log(e)
+  },
+
+  /**
    * 点击转发
    */
   onRepostTap: function (e) {

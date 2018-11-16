@@ -106,12 +106,33 @@ function postCtrl() {
       aPost.timeTop = month + "/" + day + "\n" + "置顶"
     }
     aPost.time = month + "/" + day + "\n" + hour + ":" + minute
-    // 选手姓名 TO DO
+    // 选手姓名
     var playerNames = ""
-    for (var j = 0; j < aPost.players.length; ++j) {
-      playerNames = playerNames + aPost.players[j].playerName + "、"
+    if (aPost.playerId != null) {
+      if (aPost.players != null && aPost.players.length > 0) {
+        var gotName = false
+        for (var i = 0; i < aPost.players.length; ++i) {
+          if (Number(aPost.playerId) == Number(aPost.players[i].playerId)) {
+            playerNames = aPost.players[i].playerName
+            gotName = true
+          }
+        }
+        // 列表中没找到
+        if (!gotName) {
+          playerNames = aPost.title
+        }
+      } else {
+        playerNames = aPost.title
+      }
+    } else {
+      if (aPost.players != null && aPost.players.length > 0) {
+        playerNames = aPost.players[0].playerName
+        aPost.playerId = aPost.players[0].playerId
+      } else {
+        playerNames = aPost.title
+      }
     }
-    aPost.playerNames = playerNames.substring(0, playerNames.length - 1)
+    aPost.playerNames = playerNames
     // 清除所有格式
     aPost.content = aPost.content.replace(/<([a-zA-Z]+)\s*[^><]*>/g, "<$1>")
     // 前面插入标题
