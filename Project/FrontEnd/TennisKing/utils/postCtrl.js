@@ -66,10 +66,10 @@ function postCtrl() {
     }
     var sortFunc = (a, b) => {
       if (isTopActive) {
-        if (a.isTop) return false
-        if (b.isTop) return true
+        if (a.isTop) return -1
+        if (b.isTop) return 1
       }
-      return Number(b.postId) - Number(a.postId)
+      return Number(b.createTime) - Number(a.createTime)
     }
     posts.sort(sortFunc)
     for (var i = 0; i < posts.length; ++i) {
@@ -134,7 +134,9 @@ function postCtrl() {
     }
     aPost.playerNames = playerNames
     // 清除所有格式
-    aPost.content = aPost.content.replace(/<([a-zA-Z]+)\s*[^><]*>/g, "<$1>")
+    // aPost.content = aPost.content.replace(/<([a-zA-Z]+)\s*[^><]*>/g, "<$1>")
+    // 图片添加域名
+    aPost.content = aPost.content.replace("src=\"", "src=\"https://wangqiudi.com")
     // 前面插入标题
     aPost.content = "<p style='color:black'><b>" + aPost.title + "</b></p>" + aPost.content
     // 是否需要折叠
