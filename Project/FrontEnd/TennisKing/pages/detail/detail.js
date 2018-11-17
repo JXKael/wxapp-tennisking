@@ -9,8 +9,8 @@ Page({
    */
   data: {
     postId: 0,
-    title: "美网 男单西里奇会师锦织圭 米尔曼逆转费德勒",
-    time: "02/30 05:40",
+    title: "",
+    time: "",
     tags: [],
     author: "",
     view: 0,
@@ -36,7 +36,8 @@ Page({
       var time = month + "/" + day + " " + hour + ":" + minute
       var isLiked = Number(res.data.like) == 1
       // 清除所有格式
-      post.content = post.content.replace(/<([a-zA-Z]+)\s*[^><]*>/g, "<$1>")
+      // post.content = post.content.replace(/<([a-zA-Z]+)\s*[^><]*>/g, "<$1>")
+      post.content = post.content.replace("src=\"", "src=\"https://wangqiudi.com")
       if (post.memberName == null) post.memberName = "网球帝小编"
       this.setData({
         postId: postId,
@@ -58,7 +59,7 @@ Page({
     wx.showLoading({
       title: "加载中",
     })
-    request.reqPostDetail(postId, "f-magician", success, fail)
+    request.reqPostDetail(postId, "temp", success, fail)
   },
 
   /**
@@ -107,7 +108,23 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage: function () {
-
+    console.log("转发")
+    wx.showLoading({
+      title: "加载中...",
+    })
+    const success = res => {
+      console.log("转发访问接口成功 =========== ")
+      wx.hideLoading()
+    }
+    const fail = res => {
+      wx.hideLoading()
+      console.log("转发访问接口失败 =========== ")
+      console.log(res)
+    }
+    request.reqForward(this.data.postId, success, fail)
+    return {
+      title: this.data.title
+    }
   },
 
   /**

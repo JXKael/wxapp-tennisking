@@ -47,6 +47,16 @@ const reqLike = (postId, wechatId, success, fail) => {
 }
 
 /**
+ * 转发
+ */
+const reqForward = (postId, success, fail) => {
+  var data = {
+    postId: postId
+  }
+  requestData("index/forward/", "POST", data, success, fail, null)
+}
+
+/**
  * 网络请求基本方法
  * @param url {string} 请求url
  * @param data {object} 参数
@@ -86,5 +96,6 @@ module.exports = {
   reqHomeInfo: reqHomeInfo,
   reqPlayerInfo: reqPlayerInfo,
   reqPostDetail: reqPostDetail,
-  reqLike: reqLike
+  reqLike: reqLike,
+  reqForward: reqForward
 };
