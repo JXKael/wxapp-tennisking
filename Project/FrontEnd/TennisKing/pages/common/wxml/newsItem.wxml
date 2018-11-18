@@ -16,7 +16,7 @@
       </view>
     </view>
     <!-- 中间正文 -->
-    <view class="news-middle {{isFold?'':'news-middle-notfold'}}" bindtap='onNewsItemTap' data-idx='{{idx}}' data-postid='{{postId}}'>
+    <view class="news-middle {{isFold&&canFold?'':'news-middle-notfold'}}" bindtap='onNewsItemTap' data-idx='{{idx}}' data-postid='{{postId}}' data-canfold='{{canFold}}'>
       <block wx:if='{{isFold&&canFold}}'>
         <text class='news-middle-title'>{{title+'  '}}</text>
         <text class='news-middle-summary'>{{summary+'... '}}</text>

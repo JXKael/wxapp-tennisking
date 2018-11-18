@@ -281,6 +281,7 @@ Page({
   onNewsItemTap: function (e) {
     console.log("点击赛事新闻中的item，postId: " + e.currentTarget.dataset.postid + ", idx: " + e.currentTarget.dataset.idx)
     // console.log(e)
+    if (!e.currentTarget.dataset.canfold) return
     var new_news_post = this.data.news_post
     new_news_post.posts[e.currentTarget.dataset.idx].isFold = !new_news_post.posts[e.currentTarget.dataset.idx].isFold
     this.setData({
