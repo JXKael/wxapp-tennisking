@@ -41,7 +41,7 @@
         <!-- 转发 -->
         <view class='news-number-item' data-idx='{{idx}}' data-postid='{{postId}}' bindtap='onRepostTap'>
           <image class='news-number-icon' src='/resources/images/icon_repost.png' mode='aspectFit'/>
-          <text class="news-number-text">{{viewCount}}</text>
+          <text class="news-number-text">{{forwardCount}}</text>
         </view>
       </view>
     </view>

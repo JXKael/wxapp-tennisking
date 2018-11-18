@@ -142,6 +142,9 @@ function postCtrl() {
     // 是否需要折叠
     aPost.canFold = aPost.summary.length >= 70
     // aPost.content = aPost.content.replace(/<p(><\/p><p)*>/, "<p><span style='color:black'><b>" + aPost.title  + "</b> </span>")
+    if (aPost.forwardCount == null) aPost.forwardCount = 0
+    if (aPost.viewCount == null) aPost.viewCount = 0
+    if (aPost.likeCount == null) aPost.likeCount = 0
   }
 }
 

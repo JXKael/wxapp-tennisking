@@ -15,6 +15,7 @@ Page({
     author: "",
     view: 0,
     like: 0,
+    forward: 0,
     content: "",
     cache: {},
     isLiked: false
@@ -35,6 +36,10 @@ Page({
       var minute = date.minute >= 10 ? date.minute : "0" + date.minute
       var time = month + "/" + day + " " + hour + ":" + minute
       var isLiked = Number(res.data.like) == 1
+      if (post.forwardCount == null) post.forwardCount = 0
+      if (post.viewCount == null) post.viewCount = 0
+      if (post.likeCount == null) post.likeCount = 0
+      
       // 清除所有格式
       // post.content = post.content.replace(/<([a-zA-Z]+)\s*[^><]*>/g, "<$1>")
       post.content = post.content.replace("src=\"", "src=\"https://wangqiudi.com")
@@ -47,6 +52,7 @@ Page({
         author: post.memberName,
         view: post.viewCount,
         like: post.likeCount,
+        forward: post.forwardCount,
         content: post.content,
         cache: post,
         isLiked: isLiked

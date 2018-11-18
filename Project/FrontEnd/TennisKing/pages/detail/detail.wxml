@@ -11,7 +11,7 @@
     <text class='author'>{{author}}</text>
     <view class='number'>
       <image src='../../resources/images/icon_repost.png'></image>
-      <text>{{view}}</text>
+      <text>{{forward}}</text>
     </view>
     <view class='number'>
       <image src='../../resources/images/icon_hot.png'></image>
