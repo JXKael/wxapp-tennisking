@@ -1,5 +1,5 @@
 <template name='player-item'>
-  <view class='player-item' bindtap='onPlayerItemTap' data-playerid='{{playerId}}'data-idx='{{idx}}'>
+  <view class='player-item' bindtap='onPlayerItemTap' data-playerid='{{playerId}}' data-idx='{{idx}}' data-playername='{{playerName}}'>
     <text class='player-name'>{{playerName}}</text>
     <text class='player-news-num'>{{postNum}}</text>
     <image class='player-left-arrow' src='/resources/images/left_arrow.png'></image>

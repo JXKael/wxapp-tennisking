@@ -681,8 +681,9 @@ Page({
     console.log("点击选手资讯中的选手")
     console.log(e)
     var playerId = e.currentTarget.dataset.playerid
+    var playerName = e.currentTarget.dataset.playername
     wx.navigateTo({
-      url: "../playerNews/playerNews?playerId=" + playerId,
+      url: "../playerNews/playerNews?playerId=" + playerId + "&playerName=" + playerName,
     })
   },
 

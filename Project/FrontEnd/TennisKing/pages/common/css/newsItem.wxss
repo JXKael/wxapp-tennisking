@@ -78,11 +78,11 @@
   width: auto;
   height: 30rpx;
   line-height: 30rpx;
-  border: 1rpx solid #009b42;
+  border: 2rpx solid #009b42;
   border-radius: 10rpx;
   font-size: 24rpx;
-  margin-top: 5rpx;
-  margin-bottom:5rpx;
+  margin-top: 8rpx;
+  margin-bottom: 8rpx;
   padding: 4rpx 10rpx;
 }
 
