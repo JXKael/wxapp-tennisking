@@ -7,7 +7,10 @@
       </view>
       <!-- 选手&标签 -->
       <view class='news-player'>
-        <text class='news-player-name' data-idx='{{idx}}' data-postid='{{postId}}' data-playerId='{{playerId}}' bindtap='onPlayerNameTap'>{{playerNames}}</text>
+        <view class='news-player-name-and-menu'>
+          <text class="news-player-name {{isShowMenu?'':'news-player-name-long'}} " data-idx='{{idx}}' data-postid='{{postId}}' data-playerid='{{playerId}}' data-playername='{{playerName}}' bindtap='onPlayerNameTap'>{{flexTitle}}</text>
+          <text class='news-player-menu' wx:if='{{isShowMenu}}'>{{menuName}}</text>
+        </view>
         <view class='news-player-tags'>
           <block wx:for='{{tags}}' wx:for-item='tagItem' wx:key='{{tagItem.tagId}}'>
             <text class='news-player-tag'>{{tagItem.tagName}}</text>
@@ -18,7 +21,7 @@
     <!-- 中间正文 -->
     <view class="news-middle {{isFold&&canFold?'':'news-middle-notfold'}}" bindtap='onNewsItemTap' data-idx='{{idx}}' data-postid='{{postId}}' data-canfold='{{canFold}}'>
       <block wx:if='{{isFold&&canFold}}'>
-        <text class='news-middle-title'>{{title+'  '}}</text>
+        <text class='news-middle-title' wx:if='{{!isPlayerNews}}'>{{title+'  '}}</text>
         <text class='news-middle-summary'>{{summary+'... '}}</text>
         <text class='news-middle-open'>全文</text>
       </block>

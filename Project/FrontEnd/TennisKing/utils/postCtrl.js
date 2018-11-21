@@ -1,5 +1,38 @@
 const util = require('util.js')
 
+const polish = (aPost) => {
+    // 默认作者
+    if (aPost.memberName == null) aPost.memberName = "网球帝小编"
+    aPost.isTop = Number(aPost.top) == 1
+    // 数字处理
+    if (aPost.forwardCount == null) aPost.forwardCount = 0
+    if (aPost.viewCount == null) aPost.viewCount = 0
+    if (aPost.likeCount == null) aPost.likeCount = 0
+    // 设置时间
+    var date = util.formatTime(new Date(aPost.createTime * 1000))
+    var month = date.month >= 10 ? date.month : "0" + date.month
+    var day = date.day >= 10 ? date.day : "0" + date.day
+    var hour = date.hour >= 10 ? date.hour : "0" + date.hour
+    var minute = date.minute >= 10 ? date.minute : "0" + date.minute
+    aPost.date = date
+    // 置顶处理
+    if (aPost.isTop) {
+      aPost.timeTop = month + "/" + day + "\n" + "置顶"
+    }
+    aPost.time = month + "/" + day + "\n" + hour + ":" + minute
+    // 清除所有格式
+    // aPost.content = aPost.content.replace(/<([a-zA-Z]+)\s*[^><]*>/g, "<$1>")
+    // 图片添加域名
+    aPost.content = aPost.content.replace("src=\"", "src=\"https://wangqiudi.com")
+    // 前面插入标题
+    aPost.content = "<p style='color:black'><b>" + aPost.title + "</b></p>" + aPost.content
+    // aPost.content = aPost.content.replace(/<p(><\/p><p)*>/, "<p><span style='color:black'><b>" + aPost.title  + "</b> </span>")
+    // 是否需要折叠
+    aPost.canFold = aPost.summary.length >= 70
+    // 只有全部menu显示菜单，外部设置
+    aPost.isShowMenu = false
+}
+
 function postCtrl() {
   this.post = {}
   this.count = 0
@@ -91,60 +124,60 @@ function postCtrl() {
   }
 
   this.polishPost = (aPost) => {
-    // 默认作者
-    if (aPost.memberName == null) aPost.memberName = "网球帝小编"
-    aPost.isTop = Number(aPost.top) == 1
-    // 设置时间
-    var date = util.formatTime(new Date(aPost.createTime * 1000))
-    var month = date.month >= 10 ? date.month : "0" + date.month
-    var day = date.day >= 10 ? date.day : "0" + date.day
-    var hour = date.hour >= 10 ? date.hour : "0" + date.hour
-    var minute = date.minute >= 10 ? date.minute : "0" + date.minute
-    aPost.date = date
-    // 置顶
-    if (aPost.isTop) {
-      aPost.timeTop = month + "/" + day + "\n" + "置顶"
-    }
-    aPost.time = month + "/" + day + "\n" + hour + ":" + minute
+    polish(aPost)
     // 选手姓名
-    var playerNames = ""
+    var flexTitle = ""
+    var playerName = ""
     if (aPost.playerId != null) {
       if (aPost.players != null && aPost.players.length > 0) {
         var gotName = false
         for (var i = 0; i < aPost.players.length; ++i) {
           if (Number(aPost.playerId) == Number(aPost.players[i].playerId)) {
-            playerNames = aPost.players[i].playerName
             gotName = true
+            if (aPost.players[i].shortName != null ) {
+              flexTitle = aPost.players[i].shortName
+              playerName = aPost.players[i].playerName
+            } else {
+              flexTitle = aPost.players[i].playerName
+              playerName = aPost.players[i].playerName
+            }
+            break
           }
         }
         // 列表中没找到
         if (!gotName) {
-          playerNames = aPost.title
+          flexTitle = aPost.title
         }
       } else {
-        playerNames = aPost.title
+        flexTitle = aPost.title
       }
     } else {
       if (aPost.players != null && aPost.players.length > 0) {
-        playerNames = aPost.players[0].playerName
+        if (aPost.players[0].shortName != null) {
+          flexTitle = aPost.players[0].shortName
+          playerName = aPost.players[0].playerName
+        } else {
+          flexTitle = aPost.players[0].playerName
+          playerName = aPost.players[0].playerName
+        }
         aPost.playerId = aPost.players[0].playerId
       } else {
-        playerNames = aPost.title
+        flexTitle = aPost.title
       }
     }
-    aPost.playerNames = playerNames
-    // 清除所有格式
-    // aPost.content = aPost.content.replace(/<([a-zA-Z]+)\s*[^><]*>/g, "<$1>")
-    // 图片添加域名
-    aPost.content = aPost.content.replace("src=\"", "src=\"https://wangqiudi.com")
-    // 前面插入标题
-    aPost.content = "<p style='color:black'><b>" + aPost.title + "</b></p>" + aPost.content
-    // 是否需要折叠
-    aPost.canFold = aPost.summary.length >= 70
-    // aPost.content = aPost.content.replace(/<p(><\/p><p)*>/, "<p><span style='color:black'><b>" + aPost.title  + "</b> </span>")
-    if (aPost.forwardCount == null) aPost.forwardCount = 0
-    if (aPost.viewCount == null) aPost.viewCount = 0
-    if (aPost.likeCount == null) aPost.likeCount = 0
+    aPost.flexTitle = flexTitle
+    aPost.playerName = playerName
+    // 单个选手资讯界面与资讯界面显示不同
+    aPost.isPlayerNews = false
+  }
+
+  this.polishPostForPlayer = (aPost, playerName) => {
+    polish(aPost)
+    // 主页显示名字处，显示标题
+    aPost.flexTitle = aPost.title
+    aPost.playerName = playerName
+    // 单个选手资讯界面与资讯界面显示不同
+    aPost.isPlayerNews = true
   }
 }
 

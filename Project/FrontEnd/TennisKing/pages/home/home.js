@@ -168,6 +168,10 @@ Page({
       for (var i = 0; i < menus_res.length; ++i) {
         newsMenuCtrl.add(menus_res[i].id, menus_res[i])
       }
+      var newsMenu = newsMenuCtrl.getAll() // 获得所有menu，idx在此时设置
+      var currMenuId = newsMenuCtrl.getChoosed()
+      var choosedIdx = newsMenuCtrl.getIdxById(currMenuId)
+
       // tag
       for (var i = 0; i < tagsDefault.length; ++i) {
         tagCtrl.add(tagsDefault[i].id, tagsDefault[i])
@@ -180,15 +184,12 @@ Page({
       var posts_res = res.data.posts
       for (var i = 0; i < posts_res.length; ++i) {
         postPageCtrl.polishPost(posts_res[i])
+        posts_res[i].isShowMenu = Number(currMenuId) == 0
         postPageCtrl.add(posts_res[i].postId, posts_res[i])
       }
       var hasNoMore = posts_res.length < 10
       if (!hasNoMore) oldestPostId = posts_res[posts_res.length - 1].postId
       needNewPost = false
-
-      var newsMenu = newsMenuCtrl.getAll() // 获得所有menu，idx在此时设置
-      var currMenuId = newsMenuCtrl.getChoosed()
-      var choosedIdx = newsMenuCtrl.getIdxById(currMenuId)
 
       var choosedTagId = tagCtrl.getChoosed()
       var tagsMenu = tagCtrl.getAll()
@@ -659,15 +660,16 @@ Page({
    * 点击选手名称
    */
   onPlayerNameTap: function (e) {
-    console.log("点击赛事新闻中的选手名称，postId: " + e.currentTarget.dataset.postid + ", idx: " + e.currentTarget.dataset.idx + ", playerId: " + e.currentTarget.dataset.playerid)
+    console.log("点击赛事新闻中的选手名称，postId: " + e.currentTarget.dataset.postid + ", idx: " + e.currentTarget.dataset.idx + ", playerId: " + e.currentTarget.dataset.playerid + ", playerName: " + e.currentTarget.dataset.playername)
     // console.log(e)
     var playerId = e.currentTarget.dataset.playerid
+    var playerName = e.currentTarget.dataset.playername
     if (playerId == null) {
       console.log("the playerId is null")
       return
     } else {
       wx.navigateTo({
-        url: "../playerNews/playerNews?playerId=" + playerId,
+        url: "../playerNews/playerNews?playerId=" + playerId + "&playerName=" + playerName,
       })
     }
   },

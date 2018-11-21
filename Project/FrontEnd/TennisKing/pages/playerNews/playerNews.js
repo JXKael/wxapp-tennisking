@@ -26,6 +26,7 @@ Page({
    */
   data: {
     playerId: 0,
+    playerName: "",
     news_post: {},
     currTagIdx: 0,
     isBottom: false,
@@ -56,6 +57,13 @@ Page({
     })
     postPageCtrl.clean()
     var playerId = options.playerId
+    wx.setNavigationBarTitle({
+      title: options.playerName
+    })
+    this.setData({
+      playerId: options.playerId,
+      playerName: options.playerName
+    })
     this.reqHomeInfo(null, null, playerId, true)
   },
 
@@ -81,7 +89,7 @@ Page({
       // 资讯
       var posts_res = res.data.posts
       for (var i = 0; i < posts_res.length; ++i) {
-        postPageCtrl.polishPost(posts_res[i])
+        postPageCtrl.polishPostForPlayer(posts_res[i], that.data.playerName)
         postPageCtrl.add(posts_res[i].postId, posts_res[i])
       }
       var hasNoMore = posts_res.length < 10
@@ -96,12 +104,10 @@ Page({
       new_news_post.posts = posts
       new_news_post.tags = tagsMenu
       that.setData({
-        playerId: playerId,
         currTagIdx: choosedTagId,
         news_post: new_news_post,
         isBottom: false,
         hasNoMore: hasNoMore,
-        // isTop: false
       })
 
       wx.hideLoading()
