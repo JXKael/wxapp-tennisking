@@ -99,8 +99,8 @@ function postCtrl() {
     }
     var sortFunc = (a, b) => {
       if (isTopActive) {
-        if (a.isTop) return -1
-        if (b.isTop) return 1
+        if (a.isTop && !b.isTop) return -1
+        if (b.isTop && !a.isTop) return 1
       }
       return Number(b.createTime) - Number(a.createTime)
     }
