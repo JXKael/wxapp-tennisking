@@ -3,7 +3,7 @@ const util = require('util.js')
 const polish = (aPost) => {
     // 默认作者
     if (aPost.memberName == null) aPost.memberName = "网球帝小编"
-    aPost.isTop = Number(aPost.top) == 1
+    aPost.isTop = (Number(aPost.top) == 1) || (Number(aPost.top) == 2)
     // 数字处理
     if (aPost.forwardCount == null) aPost.forwardCount = 0
     if (aPost.viewCount == null) aPost.viewCount = 0
@@ -99,8 +99,16 @@ function postCtrl() {
     }
     var sortFunc = (a, b) => {
       if (isTopActive) {
-        if (a.isTop && !b.isTop) return -1
-        if (b.isTop && !a.isTop) return 1
+        if (Number(menuId) != 0) {
+          if (a.isTop && !b.isTop) return -1
+          if (b.isTop && !a.isTop) return 1
+        } else {
+          if (Number(a.top) == 1 && a.isTop && !b.isTop) return -1
+          if (Number(b.top) == 1 && b.isTop && !a.isTop) return 1
+          if (Number(b.top) == 1 && b.isTop && a.isTop) {
+            return Number(b.createTime) - Number(a.createTime)
+          }
+        }
       }
       return Number(b.createTime) - Number(a.createTime)
     }
