@@ -656,6 +656,37 @@ Page({
     })
   },
 
+  onLikeTap: function (e) {
+    console.log("点赞, postId: " + e.currentTarget.dataset.postid + ", idx: " + e.currentTarget.dataset.idx)
+    var that = this
+    if (this.data.isLiked) {
+      console.log("已点赞")
+      return
+    }
+    var success = (res) => {
+      console.log("点赞成功")
+
+      var idx = e.currentTarget.dataset.idx
+      var currMenuId = newsMenuCtrl.getChoosed()
+      var likeCount = Number(res.data.post.likeCount)
+      var new_news_post = that.data.news_post
+      new_news_post[currMenuId].posts[idx].likeCount = likeCount
+      new_news_post[currMenuId].posts[idx].liked = true
+      this.setData({
+        news_post: new_news_post
+      })
+      wx.hideLoading()
+    }
+    var fail = (res) => {
+      wx.hideLoading()
+    }
+    wx.showLoading({
+      title: "加载中",
+    })
+    var postId = e.currentTarget.dataset.postid
+    request.reqLike(postId, "wechat-id", success, fail)
+  },
+
   /**
    * 点击选手名称
    */
@@ -664,12 +695,13 @@ Page({
     // console.log(e)
     var playerId = e.currentTarget.dataset.playerid
     var playerName = e.currentTarget.dataset.playername
+    var shortName = e.currentTarget.dataset.shortname
     if (playerId == null) {
       console.log("the playerId is null")
       return
     } else {
       wx.navigateTo({
-        url: "../playerNews/playerNews?playerId=" + playerId + "&playerName=" + playerName,
+        url: "../playerNews/playerNews?playerId=" + playerId + "&playerName=" + playerName + "&shortName=" + shortName,
       })
     }
   },
@@ -682,8 +714,9 @@ Page({
     console.log(e)
     var playerId = e.currentTarget.dataset.playerid
     var playerName = e.currentTarget.dataset.playername
+    var shortName = e.currentTarget.dataset.shortname
     wx.navigateTo({
-      url: "../playerNews/playerNews?playerId=" + playerId + "&playerName=" + playerName,
+      url: "../playerNews/playerNews?playerId=" + playerId + "&playerName=" + playerName + "&shortName=" + shortName,
     })
   },
 

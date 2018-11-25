@@ -162,6 +162,6 @@ Page({
     wx.showLoading({
       title: "加载中",
     })
-    request.reqLike(this.data.postId, "f-magician", success, fail)
+    request.reqLike(this.data.postId, "wechat-id", success, fail)
   }
 })

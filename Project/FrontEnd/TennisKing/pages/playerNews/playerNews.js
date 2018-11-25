@@ -58,7 +58,7 @@ Page({
     postPageCtrl.clean()
     var playerId = options.playerId
     wx.setNavigationBarTitle({
-      title: options.playerName
+      title: options.shortName
     })
     this.setData({
       playerId: options.playerId,
@@ -314,4 +314,38 @@ Page({
       url: "../detail/detail?postId=" + postId,
     })
   },
+
+  onLikeTap: function (e) {
+    console.log("点赞, postId: " + e.currentTarget.dataset.postid + ", idx: " + e.currentTarget.dataset.idx)
+    var that = this
+    if (this.data.isLiked) {
+      console.log("已点赞")
+      return
+    }
+    var success = (res) => {
+      console.log("点赞成功")
+
+      var idx = e.currentTarget.dataset.idx
+      var likeCount = Number(res.data.post.likeCount)
+      var new_news_post = that.data.news_post
+      new_news_post.posts[idx].likeCount = likeCount
+      new_news_post.posts[idx].liked = true
+      this.setData({
+        news_post: new_news_post
+      })
+      wx.setStorage({
+        key: "need_refresh",
+        data: true,
+      })
+      wx.hideLoading()
+    }
+    var fail = (res) => {
+      wx.hideLoading()
+    }
+    wx.showLoading({
+      title: "加载中",
+    })
+    var postId = e.currentTarget.dataset.postid
+    request.reqLike(postId, "wechat-id", success, fail)
+  }
 })

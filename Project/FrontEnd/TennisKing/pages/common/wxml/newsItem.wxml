@@ -8,7 +8,7 @@
       <!-- 选手&标签 -->
       <view class='news-player'>
         <view class='news-player-name-and-menu'>
-          <text class="news-player-name {{isShowMenu?'':'news-player-name-long'}} " data-idx='{{idx}}' data-postid='{{postId}}' data-playerid='{{playerId}}' data-playername='{{playerName}}' bindtap='onPlayerNameTap'>{{flexTitle}}</text>
+          <text class="news-player-name {{isShowMenu?'':'news-player-name-long'}} " data-idx='{{idx}}' data-postid='{{postId}}' data-playerid='{{playerId}}' data-playername='{{playerName}}'  data-shortname='{{shortName}}' bindtap='onPlayerNameTap'>{{flexTitle}}</text>
           <text class='news-player-menu' wx:if='{{isShowMenu}}'>{{menuName}}</text>
         </view>
         <view class='news-player-tags'>

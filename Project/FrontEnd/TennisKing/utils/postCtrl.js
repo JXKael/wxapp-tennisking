@@ -24,8 +24,6 @@ const polish = (aPost) => {
     // aPost.content = aPost.content.replace(/<([a-zA-Z]+)\s*[^><]*>/g, "<$1>")
     // 图片添加域名
     aPost.content = aPost.content.replace("src=\"", "src=\"https://wangqiudi.com")
-    // 前面插入标题
-    aPost.content = "<p style='color:black'><b>" + aPost.title + "</b></p>" + aPost.content
     // aPost.content = aPost.content.replace(/<p(><\/p><p)*>/, "<p><span style='color:black'><b>" + aPost.title  + "</b> </span>")
     // 是否需要折叠
     aPost.canFold = aPost.summary.length >= 70
@@ -136,6 +134,7 @@ function postCtrl() {
     // 选手姓名
     var flexTitle = ""
     var playerName = ""
+    var shortName = ""
     if (aPost.playerId != null) {
       if (aPost.players != null && aPost.players.length > 0) {
         var gotName = false
@@ -145,9 +144,11 @@ function postCtrl() {
             if (aPost.players[i].shortName != null ) {
               flexTitle = aPost.players[i].shortName
               playerName = aPost.players[i].playerName
+              shortName = aPost.players[i].shortName
             } else {
               flexTitle = aPost.players[i].playerName
               playerName = aPost.players[i].playerName
+              shortName = aPost.players[i].shortName
             }
             break
           }
@@ -164,9 +165,11 @@ function postCtrl() {
         if (aPost.players[0].shortName != null) {
           flexTitle = aPost.players[0].shortName
           playerName = aPost.players[0].playerName
+          shortName = aPost.players[0].shortName
         } else {
           flexTitle = aPost.players[0].playerName
           playerName = aPost.players[0].playerName
+          shortName = aPost.players[0].shortName
         }
         aPost.playerId = aPost.players[0].playerId
       } else {
@@ -175,8 +178,11 @@ function postCtrl() {
     }
     aPost.flexTitle = flexTitle
     aPost.playerName = playerName
+    aPost.shortName = shortName
     // 单个选手资讯界面与资讯界面显示不同
     aPost.isPlayerNews = false
+    // 前面插入标题
+    aPost.content = "<p style='color:black'><b>" + aPost.title + "</b></p>" + aPost.content
   }
 
   this.polishPostForPlayer = (aPost, playerName) => {
