@@ -115,11 +115,19 @@ Page({
    */
   onShareAppMessage: function () {
     console.log("转发")
+    var that = this
     wx.showLoading({
       title: "加载中...",
     })
     const success = res => {
       console.log("转发访问接口成功 =========== ")
+      that.setData({
+        forward: res.data.forwardCount
+      })
+      wx.setStorage({
+        key: "need_refresh",
+        data: true,
+      })
       wx.hideLoading()
     }
     const fail = res => {
