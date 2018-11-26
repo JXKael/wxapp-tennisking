@@ -92,7 +92,7 @@ function postCtrl() {
         currPost.isFold = true
         currPost.isTopActive = isTopActive
         currPost.isShowMenu = menuId == 0
-        currPost.isTop = menuId != 0 ? currPost.isMenuTop : currPost.isHomeTop
+        currPost.isTop = menuId != 0 ? (currPost.isHomeTop || currPost.isMenuTop) : currPost.isHomeTop
         posts.push(currPost)
       }
     }
