@@ -3,7 +3,8 @@ const util = require('util.js')
 const polish = (aPost) => {
     // 默认作者
     if (aPost.memberName == null) aPost.memberName = "网球帝小编"
-    aPost.isTop = (Number(aPost.top) == 1) || (Number(aPost.top) == 2)
+    aPost.isHomeTop = Number(aPost.top) == 1
+    aPost.isMenuTop = Number(aPost.top) == 2
     // 数字处理
     if (aPost.forwardCount == null) aPost.forwardCount = 0
     if (aPost.viewCount == null) aPost.viewCount = 0
@@ -16,7 +17,7 @@ const polish = (aPost) => {
     var minute = date.minute >= 10 ? date.minute : "0" + date.minute
     aPost.date = date
     // 置顶处理
-    if (aPost.isTop) {
+    if (aPost.isHomeTop || aPost.isMenuTop) {
       aPost.timeTop = month + "/" + day + "\n" + "置顶"
     }
     aPost.time = month + "/" + day + "\n" + hour + ":" + minute
@@ -27,8 +28,6 @@ const polish = (aPost) => {
     // aPost.content = aPost.content.replace(/<p(><\/p><p)*>/, "<p><span style='color:black'><b>" + aPost.title  + "</b> </span>")
     // 是否需要折叠
     aPost.canFold = aPost.summary.length >= 70
-    // 只有全部menu显示菜单，外部设置
-    aPost.isShowMenu = false
 }
 
 function postCtrl() {
@@ -92,21 +91,15 @@ function postCtrl() {
       if (isMenuMatch && isTagMatch && isPlayerMatch) {
         currPost.isFold = true
         currPost.isTopActive = isTopActive
+        currPost.isShowMenu = menuId == 0
+        currPost.isTop = menuId != 0 ? currPost.isMenuTop : currPost.isHomeTop
         posts.push(currPost)
       }
     }
     var sortFunc = (a, b) => {
       if (isTopActive) {
-        if (Number(menuId) != 0) {
-          if (a.isTop && !b.isTop) return -1
-          if (b.isTop && !a.isTop) return 1
-        } else {
-          if (Number(a.top) == 1 && a.isTop && !b.isTop) return -1
-          if (Number(b.top) == 1 && b.isTop && !a.isTop) return 1
-          if (Number(b.top) == 1 && b.isTop && a.isTop) {
-            return Number(b.createTime) - Number(a.createTime)
-          }
-        }
+        if (a.isTop && !b.isTop) return -1
+        if (b.isTop && !a.isTop) return 1
       }
       return Number(b.createTime) - Number(a.createTime)
     }
