@@ -672,7 +672,7 @@ Page({
       var likeCount = Number(res.data.post.likeCount)
       var new_news_post = that.data.news_post
       var aPost = new_news_post[currMenuId].posts[idx]
-      aPost.likeCount = likeCount
+      aPost.likeCount = Number(aPost.likeCount) + 1
       aPost.liked = true
       postPageCtrl.add(postId, aPost)
       this.setData({
