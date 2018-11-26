@@ -659,19 +659,22 @@ Page({
   onLikeTap: function (e) {
     console.log("点赞, postId: " + e.currentTarget.dataset.postid + ", idx: " + e.currentTarget.dataset.idx)
     var that = this
-    if (this.data.isLiked) {
+    var postId = e.currentTarget.dataset.postid
+    var idx = e.currentTarget.dataset.idx
+    var currMenuId = newsMenuCtrl.getChoosed()
+    if (this.data.news_post[currMenuId].posts[idx].liked) {
       console.log("已点赞")
       return
     }
     var success = (res) => {
       console.log("点赞成功")
 
-      var idx = e.currentTarget.dataset.idx
-      var currMenuId = newsMenuCtrl.getChoosed()
       var likeCount = Number(res.data.post.likeCount)
       var new_news_post = that.data.news_post
-      new_news_post[currMenuId].posts[idx].likeCount = likeCount
-      new_news_post[currMenuId].posts[idx].liked = true
+      var aPost = new_news_post[currMenuId].posts[idx]
+      aPost.likeCount = likeCount
+      aPost.liked = true
+      postPageCtrl.add(postId, aPost)
       this.setData({
         news_post: new_news_post
       })
@@ -683,7 +686,6 @@ Page({
     wx.showLoading({
       title: "加载中",
     })
-    var postId = e.currentTarget.dataset.postid
     request.reqLike(postId, "wechat-id", success, fail)
   },
 
