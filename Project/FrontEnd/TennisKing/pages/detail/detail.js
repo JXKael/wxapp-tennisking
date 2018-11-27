@@ -40,9 +40,10 @@ Page({
       if (post.viewCount == null) post.viewCount = 0
       if (post.likeCount == null) post.likeCount = 0
       
-      // 清除所有格式
-      // post.content = post.content.replace(/<([a-zA-Z]+)\s*[^><]*>/g, "<$1>")
-      post.content = post.content.replace("src=\"", "src=\"https://wangqiudi.com")
+      // 在格式中添加图片宽度控制
+      post.content = post.content.replace(/style=\"/g, "style=\"max-width:100%;")
+      // post.content = post.content.replace(/<img src=\"\/photograph/g, "<img src=\"https://wangqiudi.com/photograph")
+      post.content = post.content.replace(/<img /g, "<img style=\"max-width:100%;\" ")
       if (post.memberName == null) post.memberName = "网球帝小编"
       this.setData({
         postId: postId,

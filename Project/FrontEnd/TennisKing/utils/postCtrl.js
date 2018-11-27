@@ -24,8 +24,11 @@ const polish = (aPost) => {
     // 清除所有格式
     // aPost.content = aPost.content.replace(/<([a-zA-Z]+)\s*[^><]*>/g, "<$1>")
     // 图片添加域名
-    aPost.content = aPost.content.replace("src=\"", "src=\"https://wangqiudi.com")
+    // aPost.content = aPost.content.replace(/src=\"/g, "style=\"max-width:100%;\" src=\"https://wangqiudi.com")
     // aPost.content = aPost.content.replace(/<p(><\/p><p)*>/, "<p><span style='color:black'><b>" + aPost.title  + "</b> </span>")
+    aPost.content = aPost.content.replace(/style=\"/g, "style=\"max-width:100%;")
+    // post.content = post.content.replace(/<img src=\"\/photograph/g, "<img src=\"https://wangqiudi.com/photograph")
+    aPost.content = aPost.content.replace(/<img /g, "<img style=\"max-width:100%;\" ")
     // 是否需要折叠
     aPost.canFold = aPost.summary.length >= 70
 }
