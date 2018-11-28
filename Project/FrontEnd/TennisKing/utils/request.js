@@ -3,7 +3,7 @@ var util = require('util.js');
 /**
  * 获取主页信息
  */
-const reqHomeInfo = (postId, menuId, playerId, success, fail) => {
+const reqHomeInfo = (postId, menuId, playerId, createTime, success, fail) => {
   var data = {}
   if (postId != null) {
     data.postId = postId
@@ -13,6 +13,9 @@ const reqHomeInfo = (postId, menuId, playerId, success, fail) => {
   }
   if (menuId != null) {
     data.menuId = menuId
+  }
+  if (createTime != null) {
+    data.createTime = createTime
   }
   requestData("index/", "POST", data, success, fail, null)
 }

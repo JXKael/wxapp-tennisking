@@ -24,6 +24,7 @@ var isTapMenuOnly = false // 点击菜单会调用swiper current change事件，
 // 刷新相关
 var needNewPost = false
 var oldestPostId = 0
+var oldestPostTime = 0
 var page = 1
 var isUpdating = false
 
@@ -149,7 +150,7 @@ Page({
       playersMenuCtrl.add(playersDefault[i].id, playersDefault[i])
     }
     page = 1
-    this.reqHomeInfo(null, null, null, true)
+    this.reqHomeInfo(null, null, null, null, true)
   },
 
   /**
@@ -159,7 +160,7 @@ Page({
    * @param playerId {string} 当前playerId，null代表全部球员
    * @param showLoading {boolean} 是否显示加载中toast
    */
-  reqHomeInfo: function (postId, menuId, playerId, showLoading) {
+  reqHomeInfo: function (postId, menuId, playerId, createTime, showLoading) {
     var that = this
     isUpdating = true
     var success = res => {
@@ -192,7 +193,10 @@ Page({
         postPageCtrl.add(posts_res[i].postId, posts_res[i])
       }
       var hasNoMore = posts_res.length < 10
-      if (posts_res.length > 0) oldestPostId = posts_res[posts_res.length - 1].postId
+      if (posts_res.length > 0) {
+        oldestPostId = posts_res[posts_res.length - 1].postId
+        oldestPostTime = posts_res[posts_res.length - 1].createTime
+      }
       needNewPost = false
 
       var choosedTagId = tagCtrl.getChoosed()
@@ -227,7 +231,7 @@ Page({
         title: "加载中",
       })
     }
-    request.reqHomeInfo(postId, menuId, playerId, success, fail)
+    request.reqHomeInfo(postId, menuId, playerId, createTime, success, fail)
   },
 
   /**
@@ -249,7 +253,7 @@ Page({
         if (res.data) {
           console.log("需要更新")
           page = 1
-          that.reqHomeInfo(null, currMenuId, null, false)
+          that.reqHomeInfo(null, currMenuId, null, null, false)
         }
         wx.removeStorage({
           key: 'need_refresh',
@@ -293,7 +297,7 @@ Page({
         console.log("读取缓存成功")
         if (res.data) {
           console.log("需要更新")
-          that.reqHomeInfo(null, currMenuId, null, false)
+          that.reqHomeInfo(null, currMenuId, null, null, false)
         } else {
           var newsMenu = newsMenuCtrl.getAll()
           var choosedIdx = newsMenuCtrl.getIdxById(currMenuId)
@@ -439,7 +443,7 @@ Page({
         tapId = null
       }
       page = 1
-      this.reqHomeInfo(null, tapId, null, true)
+      this.reqHomeInfo(null, tapId, null, null, true)
     // }
   },
 
@@ -521,7 +525,7 @@ Page({
     var currMenuId = newsMenuCtrl.getChoosed()
     if (currMenuId == 0) currMenuId = null
     if (!isUpdating) ++page
-    this.reqHomeInfo(oldestPostId, currMenuId, null, false)
+    this.reqHomeInfo(oldestPostId, currMenuId, null, oldestPostTime, false)
   },
 
   /**
@@ -636,7 +640,7 @@ Page({
       if (needNewPost) {
         var currMenuId = newsMenuCtrl.getChoosed()
         if (currMenuId == 0) currMenuId = null
-        this.reqHomeInfo(null, currMenuId, null, true)
+        this.reqHomeInfo(null, currMenuId, null, null, true)
       }
     }
   },

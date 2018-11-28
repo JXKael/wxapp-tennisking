@@ -14,6 +14,7 @@ const top_loading_threshold = 80
 
 var needNewPost = false
 var oldestPostId = 0
+var oldestPostTime = 0
 
 var page = 1
 var isUpdating = false
@@ -68,7 +69,7 @@ Page({
       playerName: options.playerName
     })
     page = 1
-    this.reqHomeInfo(null, null, playerId, true)
+    this.reqHomeInfo(null, null, playerId, null, true)
   },
 
 
@@ -79,7 +80,7 @@ Page({
    * @param playerId {string} 当前playerId，null代表全部球员
    * @param showLoading {boolean} 是否显示加载中toast
    */
-  reqHomeInfo: function (postId, menuId, playerId, showLoading) {
+  reqHomeInfo: function (postId, menuId, playerId, createTime, showLoading) {
     var that = this
     isUpdating = true
     var success = res => {
@@ -99,7 +100,10 @@ Page({
         postPageCtrl.add(posts_res[i].postId, posts_res[i])
       }
       var hasNoMore = posts_res.length < 10
-      if (!hasNoMore) oldestPostId = posts_res[posts_res.length - 1].postId
+      if (posts_res.length > 0) {
+        oldestPostId = posts_res[posts_res.length - 1].postId
+        oldestPostTime = posts_res[posts_res.length - 1].createTime
+      }
       needNewPost = false
 
       var choosedTagId = tagCtrl.getChoosed()
@@ -127,7 +131,7 @@ Page({
         title: "加载中",
       })
     }
-    request.reqHomeInfo(postId, menuId, playerId, success, fail)
+    request.reqHomeInfo(postId, menuId, playerId, createTime, success, fail)
   },
 
   /**
@@ -149,7 +153,7 @@ Page({
         if (res.data) {
           console.log("需要更新")
           page = 1
-          that.reqHomeInfo(null, null, that.data.playerId, false)
+          that.reqHomeInfo(null, null, that.data.playerId, null, false)
         }
       },
     })
@@ -244,7 +248,7 @@ Page({
       isBottom: true
     })
     if (!isUpdating) ++page
-    this.reqHomeInfo(oldestPostId, null, this.data.playerId, false)
+    this.reqHomeInfo(oldestPostId, null, this.data.playerId, oldestPostTime, false)
   },
 
   /**
@@ -285,7 +289,7 @@ Page({
     console.log("触摸结束")
     if (this.data.isTop) {
       if (needNewPost) {
-        this.reqHomeInfo(null, null, this.data.playerId, true)
+        this.reqHomeInfo(null, null, this.data.playerId, null, true)
       }
     }
   },
