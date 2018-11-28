@@ -69,7 +69,7 @@ Page({
       playerName: options.playerName
     })
     page = 1
-    this.reqHomeInfo(null, null, playerId, null, true)
+    this.reqHomeInfo(null, null, playerId, null, null, true)
   },
 
 
@@ -80,7 +80,7 @@ Page({
    * @param playerId {string} 当前playerId，null代表全部球员
    * @param showLoading {boolean} 是否显示加载中toast
    */
-  reqHomeInfo: function (postId, menuId, playerId, createTime, showLoading) {
+  reqHomeInfo: function (postId, menuId, playerId, tagId, createTime, showLoading) {
     var that = this
     isUpdating = true
     var success = res => {
@@ -93,6 +93,10 @@ Page({
       for (var i = 0; i < tags_res.length; ++i) {
         tagCtrl.add(tags_res[i].id, tags_res[i])
       }
+      var tagsMenu = tagCtrl.getAll() // 获得所有menu，idx在此时设置
+      var currTagId = tagCtrl.getChoosed()
+      var currTagIdx = tagCtrl.getIdxById()
+
       // 资讯
       var posts_res = res.data.posts
       for (var i = 0; i < posts_res.length; ++i) {
@@ -102,11 +106,8 @@ Page({
       var hasNoMore = posts_res.length < 10
       needNewPost = false
 
-      var choosedTagId = tagCtrl.getChoosed()
-      var tagsMenu = tagCtrl.getAll()
-
       var new_news_post = this.data.news_post
-      var posts = postPageCtrl.getPost(0, choosedTagId, playerId, false, page)
+      var posts = postPageCtrl.getPost(0, tagId, playerId, false, page)
       if (posts_res.length > 0) {
         oldestPostId = posts[posts.length - 1].postId
         oldestPostTime = posts[posts.length - 1].createTime
@@ -114,7 +115,7 @@ Page({
       new_news_post.posts = posts
       new_news_post.tags = tagsMenu
       that.setData({
-        currTagIdx: choosedTagId,
+        currTagIdx: currTagIdx,
         news_post: new_news_post,
         isBottom: false,
         hasNoMore: hasNoMore,
@@ -131,7 +132,7 @@ Page({
         title: "加载中",
       })
     }
-    request.reqHomeInfo(postId, menuId, playerId, createTime, success, fail)
+    request.reqHomeInfo(postId, menuId, playerId, tagId, createTime, success, fail)
   },
 
   /**
@@ -152,8 +153,9 @@ Page({
         console.log("读取缓存成功")
         if (res.data) {
           console.log("需要更新")
+          var currTagId = tagCtrl.getChoosed()
           page = 1
-          that.reqHomeInfo(null, null, that.data.playerId, null, false)
+          that.reqHomeInfo(null, null, that.data.playerId, currTagId, null, true)
         }
       },
     })
@@ -206,16 +208,8 @@ Page({
       return
     }
     tagCtrl.setChoosed(tapId)
-    var tagsMenu = tagCtrl.getAll()
-    var new_news_post = this.data.news_post
     page = 1
-    var posts = postPageCtrl.getPost(null, tapId, this.data.playerId, false, page)
-    new_news_post.posts = posts
-    new_news_post.tags = tagsMenu
-    this.setData({
-      currTagIdx: tapIdx,
-      news_post: new_news_post
-    })
+    this.reqHomeInfo(null, null, this.data.playerId, tapId, null, true)
   },
 
   /**
@@ -247,8 +241,11 @@ Page({
     this.setData({
       isBottom: true
     })
-    if (!isUpdating) ++page
-    this.reqHomeInfo(oldestPostId, null, this.data.playerId, oldestPostTime, false)
+    if (!isUpdating) {
+      ++page
+    }
+    var currTagId = tagCtrl.getChoosed()
+    this.reqHomeInfo(oldestPostId, null, this.data.playerId, currTagId, oldestPostTime, false)
   },
 
   /**
@@ -289,7 +286,8 @@ Page({
     console.log("触摸结束")
     if (this.data.isTop) {
       if (needNewPost) {
-        this.reqHomeInfo(null, null, this.data.playerId, null, true)
+        var currTagId = tagCtrl.getChoosed()
+        this.reqHomeInfo(null, null, this.data.playerId, currTagId, null, true)
       }
     }
   },

@@ -3,16 +3,19 @@ var util = require('util.js');
 /**
  * 获取主页信息
  */
-const reqHomeInfo = (postId, menuId, playerId, createTime, success, fail) => {
+const reqHomeInfo = (postId, menuId, playerId, tagId, createTime, success, fail) => {
   var data = {}
   // if (postId != null) {
   //   data.postId = postId
   // }
+  if (menuId != null && Number(menuId) != 0) {
+    data.menuId = menuId
+  }
   if (playerId != null) {
     data.playerId = playerId
   }
-  if (menuId != null) {
-    data.menuId = menuId
+  if (tagId != null && Number(tagId) != 0) {
+    data.tagId = tagId
   }
   if (createTime != null) {
     data.createTime = createTime

@@ -150,7 +150,7 @@ Page({
       playersMenuCtrl.add(playersDefault[i].id, playersDefault[i])
     }
     page = 1
-    this.reqHomeInfo(null, null, null, null, true)
+    this.reqHomeInfo(null, null, null, null, null, true)
   },
 
   /**
@@ -160,7 +160,7 @@ Page({
    * @param playerId {string} 当前playerId，null代表全部球员
    * @param showLoading {boolean} 是否显示加载中toast
    */
-  reqHomeInfo: function (postId, menuId, playerId, createTime, showLoading) {
+  reqHomeInfo: function (postId, menuId, playerId, tagId, createTime, showLoading) {
     var that = this
     isUpdating = true
     var success = res => {
@@ -175,7 +175,7 @@ Page({
       }
       var newsMenu = newsMenuCtrl.getAll() // 获得所有menu，idx在此时设置
       var currMenuId = newsMenuCtrl.getChoosed()
-      var choosedIdx = newsMenuCtrl.getIdxById(currMenuId)
+      var currMenuIdx = newsMenuCtrl.getIdxById()
 
       // tag
       for (var i = 0; i < tagsDefault.length; ++i) {
@@ -185,6 +185,10 @@ Page({
       for (var i = 0; i < tags_res.length; ++i) {
         tagCtrl.add(tags_res[i].id, tags_res[i])
       }
+      var tagsMenu = tagCtrl.getAll() // 获得所有menu，idx在此时设置
+      var currTagId = tagCtrl.getChoosed()
+      var currTagIdx = tagCtrl.getIdxById()
+
       // 资讯
       var posts_res = res.data.posts
       for (var i = 0; i < posts_res.length; ++i) {
@@ -195,11 +199,8 @@ Page({
       var hasNoMore = posts_res.length < 10
       needNewPost = false
 
-      var choosedTagId = tagCtrl.getChoosed()
-      var tagsMenu = tagCtrl.getAll()
-
       var new_news_post = that.data.news_post
-      var posts = postPageCtrl.getPost(currMenuId, choosedTagId, playerId, true, page)
+      var posts = postPageCtrl.getPost(currMenuId, tagId, playerId, true, page)
       if (posts_res.length > 0) {
         oldestPostId = posts[posts.length - 1].postId
         oldestPostTime = posts[posts.length - 1].createTime
@@ -211,9 +212,9 @@ Page({
       that.setData({
         currTabID: 0,
         scroll_menu: newsMenu,
-        currNewsMenuIdx: choosedIdx,
-        curr_news_swiper_id: choosedIdx,
-        currTagIdx: choosedTagId,
+        currNewsMenuIdx: currMenuIdx,
+        curr_news_swiper_id: currMenuIdx,
+        currTagIdx: currTagIdx,
         news_post: new_news_post,
         isBottom: false,
         hasNoMore: hasNoMore,
@@ -231,7 +232,7 @@ Page({
         title: "加载中",
       })
     }
-    request.reqHomeInfo(postId, menuId, playerId, createTime, success, fail)
+    request.reqHomeInfo(postId, menuId, playerId, tagId, createTime, success, fail)
   },
 
   /**
@@ -249,11 +250,12 @@ Page({
       key: "need_refresh",
       success: function (res) {
         console.log("读取缓存成功")
-        var currMenuId = newsMenuCtrl.getChoosed()
         if (res.data) {
           console.log("需要更新")
+          var currMenuId = newsMenuCtrl.getChoosed()
+          var currTagId = tagCtrl.getChoosed()
           page = 1
-          that.reqHomeInfo(null, currMenuId, null, null, false)
+          that.reqHomeInfo(null, currMenuId, null, currTagId, null, false)
         }
         wx.removeStorage({
           key: 'need_refresh',
@@ -289,7 +291,6 @@ Page({
     console.log("点击赛事新闻")
     if (this.data.currTabID == 0) return
     var that = this
-    var currMenuId = newsMenuCtrl.getChoosed()
     page = 1
     wx.getStorage({
       key: "need_refresh",
@@ -297,15 +298,17 @@ Page({
         console.log("读取缓存成功")
         if (res.data) {
           console.log("需要更新")
-          that.reqHomeInfo(null, currMenuId, null, null, false)
+          var currMenuId = newsMenuCtrl.getChoosed()
+          var currTagId = tagCtrl.getChoosed()
+          that.reqHomeInfo(null, currMenuId, null, currTagId, null, true)
         } else {
           var newsMenu = newsMenuCtrl.getAll()
-          var choosedIdx = newsMenuCtrl.getIdxById(currMenuId)
+          var currMenuIdx = newsMenuCtrl.getIdxById()
           that.setData({
             currTabID: 0,
             scroll_menu: newsMenu,
-            currNewsMenuIdx: choosedIdx,
-            curr_news_swiper_id: choosedIdx
+            currNewsMenuIdx: currMenuIdx,
+            curr_news_swiper_id: currMenuIdx
           })
         }
         wx.removeStorage({
@@ -317,12 +320,12 @@ Page({
       },
       fail: function (res) {
         var newsMenu = newsMenuCtrl.getAll()
-        var choosedIdx = newsMenuCtrl.getIdxById(currMenuId)
+        var currMenuIdx = newsMenuCtrl.getIdxById()
         that.setData({
           currTabID: 0,
           scroll_menu: newsMenu,
-          currNewsMenuIdx: choosedIdx,
-          curr_news_swiper_id: choosedIdx
+          currNewsMenuIdx: currMenuIdx,
+          curr_news_swiper_id: currMenuIdx
         })
       }
     })
@@ -429,22 +432,12 @@ Page({
    */
   newsSwiperChange: function (tapId, tapIdx) {
     newsMenuCtrl.setChoosed(tapId)
-    tagCtrl.clean()
-    // 缓存处理先屏蔽，tag出错
-    // if (this.data.news_post[tapId] != null) {
-    //   var newsMenu = newsMenuCtrl.getAll()
-    //   this.setData({
-    //     scroll_menu: newsMenu,
-    //     currNewsMenuIdx: tapIdx,
-    //     curr_news_swiper_id: tapIdx,
-    //   })
-    // } else {
-      if (tapId == 0) { 
-        tapId = null
-      }
-      page = 1
-      this.reqHomeInfo(null, tapId, null, null, true)
-    // }
+    tagCtrl.clean() // 切换menu会清空tag记录
+    if (tapId == 0) {
+      tapId = null
+    }
+    page = 1
+    this.reqHomeInfo(null, tapId, null, null, null, true)
   },
 
   /**
@@ -476,19 +469,9 @@ Page({
       return
     }
     tagCtrl.setChoosed(tapId)
-    var tagsMenu = tagCtrl.getAll()
-    var currMenuId = newsMenuCtrl.getChoosed()
-    var new_news_post = this.data.news_post
     page = 1
-    var posts = postPageCtrl.getPost(currMenuId, tapId, null, true, page)
-    new_news_post[currMenuId] = {
-      posts: posts,
-      tags: tagsMenu
-    }
-    this.setData({
-      currTagIdx: tapIdx,
-      news_post: new_news_post
-    })
+    var currMenuId = newsMenuCtrl.getChoosed()
+    this.reqHomeInfo(null, currMenuId, null, tapId, null, true)
   },
 
   /**
@@ -523,13 +506,14 @@ Page({
       isBottom: true
     })
     var currMenuId = newsMenuCtrl.getChoosed()
+    var currTagId = tagCtrl.getChoosed()
     if (currMenuId == 0) {
       currMenuId = null
     }
     if (!isUpdating) {
       ++page
     }
-    this.reqHomeInfo(oldestPostId, currMenuId, null, oldestPostTime, false)
+    this.reqHomeInfo(oldestPostId, currMenuId, null, currTagId, oldestPostTime, false)
   },
 
   /**
@@ -643,8 +627,8 @@ Page({
     if (this.data.isTop) {
       if (needNewPost) {
         var currMenuId = newsMenuCtrl.getChoosed()
-        if (currMenuId == 0) currMenuId = null
-        this.reqHomeInfo(null, currMenuId, null, null, true)
+        var currTagId = tagCtrl.getChoosed()
+        this.reqHomeInfo(null, currMenuId, null, currTagId, null, true)
       }
     }
   },
