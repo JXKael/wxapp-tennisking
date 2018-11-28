@@ -5,9 +5,9 @@ var util = require('util.js');
  */
 const reqHomeInfo = (postId, menuId, playerId, createTime, success, fail) => {
   var data = {}
-  if (postId != null) {
-    data.postId = postId
-  }
+  // if (postId != null) {
+  //   data.postId = postId
+  // }
   if (playerId != null) {
     data.playerId = playerId
   }
