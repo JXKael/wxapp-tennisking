@@ -15,6 +15,9 @@ const top_loading_threshold = 80
 var needNewPost = false
 var oldestPostId = 0
 
+var page = 1
+var isUpdating = false
+
 const tagsDefault = [
   { id: 0, name: "全部", weight: 999999999 }
 ]
@@ -64,6 +67,7 @@ Page({
       playerId: options.playerId,
       playerName: options.playerName
     })
+    page = 1
     this.reqHomeInfo(null, null, playerId, true)
   },
 
@@ -77,7 +81,9 @@ Page({
    */
   reqHomeInfo: function (postId, menuId, playerId, showLoading) {
     var that = this
+    isUpdating = true
     var success = res => {
+      isUpdating = false
       // tag
       for (var i = 0; i < tagsDefault.length; ++i) {
         tagCtrl.add(tagsDefault[i].id, tagsDefault[i])
@@ -100,7 +106,7 @@ Page({
       var tagsMenu = tagCtrl.getAll()
 
       var new_news_post = this.data.news_post
-      var posts = postPageCtrl.getPost(0, choosedTagId, playerId, false)
+      var posts = postPageCtrl.getPost(0, choosedTagId, playerId, false, page)
       new_news_post.posts = posts
       new_news_post.tags = tagsMenu
       that.setData({
@@ -113,6 +119,7 @@ Page({
       wx.hideLoading()
     }
     var fail = res => {
+      isUpdating = false
       wx.hideLoading()
     }
     if (showLoading) {
@@ -141,6 +148,7 @@ Page({
         console.log("读取缓存成功")
         if (res.data) {
           console.log("需要更新")
+          page = 1
           that.reqHomeInfo(null, null, that.data.playerId, false)
         }
       },
@@ -196,7 +204,8 @@ Page({
     tagCtrl.setChoosed(tapId)
     var tagsMenu = tagCtrl.getAll()
     var new_news_post = this.data.news_post
-    var posts = postPageCtrl.getPost(null, tapId, this.data.playerId, false)
+    page = 1
+    var posts = postPageCtrl.getPost(null, tapId, this.data.playerId, false, page)
     new_news_post.posts = posts
     new_news_post.tags = tagsMenu
     this.setData({
@@ -234,7 +243,7 @@ Page({
     this.setData({
       isBottom: true
     })
-    
+    if (!isUpdating) ++page
     this.reqHomeInfo(oldestPostId, null, this.data.playerId, false)
   },
 

@@ -24,6 +24,8 @@ var isTapMenuOnly = false // 点击菜单会调用swiper current change事件，
 // 刷新相关
 var needNewPost = false
 var oldestPostId = 0
+var page = 1
+var isUpdating = false
 
 const newsDefault = [
   { id: 0, name: "全部", weight: 999999999 }
@@ -146,7 +148,7 @@ Page({
     for (var i = 0; i < playersDefault.length; ++i) {
       playersMenuCtrl.add(playersDefault[i].id, playersDefault[i])
     }
-
+    page = 1
     this.reqHomeInfo(null, null, null, true)
   },
 
@@ -159,7 +161,9 @@ Page({
    */
   reqHomeInfo: function (postId, menuId, playerId, showLoading) {
     var that = this
+    isUpdating = true
     var success = res => {
+      isUpdating = false
       // menu
       for (var i = 0; i < newsDefault.length; ++i) {
         newsMenuCtrl.add(newsDefault[i].id, newsDefault[i])
@@ -188,14 +192,14 @@ Page({
         postPageCtrl.add(posts_res[i].postId, posts_res[i])
       }
       var hasNoMore = posts_res.length < 10
-      if (!hasNoMore) oldestPostId = posts_res[posts_res.length - 1].postId
+      if (posts_res.length > 0) oldestPostId = posts_res[posts_res.length - 1].postId
       needNewPost = false
 
       var choosedTagId = tagCtrl.getChoosed()
       var tagsMenu = tagCtrl.getAll()
 
       var new_news_post = that.data.news_post
-      var posts = postPageCtrl.getPost(currMenuId, choosedTagId, playerId, true)
+      var posts = postPageCtrl.getPost(currMenuId, choosedTagId, playerId, true, page)
       new_news_post[currMenuId] = {
         posts: posts,
         tags: tagsMenu
@@ -215,6 +219,7 @@ Page({
       wx.hideLoading()
     }
     var fail = res => {
+      isUpdating = false
       wx.hideLoading()
     }
     if (showLoading) {
@@ -243,6 +248,7 @@ Page({
         var currMenuId = newsMenuCtrl.getChoosed()
         if (res.data) {
           console.log("需要更新")
+          page = 1
           that.reqHomeInfo(null, currMenuId, null, false)
         }
         wx.removeStorage({
@@ -280,6 +286,7 @@ Page({
     if (this.data.currTabID == 0) return
     var that = this
     var currMenuId = newsMenuCtrl.getChoosed()
+    page = 1
     wx.getStorage({
       key: "need_refresh",
       success: function (res) {
@@ -428,7 +435,10 @@ Page({
     //     curr_news_swiper_id: tapIdx,
     //   })
     // } else {
-      if (tapId == 0) tapId = null
+      if (tapId == 0) { 
+        tapId = null
+      }
+      page = 1
       this.reqHomeInfo(null, tapId, null, true)
     // }
   },
@@ -465,7 +475,8 @@ Page({
     var tagsMenu = tagCtrl.getAll()
     var currMenuId = newsMenuCtrl.getChoosed()
     var new_news_post = this.data.news_post
-    var posts = postPageCtrl.getPost(currMenuId, tapId, null, true)
+    page = 1
+    var posts = postPageCtrl.getPost(currMenuId, tapId, null, true, page)
     new_news_post[currMenuId] = {
       posts: posts,
       tags: tagsMenu
@@ -509,6 +520,7 @@ Page({
     })
     var currMenuId = newsMenuCtrl.getChoosed()
     if (currMenuId == 0) currMenuId = null
+    if (!isUpdating) ++page
     this.reqHomeInfo(oldestPostId, currMenuId, null, false)
   },
 

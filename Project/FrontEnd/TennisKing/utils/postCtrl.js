@@ -33,6 +33,8 @@ const polish = (aPost) => {
     aPost.canFold = aPost.summary.length >= 70
 }
 
+const pageCount = 10
+
 function postCtrl() {
   this.post = {}
   this.count = 0
@@ -54,11 +56,13 @@ function postCtrl() {
     return posts
   }
 
-  this.getPost = (menuId, tagId, playerId, isTopActive) => {
+  this.getPost = (menuId, tagId, playerId, isTopActive, page) => {
     menuId = menuId != null ? Number(menuId) : 0
     tagId = tagId != null ? Number(tagId) : 0
     playerId = playerId != null ? Number(playerId) : 0
     isTopActive = isTopActive != null ? isTopActive : true
+    page = page != null ? page : 1
+    var needNum = pageCount * page
     var posts = []
     for (var key in this.post) {
       var currPost = this.post[key]
@@ -98,6 +102,7 @@ function postCtrl() {
         currPost.isTop = menuId != 0 ? (currPost.isHomeTop || currPost.isMenuTop) : currPost.isHomeTop
         posts.push(currPost)
       }
+      if (posts.length >= needNum) break
     }
     var sortFunc = (a, b) => {
       if (isTopActive) {
