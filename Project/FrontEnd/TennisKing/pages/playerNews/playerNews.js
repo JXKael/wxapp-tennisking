@@ -100,10 +100,6 @@ Page({
         postPageCtrl.add(posts_res[i].postId, posts_res[i])
       }
       var hasNoMore = posts_res.length < 10
-      if (posts_res.length > 0) {
-        oldestPostId = posts_res[posts_res.length - 1].postId
-        oldestPostTime = posts_res[posts_res.length - 1].createTime
-      }
       needNewPost = false
 
       var choosedTagId = tagCtrl.getChoosed()
@@ -111,6 +107,10 @@ Page({
 
       var new_news_post = this.data.news_post
       var posts = postPageCtrl.getPost(0, choosedTagId, playerId, false, page)
+      if (posts_res.length > 0) {
+        oldestPostId = posts[posts.length - 1].postId
+        oldestPostTime = posts[posts.length - 1].createTime
+      }
       new_news_post.posts = posts
       new_news_post.tags = tagsMenu
       that.setData({

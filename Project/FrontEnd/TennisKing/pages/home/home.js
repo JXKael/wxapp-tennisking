@@ -193,10 +193,6 @@ Page({
         postPageCtrl.add(posts_res[i].postId, posts_res[i])
       }
       var hasNoMore = posts_res.length < 10
-      if (posts_res.length > 0) {
-        oldestPostId = posts_res[posts_res.length - 1].postId
-        oldestPostTime = posts_res[posts_res.length - 1].createTime
-      }
       needNewPost = false
 
       var choosedTagId = tagCtrl.getChoosed()
@@ -204,6 +200,10 @@ Page({
 
       var new_news_post = that.data.news_post
       var posts = postPageCtrl.getPost(currMenuId, choosedTagId, playerId, true, page)
+      if (posts_res.length > 0) {
+        oldestPostId = posts[posts.length - 1].postId
+        oldestPostTime = posts[posts.length - 1].createTime
+      }
       new_news_post[currMenuId] = {
         posts: posts,
         tags: tagsMenu
@@ -523,8 +523,12 @@ Page({
       isBottom: true
     })
     var currMenuId = newsMenuCtrl.getChoosed()
-    if (currMenuId == 0) currMenuId = null
-    if (!isUpdating) ++page
+    if (currMenuId == 0) {
+      currMenuId = null
+    }
+    if (!isUpdating) {
+      ++page
+    }
     this.reqHomeInfo(oldestPostId, currMenuId, null, oldestPostTime, false)
   },
 

@@ -102,7 +102,6 @@ function postCtrl() {
         currPost.isTop = menuId != 0 ? (currPost.isHomeTop || currPost.isMenuTop) : currPost.isHomeTop
         posts.push(currPost)
       }
-      if (posts.length >= needNum) break
     }
     var sortFunc = (a, b) => {
       if (isTopActive) {
@@ -115,6 +114,7 @@ function postCtrl() {
     for (var i = 0; i < posts.length; ++i) {
       posts[i].idx = i
     }
+    posts = posts.slice(0, needNum)
     return posts
   }
 
