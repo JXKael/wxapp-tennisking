@@ -202,8 +202,21 @@ Page({
       var new_news_post = that.data.news_post
       var posts = postPageCtrl.getPost(currMenuId, tagId, playerId, true, page)
       if (posts_res.length > 0) {
-        oldestPostId = posts[posts.length - 1].postId
-        oldestPostTime = posts[posts.length - 1].createTime
+        oldestPostId = null
+        oldestPostTime = Number.MAX_VALUE
+        for (var i = 0; i < posts_res.length; ++i) {
+          if (!posts_res[i].isHomeTop && !posts_res[i].isMenuTop) {
+            if (Number(oldestPostTime) > Number(posts_res[i].createTime)) {
+              oldestPostId = posts_res[i].postId
+              oldestPostTime = posts_res[i].createTime
+            }
+          }
+        }
+
+        if (oldestPostId == null) {
+          oldestPostId = posts_res[posts_res.length - 1].postId
+          oldestPostTime = posts_res[posts_res.length - 1].createTime
+        }
       }
       new_news_post[currMenuId] = {
         posts: posts,
