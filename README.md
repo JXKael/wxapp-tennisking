@@ -42,5 +42,5 @@ Sep. 29th, 2018
 
 ## 4. Tags
 
-* **20181130_v1.0.2**: Released on Nov. 30th, 2018，the first stable version, including the initial function such as getting all posts, diverse menu, stick-top posts, all posts of a player, etc.
+* **20181130_v1.0.2**: Released on Nov. 30th, 2018，the first stable version, including the initial function such as getting all posts, diverse menu, stick-top posts, viewing all posts of one player, filtering by tags, etc.
 
