@@ -10,13 +10,9 @@
 
 * Jin Xiangkai
 
----
-
 ## 2. Launching Date
 
 Sep. 29th, 2018
-
----
 
 ## 3. Branches
 
@@ -43,8 +39,6 @@ Sep. 29th, 2018
 * 个人保留、修改
 
 * 提交合并请求至dev
-
----
 
 ## 4. Tags
 
