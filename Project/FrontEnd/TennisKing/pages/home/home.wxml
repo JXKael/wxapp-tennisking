@@ -22,9 +22,10 @@
     <view class='scroll-menu'>
       <scroll-view scroll-x='true' scroll-into-view='menu-{{currTabID==0?currNewsMenuIdx:currPlayersMenuIdx}}' scroll-with-animation='true'>
         <block wx:for='{{scroll_menu}}' wx:for-item='menuItem' wx:key='{{menuItem.idx}}'>
-          <text class="scroll-menu-item {{menuItem.choosed?'scroll-menu-item-choosed':''}}" id='menu-{{menuItem.idx}}' bindtap='onMenuItemTap' data-id='{{menuItem.id}}' data-idx='{{menuItem.idx}}'>
+          <view class="scroll-menu-item {{menuItem.choosed?'scroll-menu-item-choosed':''}}" id='menu-{{menuItem.idx}}' bindtap='onMenuItemTap' data-id='{{menuItem.id}}' data-idx='{{menuItem.idx}}'>
             <text>{{menuItem.name}}</text>
-          </text>
+            <view class="scroll-menu-item-red" wx:if='{{menuItem.red}}'></view>
+          </view>
         </block>
       </scroll-view>
     </view>

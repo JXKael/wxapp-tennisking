@@ -69,6 +69,7 @@ page{
 
 .scroll-menu-item{
   display: inline-block;
+  position: relative;
   width: auto;
   height: 80rpx;
   line-height: 80rpx;
@@ -82,6 +83,17 @@ page{
 .scroll-menu-item-choosed{
   color: #009b42;
   border-bottom: 6rpx solid #009b42;
+}
+
+.scroll-menu-item-red{
+  display: inline-block;
+  position: absolute;
+  right: 2rpx;
+  top: 10rpx;
+  width: 12rpx;
+  height: 12rpx;
+  background-color: red;
+  border-radius: 50%;
 }
 
 .btn-userinfo{

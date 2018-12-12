@@ -28,6 +28,10 @@ var oldestPostTime = 0
 var page = 1
 var isUpdating = false
 
+// 小红点
+var lastServerTime = 0
+var reminder_interval = 10 // 刷新间隔，10s
+
 const newsDefault = [
   { id: 0, name: "全部", weight: 999999999 }
 ]
@@ -151,6 +155,10 @@ Page({
     }
     page = 1
     this.reqHomeInfo(null, null, null, null, null, true)
+
+    setInterval(() => {
+      that.reqReminder(lastServerTime)
+    }, reminder_interval * 1000)
   },
 
   /**
@@ -165,6 +173,8 @@ Page({
     isUpdating = true
     var success = res => {
       isUpdating = false
+      // 小红点计时
+      lastServerTime = res.data.time
       // menu
       for (var i = 0; i < newsDefault.length; ++i) {
         newsMenuCtrl.add(newsDefault[i].id, newsDefault[i])
@@ -247,6 +257,30 @@ Page({
     }
     request.reqHomeInfo(postId, menuId, playerId, tagId, createTime, success, fail)
   },
+
+  /**
+   * 小红点刷新
+   */
+   reqReminder: function (time) {
+    var that = this
+    var success = res => {
+      var menus = res.data.menuIds
+      for (var i = 0; i < menus.length; ++i) {
+        newsMenuCtrl.setRed(String(menus[i]), true)
+      }
+      var newsMenu = newsMenuCtrl.getAll()
+      that.setData({
+        scroll_menu: newsMenu,
+      })
+    }
+    var fail = res => {
+
+    }
+
+    if (this.data.currTabID == 1) return
+
+    request.reqReminder(time, success, fail)
+   },
 
   /**
    * 生命周期函数--监听页面初次渲染完成
@@ -445,6 +479,7 @@ Page({
    */
   newsSwiperChange: function (tapId, tapIdx) {
     newsMenuCtrl.setChoosed(tapId)
+    newsMenuCtrl.setRed(tapId, false)
     tagCtrl.clean() // 切换menu会清空tag记录
     if (tapId == 0) {
       tapId = null
@@ -640,6 +675,7 @@ Page({
     if (this.data.isTop) {
       if (needNewPost) {
         var currMenuId = newsMenuCtrl.getChoosed()
+        newsMenuCtrl.setRed(currMenuId, false)
         var currTagId = tagCtrl.getChoosed()
         this.reqHomeInfo(null, currMenuId, null, currTagId, null, true)
       }

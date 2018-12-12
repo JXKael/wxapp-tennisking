@@ -86,6 +86,12 @@ function menuCtrl() {
       else this.menu[key].isShow = false
     }
   }
+
+  this.setRed = (key, isRed) => {
+    if (this.check(key)) {
+      this.menu[key].red = isRed
+    }
+  }
 }
 
 module.exports = menuCtrl

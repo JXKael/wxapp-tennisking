@@ -63,6 +63,16 @@ const reqForward = (postId, success, fail) => {
 }
 
 /**
+ * 小红点
+ */
+ const reqReminder = (time, success, fail) => {
+    var data = {
+        time: time
+    }
+    requestData("index/remind/", "POST", data, success, fail, null)
+ }
+
+/**
  * 网络请求基本方法
  * @param url {string} 请求url
  * @param data {object} 参数
@@ -103,5 +113,6 @@ module.exports = {
   reqPlayerInfo: reqPlayerInfo,
   reqPostDetail: reqPostDetail,
   reqLike: reqLike,
-  reqForward: reqForward
+  reqForward: reqForward,
+  reqReminder: reqReminder
 };
