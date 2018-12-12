@@ -136,7 +136,8 @@ function postCtrl() {
     var flexTitle = ""
     var playerName = ""
     var shortName = ""
-    if (aPost.playerId != null) {
+    var isNeedTitle = true // 是否需要在正文前加上title
+    if (aPost.playerId != null) { // post中包含playerId，查找players，得到shortName，否则默认为title
       if (aPost.players != null && aPost.players.length > 0) {
         var gotName = false
         for (var i = 0; i < aPost.players.length; ++i) {
@@ -156,12 +157,14 @@ function postCtrl() {
         }
         // 列表中没找到
         if (!gotName) {
+          isNeedTitle = false
           flexTitle = aPost.title
         }
       } else {
+        isNeedTitle = false
         flexTitle = aPost.title
       }
-    } else {
+    } else { // post中不包含playerId，用第0个，否则默认title
       if (aPost.players != null && aPost.players.length > 0) {
         if (aPost.players[0].shortName != null) {
           flexTitle = aPost.players[0].shortName
@@ -174,16 +177,20 @@ function postCtrl() {
         }
         aPost.playerId = aPost.players[0].playerId
       } else {
+        isNeedTitle = false
         flexTitle = aPost.title
       }
     }
+    aPost.isNeedTitle = isNeedTitle
     aPost.flexTitle = flexTitle
     aPost.playerName = playerName
     aPost.shortName = shortName
     // 单个选手资讯界面与资讯界面显示不同
     aPost.isPlayerNews = false
     // 前面插入标题
-    aPost.content = "<p style='color:black'><b>" + aPost.title + "</b></p>" + aPost.content
+    if (isNeedTitle) {
+      aPost.content = "<p style='color:black'><b>" + aPost.title + "</b></p>" + aPost.content
+    }
   }
 
   this.polishPostForPlayer = (aPost, playerName) => {
