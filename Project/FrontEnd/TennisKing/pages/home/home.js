@@ -30,7 +30,7 @@ var isUpdating = false
 
 // 小红点
 var lastServerTime = 0
-var reminder_interval = 60 // 刷新间隔，10s
+var reminder_interval = 60 // 刷新间隔，60s
 
 const newsDefault = [
   { id: 0, name: "最新", weight: 999999999 }
