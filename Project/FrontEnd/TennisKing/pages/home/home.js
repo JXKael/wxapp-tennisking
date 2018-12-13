@@ -33,7 +33,7 @@ var lastServerTime = 0
 var reminder_interval = 60 // 刷新间隔，10s
 
 const newsDefault = [
-  { id: 0, name: "全部", weight: 999999999 }
+  { id: 0, name: "最新", weight: 999999999 }
 ]
 
 const playersDefault = [
@@ -312,6 +312,9 @@ Page({
         })
       },
     })
+    if (lastServerTime > 0) {
+      this.reqReminder(lastServerTime)
+    }
   },
 
   /**
